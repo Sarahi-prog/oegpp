@@ -1,16 +1,12 @@
 <?php
-require_once("../models/trabajadoresModel.php");
+require_once './models/TrabajadoresModel.php';
+require_once './helpers/verificacion.php';
 
-$dni = $_POST['dni'];
-$nombres = $_POST['nombres'];
-$apellidos = $_POST['apellidos'];
-$correo = $_POST['correo'];
+class TrabajadoresController {
 
-$resultado = insertarTrabajador($dni, $nombres, $apellidos, $correo);
-
-if ($resultado) {
-    echo "Trabajador registrado (sin empresa)";
-} else {
-    echo "Error al registrar";
+    public function cargar() {
+        $model = new TrabajadoresModel();
+        $trabajadores = $model->cargar();
+        require './view/viewCargarTrabajadores.php';
+    }
 }
-?>

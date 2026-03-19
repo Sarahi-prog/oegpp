@@ -1,16 +1,29 @@
-<?php
-require_once("../config.php");
+<?php  
+    require_once './config/DB.php';
+    require_once 'Trabajadores.php';
 
-function insertarTrabajador($dni, $nombres, $apellidos, $correo) {
-    global $conexion;
+    class TrabajadoresModel{
+        private $db;
+        public function __construct(){
+            $this->db=DB::conectar();
+        }
 
-    $sql = "INSERT INTO trabajadores (dni, nombres, apellidos, correo)
-            VALUES ($1, $2, $3, $4)";
-
-    $result = pg_query_params($conexion, $sql, array(
-        $dni, $nombres, $apellidos, $correo
-    ));
-
-    return $result;
-}
+        public function cargar(){
+            $sql = "SELECT id_trabajador, dni, nombres, apellidos, correo FROM trabajadores";
+            $ps=$this->db->prepare($sql);
+            $ps->execute();
+            $filas=$ps->fetchall();
+            $trabajadores=array();
+            foreach($filas as $f){
+                $fam = new Trabajadores();
+                $fam->setId_trabajador($f[0]);
+                $fam->setDni($f[1]);
+                $fam->setNombres($f[2]);
+                $fam->setApellidos($f[3]);
+                $fam->setCorreo($f[4]);
+                array_push($trabajadores, $fam);
+            }
+            return $trabajadores;
+        }
+    }
 ?>
