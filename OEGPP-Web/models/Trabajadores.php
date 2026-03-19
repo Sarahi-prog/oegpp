@@ -1,18 +1,11 @@
 <?php
-class Trabajador {
+class Trabajadores {
     private $id_trabajador;
     private $dni;
     private $nombres;
     private $apellidos;
     private $correo;
 
-    public function __construct($id_trabajador, $dni, $nombres, $apellidos, $correo) {
-        $this->id_trabajador = $id_trabajador;
-        $this->dni = $dni;
-        $this->nombres = $nombres;
-        $this->apellidos = $apellidos;
-        $this->correo = $correo;
-    }
 
     // Getters y setters
     public function getIdTrabajador() {
@@ -53,5 +46,6 @@ class Trabajador {
 
     public function setCorreo($correo) {
         $this->correo = $correo;
+    }
 }
 ?>

@@ -23,13 +23,14 @@
         <tbody>
           <?php foreach ($trabajadores as $t): ?>
             <tr>
-              <td><?= htmlspecialchars($t->getId_trabajador()) ?></td>
+              <td><?= htmlspecialchars($t->getIdTrabajador()) ?></td>
               <td><?= $t->getNombres() ?></td>
               <td><?= $t->getApellidos() ?></td>
               <td><?= $t->getDni() ?></td>
               <td><?= $t->getCorreo() ?></td>
             </tr>
           <?php endforeach; ?>
+        
         </tbody>
       </table>
     </div>
