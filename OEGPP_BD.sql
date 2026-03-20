@@ -1,3 +1,4 @@
+
 CREATE DATABASE oegpp; 
 --agregando variable correo para mas formas de ingreso en la aplicación
 CREATE TABLE administradores ( 
@@ -12,6 +13,7 @@ CREATE TABLE trabajadores (
     nombres VARCHAR(120) NOT NULL, 
     apellidos VARCHAR(120) NOT NULL, 
     correo VARCHAR(120)
+	
      );
 --se quita folio de cursos pues un curso puede tener varios folios, se tendra que acer la busqueda con los trabajadores.
 CREATE TABLE cursos ( 
@@ -65,6 +67,15 @@ CREATE TABLE registros_capacitacion (
     folio VARCHAR(20)
     );
 
-select * from libros_registro 
-where tipo ='certificados' 
 
+select * from libros_registro 
+where tipo ='certificados'
+
+
+ALTER TABLE trabajadores 
+ADD COLUMN celular VARCHAR(15),
+ADD COLUMN area VARCHAR(100);
+
+ALTER TABLE administradores
+ADD COLUMN rol BOOLEAN DEFAULT TRUE,
+ADD COLUMN verificado BOOLEAN DEFAULT FALSE;
