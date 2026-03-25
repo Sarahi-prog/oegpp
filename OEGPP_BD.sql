@@ -13,8 +13,7 @@ CREATE TABLE trabajadores (
     nombres VARCHAR(120) NOT NULL, 
     apellidos VARCHAR(120) NOT NULL, 
     correo VARCHAR(120)
-	
-     );
+    );
 --se quita folio de cursos pues un curso puede tener varios folios, se tendra que acer la busqueda con los trabajadores.
 CREATE TABLE cursos ( 
     id_curso SERIAL PRIMARY KEY, 
@@ -50,6 +49,7 @@ CREATE TABLE libros_registro (
     anio_inicio INT NOT NULL,
     fecha_fin DATE
     ); 
+
 --El registro o codigo de un libro tiene la siguiente forma OEGPP-L(numero de libro aqui)
 --En vez de guardar COD se guardara Registro pues COD se considerara sin importancia
 --En registro solo se guardara el numero de orden mas no las iniciales del curso o diplomado
@@ -79,3 +79,34 @@ ADD COLUMN area VARCHAR(100);
 ALTER TABLE administradores
 ADD COLUMN rol BOOLEAN DEFAULT TRUE,
 ADD COLUMN verificado BOOLEAN DEFAULT FALSE;
+
+
+--Tablas para trazabilidad de error, actividades y sesiones
+
+CREATE TABLE actividad_logs (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT,
+    accion VARCHAR(50),
+    tabla_afectada VARCHAR(50),
+    registro_id INT,
+    descripcion TEXT,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE error_logs (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT,
+    mensaje TEXT,
+    tipo VARCHAR(50),
+    archivo VARCHAR(255),
+    linea INT,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+);
+
+CREATE TABLE sesiones (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT,
+    fecha_inicio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_fin TIMESTAMP,
+    activa BOOLEAN DEFAULT TRUE,
+);

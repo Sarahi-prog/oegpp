@@ -6,7 +6,7 @@ class Cursos {
     private $tipo;
     private $horas_totales;
 
-    pubclic function getIdCurso() {
+    public function getIdCurso() {
         return $this->id_curso;
     }
     public function setIdCurso($id_curso) {
@@ -35,5 +35,6 @@ class Cursos {
     }
     public function setHorasTotales($horas_totales) {
         $this->horas_totales = $horas_totales;
+    }
 }
 ?>

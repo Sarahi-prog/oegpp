@@ -1,0 +1,46 @@
+<?php
+    require_once './config/DB.php';
+    require_once 'Sesiones.php';
+
+    class SesionesModel{
+        private $db;
+        public function __construct(){
+            $this->db=DB::conectar();
+        }
+        public function cargar(){
+            $sql = "SELECT * FROM obtener_sesiones()";
+            $ps=$this->db->prepare($sql);
+            $ps->execute();
+            $filas=$ps->fetchall();
+            $sesiones=array();
+            foreach($filas as $f){
+                $al = new Sesiones();
+                $al->setIdSesion($f[0]);
+                $al->setUsuarioId($f[1]);
+                $al->setFechaInicio($f[2]);
+                $al->setFechaFin($f[3]);
+                $al->setActiva($f[4]);
+                array_push($sesiones, $al);
+            }
+            return $sesiones;
+        }
+        public function guardar(Sesiones $sesiones){
+            $sql = "INSERT INTO sesiones ( 
+            usuario_id, 
+            fecha_inicio, 
+            fecha_fin, 
+            activa)
+                VALUES (
+                :uid,
+                :fi,
+                :ff,
+                :ac)";
+            $ps=$this->db->prepare($sql);
+            $ps->bindParam(":uid", $sesiones->getUsuarioId());
+            $ps->bindParam(":fi", $sesiones->getFechaInicio());
+            $ps->bindParam(":ff", $sesiones->getFechaFin());
+            $ps->bindParam(":ac", $sesiones->getActiva());
+            $ps->execute();
+        }
+    }
+?>

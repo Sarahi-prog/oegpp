@@ -25,5 +25,49 @@
                 }
                 return $trabajadores;
             }
+            public function actualizar(Trabajadores trabajador){
+                $sql = "UPDATE trabajadores SET 
+                dni=:dni, 
+                nombres=:nom, 
+                apellidos=:ape, 
+                correo=:cor,
+                celular=:cel,
+                area=:are
+                WHERE id_trabajador=:id";
+                $ps=$this->db->prepare($sql);
+                $ps->bindParam(":id", $trabajador->getIdTrabajador());
+                $ps->bindParam(":dni", $trabajador->getDni());
+                $ps->bindParam(":nom", $trabajador->getNombres());
+                $ps->bindParam(":ape", $trabajador->getApellidos());
+                $ps->bindParam(":cor", $trabajador->getCorreo());
+                $ps->bindParam(":cel", $trabajador->getCelular());
+                $ps->bindParam(":are", $trabajador->getArea());
+                $ps->execute();
+            }
+            public function guardar(Trabajadores trabajador){
+                $sql = "INSERT INTO trabajadores 
+                (dni, 
+                nombres, 
+                apellidos, 
+                correo, 
+                celular, 
+                area) 
+                VALUES 
+                (:dni, 
+                :nom, 
+                :ape, 
+                :cor, 
+                :cel, 
+                :are)";
+                $ps=$this->db->prepare($sql);
+                $ps->bindParam(":dni", $trabajador->getDni());
+                $ps->bindParam(":nom", $trabajador->getNombres());
+                $ps->bindParam(":ape", $trabajador->getApellidos());
+                $ps->bindParam(":cor", $trabajador->getCorreo());
+                $ps->bindParam(":cel", $trabajador->getCelular());
+                $ps->bindParam(":are", $trabajador->getArea());
+                $ps->execute();
+            }
+        
         }
     ?>
