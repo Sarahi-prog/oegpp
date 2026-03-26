@@ -206,3 +206,81 @@ function prevStep(step) {
     document.querySelectorAll(".step").forEach(s => s.style.display = "none");
     document.getElementById("step" + step).style.display = "block";
 }
+
+
+//dfdsfsdfdsf
+
+
+// 1. Lógica para abrir y cerrar el Modal
+    function abrirModal() {
+        document.getElementById('modalNuevoUsuario').style.display = 'flex';
+    }
+
+    function cerrarModal() {
+        document.getElementById('modalNuevoUsuario').style.display = 'none';
+    }
+
+    // 2. Simulación de guardado rápido y actualización del select principal
+    function guardarNuevoTrabajador(event) {
+        event.preventDefault(); // Evita que la página se recargue
+        
+        let nombres = document.getElementById('nuevoNombres').value;
+        let apellidos = document.getElementById('nuevoApellidos').value;
+        let dni = document.getElementById('nuevoDni').value;
+
+        // Crear una nueva opción para el select principal
+        let selectUsuario = document.getElementById('usuarioSelect');
+        let nuevaOpcion = document.createElement('option');
+        
+        // Asignamos un ID temporal (En la vida real, este ID vendría de tu base de datos)
+        nuevaOpcion.value = "nuevo_" + dni; 
+        nuevaOpcion.text = `${nombres} ${apellidos} (DNI: ${dni})`;
+        
+        // Agregamos la opción y la dejamos seleccionada automáticamente
+        selectUsuario.add(nuevaOpcion);
+        selectUsuario.value = nuevaOpcion.value;
+
+        alert('Trabajador agregado temporalmente a la lista.');
+        
+        // Limpiamos y cerramos el modal
+        document.getElementById('nuevoTrabajadorForm').reset();
+        cerrarModal();
+    }
+
+    // 3. Lógica para cambiar los cursos disponibles según el tipo (Certificado o Diplomado)
+    function actualizarCursos() {
+        let tipo = document.getElementById('tipoCurso').value;
+        let cursoSelect = document.getElementById('cursoSelect');
+        
+        // Limpiamos las opciones actuales
+        cursoSelect.innerHTML = '<option value="">-- Seleccione un curso --</option>';
+
+        // Opciones simuladas (Esto normalmente se trae de la BD)
+        if (tipo === 'certificados') {
+            cursoSelect.add(new Option('Gestión Pública Básica', 'c1'));
+            cursoSelect.add(new Option('Ofimática para el Estado', 'c2'));
+        } else if (tipo === 'diplomados') {
+            cursoSelect.add(new Option('Diplomado en Contrataciones del Estado', 'd1'));
+            cursoSelect.add(new Option('Diplomado en Proyectos de Inversión', 'd2'));
+        }
+    }
+
+    ///////////// Modal de Registro de Cursos - Lógica para abrir, cerrar y cargar cursos dinámicamente
+    function toggleModal(show) {
+            const modal = document.getElementById('modalRegistro');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        // Cerrar al hacer click fuera de la caja blanca
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalRegistro');
+            if (event.target == modal) {
+                toggleModal(false);
+            }
+        }
+
+        // Lógica simple para cargar cursos (Ejemplo)
+        function cargarCursos() {
+            const tipo = document.getElementById('tipoCurso').value;
+            console.log("Cargando lista de tipo: " + tipo);
+        }

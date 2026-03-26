@@ -12,4 +12,8 @@ class TrabajadoresController {
     public function pruebas(){
         require './views/trabajadores.php';
     }
+
+    public function pruebas_2(){
+        require './views/asignacionCurso.php';
+    }
 }

@@ -80,80 +80,10 @@
                 <h1 class="hero-title">Organización de Especialistas en Gestión Publica y Privada</h1>
                 <p class="hero-subtitle">Realiza cursos con nosotros</p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary-white" onclick="openModal()">
+                    <button class="btn btn-primary-white" onclick="window.location.href='asignacionCurso.php'">
                         <i class="fas fa-plus"></i>
                         Registrar nuevo usuario
                     </button>
-
-                    <div id="myModal" class="modal">
-                        <div class="modal-content">
-                            <span onclick="closeModal()">X</span>
-
-                            <form id="multiStepForm" action="guardar.php" method="POST">
-
-                                <!-- PASO 1 -->
-                                <div class="step" id="step1">
-                                    <h2>Registrar Usuario</h2>
-
-                                    <input type="text" name="dni" placeholder="DNI" required>
-                                    <input type="text" name="nombres" placeholder="Nombres" required>
-                                    <input type="text" name="apellidos" placeholder="Apellidos" required>
-                                    <input type="email" name="correo" placeholder="Correo" required>
-
-                                    <div class="form-actions">
-                                        <button type="button" onclick="nextStep(2)">Siguiente</button>
-                                    </div>
-                                </div>
-
-                                <!-- PASO 2 -->
-                                <div class="step" id="step2" style="display:none;">
-                                    <h2>Asignar Curso</h2>
-
-                                    <select name="curso_id">
-                                        <option value="">Seleccione curso</option>
-                                    </select>
-
-                                    <input type="number" name="horas_realizadas" placeholder="Horas">
-                                    <input type="date" name="fecha_inicio">
-                                    <input type="date" name="fecha_fin">
-
-                                    <div class="form-actions">
-                                        <button type="button" onclick="prevStep(1)">Atrás</button>
-                                        <button type="button" onclick="nextStep(3)">Siguiente</button>
-                                    </div>
-                                </div>
-
-                                <!-- PASO 3 -->
-                                <div class="step" id="step3" style="display:none;">
-                                    <h2>Libro + Registro</h2>
-
-                                    <select name="libro_id">
-                                        <option>Libro 1</option>
-                                    </select>
-
-                                    <input type="number" name="registro" placeholder="N° registro">
-                                    <input type="date" name="fecha_emision">
-                                    <input type="text" name="folio" placeholder="Folio">
-
-                                    <div class="form-actions">
-                                        <button type="button" onclick="prevStep(2)">Atrás</button>
-                                        <button type="submit">Guardar</button>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
-
-                    <script>
-                    function openModal() {
-                        document.getElementById("myModal").style.display = "block";
-                    }
-
-                    function closeModal() {
-                        document.getElementById("myModal").style.display = "none";
-                    }
-                    </script>
 
                     <button class="btn btn-outline-white">
                         <i class="fas fa-download"></i>
@@ -252,7 +182,7 @@
                 <input 
                     type="text" 
                     id="searchInput" 
-                    placeholder="Buscar por nombre, apellido, DNI o correo..."
+                    placeholder="Buscar por DNI..."
                     class="search-input"
                 >
             </div>
