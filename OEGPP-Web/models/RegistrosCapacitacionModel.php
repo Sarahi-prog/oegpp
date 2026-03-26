@@ -15,7 +15,7 @@
                 $registroscapacitacion=array();
                 foreach($filas as $f){
                     $regc = new RegistrosCapacitacion();
-                    $regc->setIdRegistroCapacitacion($f[0]);
+                    $regc->setIdRegistro($f[0]);
                     $regc->setTrabajadorId($f[1]);
                     $regc->setCursoId($f[2]);
                     $regc->setLibroId($f[3]);
@@ -52,15 +52,25 @@
                     :fe,
                     :f)";
                 $ps=$this->db->prepare($sql);
-                $ps->bindParam(":tid", $registroscapacitacion->getTrabajadorId());
-                $ps->bindParam(":cid", $registroscapacitacion->getCursoId());
-                $ps->bindParam(":lid", $registroscapacitacion->getLibroId());
-                $ps->bindParam(":r", $registroscapacitacion->getRegistro());
-                $ps->bindParam(":hr", $registroscapacitacion->getHorasRealizadas());
-                $ps->bindParam(":fi", $registroscapacitacion->getFechaInicio());
-                $ps->bindParam(":ff", $registroscapacitacion->getFechaFin());
-                $ps->bindParam(":fe", $registroscapacitacion->getFechaEmision());
-                $ps->bindParam(":f", $registroscapacitacion->getFolio());
+                $tid= $registroscapacitacion->getTrabajadorId();
+                $cid= $registroscapacitacion->getCursoId();
+                $lid= $registroscapacitacion->getLibroId();
+                $r= $registroscapacitacion->getRegistro();
+                $hr= $registroscapacitacion->getHorasRealizadas();
+                $fi= $registroscapacitacion->getFechaInicio();
+                $ff= $registroscapacitacion->getFechaFin();
+                $fe= $registroscapacitacion->getFechaEmision();
+                $f= $registroscapacitacion->getFolio();
+                
+                $ps->bindParam(":tid", $tid);
+                $ps->bindParam(":cid", $cid);
+                $ps->bindParam(":lid", $lid);
+                $ps->bindParam(":r", $r);
+                $ps->bindParam(":hr", $hr);
+                $ps->bindParam(":fi", $fi);
+                $ps->bindParam(":ff", $ff);
+                $ps->bindParam(":fe", $fe);
+                $ps->bindParam(":f", $f);
                 $ps->execute();
             }
 
@@ -77,16 +87,25 @@
                     folio=:f
                     WHERE id_registro=:id";
                 $ps=$this->db->prepare($sql);
-                $ps->bindParam(":id", $registroscapacitacion->getIdRegistroCapacitacion());
-                $ps->bindParam(":tid", $registroscapacitacion->getTrabajadorId());
-                $ps->bindParam(":cid", $registroscapacitacion->getCursoId());
-                $ps->bindParam(":lid", $registroscapacitacion->getLibroId());
-                $ps->bindParam(":r", $registroscapacitacion->getRegistro());
-                $ps->bindParam(":hr", $registroscapacitacion->getHorasRealizadas());
-                $ps->bindParam(":fi", $registroscapacitacion->getFechaInicio());
-                $ps->bindParam(":ff", $registroscapacitacion->getFechaFin());
-                $ps->bindParam(":fe", $registroscapacitacion->getFechaEmision());
-                $ps->bindParam(":f", $registroscapacitacion->getFolio());
+                $tid= $registroscapacitacion->getTrabajadorId();
+                $cid= $registroscapacitacion->getCursoId();
+                $lid= $registroscapacitacion->getLibroId();
+                $r= $registroscapacitacion->getRegistro();
+                $hr= $registroscapacitacion->getHorasRealizadas();
+                $fi= $registroscapacitacion->getFechaInicio();
+                $ff= $registroscapacitacion->getFechaFin();
+                $fe= $registroscapacitacion->getFechaEmision();
+                $f= $registroscapacitacion->getFolio();
+                $ps->bindParam(":id", $registroscapacitacion->getIdRegistro());
+                $ps->bindParam(":tid", $tid);
+                $ps->bindParam(":cid", $cid);
+                $ps->bindParam(":lid", $lid);
+                $ps->bindParam(":r", $r);
+                $ps->bindParam(":hr", $hr);
+                $ps->bindParam(":fi", $fi);
+                $ps->bindParam(":ff", $ff);
+                $ps->bindParam(":fe", $fe);
+                $ps->bindParam(":f", $f);
                 $ps->execute();
             }
         }

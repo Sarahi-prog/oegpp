@@ -25,7 +25,7 @@
                 }
                 return $trabajadores;
             }
-            public function actualizar(Trabajadores trabajador){
+            public function actualizar(Trabajadores $trabajador){
                 $sql = "UPDATE trabajadores SET 
                 dni=:dni, 
                 nombres=:nom, 
@@ -35,6 +35,13 @@
                 area=:are
                 WHERE id_trabajador=:id";
                 $ps=$this->db->prepare($sql);
+                $id= $trabajador->getIdTrabajador();
+                $dni= $trabajador->getDni();
+                $nom= $trabajador->getNombres();
+                $ape= $trabajador->getApellidos();
+                $cor= $trabajador->getCorreo();
+                $cel= $trabajador->getCelular();
+                $are= $trabajador->getArea();
                 $ps->bindParam(":id", $trabajador->getIdTrabajador());
                 $ps->bindParam(":dni", $trabajador->getDni());
                 $ps->bindParam(":nom", $trabajador->getNombres());
@@ -44,7 +51,7 @@
                 $ps->bindParam(":are", $trabajador->getArea());
                 $ps->execute();
             }
-            public function guardar(Trabajadores trabajador){
+            public function guardar(Trabajadores $trabajador){
                 $sql = "INSERT INTO trabajadores 
                 (dni, 
                 nombres, 
@@ -60,12 +67,18 @@
                 :cel, 
                 :are)";
                 $ps=$this->db->prepare($sql);
-                $ps->bindParam(":dni", $trabajador->getDni());
-                $ps->bindParam(":nom", $trabajador->getNombres());
-                $ps->bindParam(":ape", $trabajador->getApellidos());
-                $ps->bindParam(":cor", $trabajador->getCorreo());
-                $ps->bindParam(":cel", $trabajador->getCelular());
-                $ps->bindParam(":are", $trabajador->getArea());
+                $dni= $trabajador->getDni();
+                $nom= $trabajador->getNombres();
+                $ape= $trabajador->getApellidos();
+                $cor= $trabajador->getCorreo();
+                $cel= $trabajador->getCelular();
+                $are= $trabajador->getArea();
+                $ps->bindParam(":dni", $dni);
+                $ps->bindParam(":nom", $nom);
+                $ps->bindParam(":ape", $ape);
+                $ps->bindParam(":cor", $cor);
+                $ps->bindParam(":cel", $cel);
+                $ps->bindParam(":are", $are);
                 $ps->execute();
             }
         

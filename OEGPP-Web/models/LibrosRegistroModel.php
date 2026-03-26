@@ -38,10 +38,14 @@
                 :ai,
                 :ff)";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":t", $libro->getTipo());
-            $ps->bindParam(":nl", $libro->getNumeroLibro());
-            $ps->bindParam(":ai", $libro->getAnioInicio());
-            $ps->bindParam(":ff", $libro->getFechaFin());
+            $t= $libro->getTipo();
+            $nl= $libro->getNumeroLibro();
+            $ai= $libro->getAnioInicio();
+            $ff= $libro->getFechaFin();
+            $ps->bindParam(":t", $t);
+            $ps->bindParam(":nl", $nl);
+            $ps->bindParam(":ai", $ai);
+            $ps->bindParam(":ff", $ff);
             $ps->execute();
         }
         
@@ -53,11 +57,16 @@
             fecha_fin=:ff
                 WHERE id_libro=:id";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":id", $libro->getIdLibro());
-            $ps->bindParam(":t", $libro->getTipo());
-            $ps->bindParam(":nl", $libro->getNumeroLibro());
-            $ps->bindParam(":ai", $libro->getAnioInicio());
-            $ps->bindParam(":ff", $libro->getFechaFin());
+            $id= $libro->getIdLibro();
+            $t= $libro->getTipo();
+            $nl= $libro->getNumeroLibro();
+            $ai= $libro->getAnioInicio();
+            $ff= $libro->getFechaFin();
+            $ps->bindParam(":id", $id);
+            $ps->bindParam(":t", $t);
+            $ps->bindParam(":nl", $nl);
+            $ps->bindParam(":ai", $ai);
+            $ps->bindParam(":ff", $ff);
             $ps->execute();
         }
     }

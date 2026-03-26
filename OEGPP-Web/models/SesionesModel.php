@@ -31,15 +31,19 @@
             fecha_fin, 
             activa)
                 VALUES (
-                :uid,
+                :usid,
                 :fi,
                 :ff,
                 :ac)";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":uid", $sesiones->getUsuarioId());
-            $ps->bindParam(":fi", $sesiones->getFechaInicio());
-            $ps->bindParam(":ff", $sesiones->getFechaFin());
-            $ps->bindParam(":ac", $sesiones->getActiva());
+            $usid= $sesiones->getUsuarioId();
+            $fi= $sesiones->getFechaInicio();
+            $ff= $sesiones->getFechaFin();
+            $ac= $sesiones->getActiva();
+            $ps->bindParam(":usid", $usid);
+            $ps->bindParam(":fi", $fi);
+            $ps->bindParam(":ff", $ff);
+            $ps->bindParam(":ac", $ac);
             $ps->execute();
         }
     }

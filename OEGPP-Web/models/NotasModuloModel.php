@@ -32,13 +32,17 @@
                 nota=:nt
                 WHERE id_notas=:id";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":id", $notas->getIdNota());
-            $ps->bindParam(":tid", $notas->getTrabajadorId());
-            $ps->bindParam(":mid", $notas->getModuloId());
-            $ps->bindParam(":nt", $notas->getNota());
+            $id= $notas->getIdNota();
+            $tid= $notas->getTrabajadorId();
+            $mid= $notas->getModuloId();
+            $nt= $notas->getNota();
+            $ps->bindParam(":id", $id);
+            $ps->bindParam(":tid", $tid);
+            $ps->bindParam(":mid", $mid);
+            $ps->bindParam(":nt", $nt);
             $ps->execute();
         }
-        public function guardar(){
+        public function guardar(NotasModulo $notas){
             $sql = "INSERT INTO notas_modulo ( 
             trabajador_id, 
             modulo_id, 
@@ -48,9 +52,12 @@
                 :mid,
                 :nt)";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":tid", $notas->getTrabajadorId());
-            $ps->bindParam(":mid", $notas->getModuloId());
-            $ps->bindParam(":nt", $notas->getNota());
+            $tid= $notas->getTrabajadorId();
+            $mid= $notas->getModuloId();
+            $nt= $notas->getNota();
+            $ps->bindParam(":tid", $tid);
+            $ps->bindParam(":mid", $mid);
+            $ps->bindParam(":nt", $nt);
             $ps->execute();
         }
     }   

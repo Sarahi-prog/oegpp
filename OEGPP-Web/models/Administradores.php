@@ -42,5 +42,6 @@ class Administradores {
     }
     public function setRol($rol) {
         $this->rol = $rol;
+    }
 }
 ?>

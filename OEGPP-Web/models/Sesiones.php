@@ -1,10 +1,10 @@
 <?php
     class Sesiones{
-        private id_sesion;
-        private usuario_id;
-        private fecha_inicio;
-        private fecha_fin;
-        private activa;
+        private $id_sesion;
+        private $usuario_id;
+        private $fecha_inicio;
+        private $fecha_fin;
+        private $activa;
         
         public function getIdSesion() {
             return $this->id_sesion;
@@ -36,6 +36,5 @@
         public function setActiva($activa) {
             $this->activa = $activa;
         }
-
     }
 ?>

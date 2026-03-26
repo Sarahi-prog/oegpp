@@ -35,5 +35,6 @@
     }
     public function setFechaRegistro($fecha_registro) {
         $this->fecha_registro = $fecha_registro;
-    }}
+    }
+}
 ?>

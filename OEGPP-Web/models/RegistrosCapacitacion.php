@@ -10,6 +10,7 @@
         private $fecha_fin;
         private $fecha_emision;
         private $folio;
+        private $fecha_registro;
 
         public function getIdRegistro() {
             return $this->id_registro;

@@ -24,6 +24,41 @@
             }
             return $cursos;
         }
+
+        public function cargarD(){
+            $sql = "SELECT * FROM obtener_cursos_diplomados();";
+            $ps=$this->db->prepare($sql);
+            $ps->execute();
+            $filas=$ps->fetchall();
+            $cursos=array();
+            foreach($filas as $f){
+                $cur = new Cursos();
+                $cur->setIdCurso($f[0]);
+                $cur->setCodigoCurso($f[1]);
+                $cur->setNombreCurso($f[2]);
+                $cur->setTipo($f[3]);
+                $cur->setHorasTotales($f[4]);
+                array_push($cursos, $cur);
+            }
+            return $cursos;
+        }
+        public function cargarC(){
+            $sql = "SELECT * FROM obtener_cursos_cursos();";
+            $ps=$this->db->prepare($sql);
+            $ps->execute();
+            $filas=$ps->fetchall();
+            $cursos=array();
+            foreach($filas as $f){
+                $cur = new Cursos();
+                $cur->setIdCurso($f[0]);
+                $cur->setCodigoCurso($f[1]);
+                $cur->setNombreCurso($f[2]);
+                $cur->setTipo($f[3]);
+                $cur->setHorasTotales($f[4]);
+                array_push($cursos, $cur);
+            }
+            return $cursos;
+        }
         public function guardar(Cursos $curso){
             $sql = "INSERT INTO cursos ( 
             codigo_curso, 
@@ -36,10 +71,14 @@
                 :t,
                 :ht)";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":cc", $curso->getCodigoCurso());
-            $ps->bindParam(":nc", $curso->getNombreCurso());
-            $ps->bindParam(":t", $curso->getTipo());
-            $ps->bindParam(":ht", $curso->getHorasTotales());
+            $cc= $curso->getCodigoCurso();
+            $nc= $curso->getNombreCurso();
+            $t= $curso->getTipo();
+            $ht= $curso->getHorasTotales();
+            $ps->bindParam(":cc", $cc);
+            $ps->bindParam(":nc", $nc);
+            $ps->bindParam(":t", $t);
+            $ps->bindParam(":ht", $ht);
             $ps->execute();
         }
 
@@ -51,11 +90,17 @@
                 horas_totales=:ht
                 WHERE id_curso=:id";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":id", $curso->getIdCurso());
-            $ps->bindParam(":cc", $curso->getCodigoCurso());
-            $ps->bindParam(":nc", $curso->getNombreCurso());
-            $ps->bindParam(":t", $curso->getTipo());
-            $ps->bindParam(":ht", $curso->getHorasTotales());
+            $id= $curso->getIdCurso();
+            $cc= $curso->getCodigoCurso();
+            $nc= $curso->getNombreCurso();
+            $t= $curso->getTipo();
+            $ht= $curso->getHorasTotales();
+
+            $ps->bindParam(":id", $id);
+            $ps->bindParam(":cc", $cc);
+            $ps->bindParam(":nc", $nc);
+            $ps->bindParam(":t", $t);
+            $ps->bindParam(":ht", $ht);
             $ps->execute();
         }
     }

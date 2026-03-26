@@ -42,11 +42,16 @@
                 :fi,
                 :ff)";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":cid", $modulo->getCursoId());
-            $ps->bindParam(":nm", $modulo->getNombreModulo());
-            $ps->bindParam(":h", $modulo->getHoras());
-            $ps->bindParam(":fi", $modulo->getFechaInicio());
-            $ps->bindParam(":ff", $modulo->getFechaFin());
+            $cid= $modulo->getCursoId();
+            $nm= $modulo->getNombreModulo();
+            $h= $modulo->getHoras();
+            $fi= $modulo->getFechaInicio();
+            $ff= $modulo->getFechaFin();
+            $ps->bindParam(":cid", $cid);
+            $ps->bindParam(":nm", $nm);
+            $ps->bindParam(":h", $h);
+            $ps->bindParam(":fi", $fi);
+            $ps->bindParam(":ff", $ff);
             $ps->execute();
         }
 
@@ -60,12 +65,18 @@
             fecha_fin=:ff
                 WHERE id_modulo=:id";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":id", $modulo->getIdModulo());
-            $ps->bindParam(":cid", $modulo->getCursoId());
-            $ps->bindParam(":nm", $modulo->getNombreModulo());
-            $ps->bindParam(":h", $modulo->getHoras());
-            $ps->bindParam(":fi", $modulo->getFechaInicio());
-            $ps->bindParam(":ff", $modulo->getFechaFin());
+            $id= $modulo->getIdModulo();
+            $cid= $modulo->getCursoId();
+            $nm= $modulo->getNombreModulo();
+            $h= $modulo->getHoras();
+            $fi= $modulo->getFechaInicio();
+            $ff= $modulo->getFechaFin();
+            $ps->bindParam(":id", $id);
+            $ps->bindParam(":cid", $cid);
+            $ps->bindParam(":nm", $nm);
+            $ps->bindParam(":h", $h);
+            $ps->bindParam(":fi", $fi);
+            $ps->bindParam(":ff", $ff);
             $ps->execute();
         }
     }

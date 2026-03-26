@@ -28,19 +28,18 @@
         public function guardar(ErrorLogs $log) {
             $sql = "INSERT INTO error_logs 
             (usuario_id, mensaje, tipo, archivo, linea) 
-            VALUES (
-            :uid, 
-            :men, 
-            :tip, 
-            :arc, 
-            :lin
-            )";
+            VALUES (:uid,:men,:tip,:arc,:lin)";
             $ps = $this->db->prepare($sql);
-            $ps->bindParam(":uid", $log->getUsuarioId());
-            $ps->bindParam(":men", $log->getMensaje());
-            $ps->bindParam(":tip", $log->getTipo());
-            $ps->bindParam(":arc", $log->getArchivo());
-            $ps->bindParam(":lin", $log->getLinea());
+            $uid= $log->getUsuarioId();
+            $men= $log->getMensaje();
+            $tip= $log->getTipo();
+            $arc= $log->getArchivo();
+            $lin= $log->getLinea();
+            $ps->bindParam(":uid", $uid);
+            $ps->bindParam(":men", $men);
+            $ps->bindParam(":tip", $tip);
+            $ps->bindParam(":arc", $arc);
+            $ps->bindParam(":lin", $lin);
             $ps->execute();
         }
     }

@@ -31,13 +31,18 @@
         public function guardar(ActividadLogs $log) {
             $sql = "INSERT INTO actividad_logs (
             accion, tabla_afectada, registro_id, descripcion, fecha) 
-            VALUES (:acc, :taf, :rid, :des, :fec)";
+            VALUES (:acc, :taf, :rid, :desc, :fec)";
             $ps = $this->db->prepare($sql);
-            $ps->bindParam(":acc", $log->getAccion());
-            $ps->bindParam(":taf", $log->getTablaAfectada());
-            $ps->bindParam(":rid", $log->getRegistroId());
-            $ps->bindParam(":des", $log->getDescripcion());
-            $ps->bindParam(":fec", $log->getFecha());
+            $acc= $log->getAccion();
+            $taf= $log->getTablaAfectada();
+            $rid= $log->getRegistroId();
+            $des= $log->getDescripcion();
+            $fec= $log->getFecha();
+            $ps->bindParam(":acc", $acc);
+            $ps->bindParam(":taf", $taf);
+            $ps->bindParam(":rid", $rid);
+            $ps->bindParam(":desc", $des);
+            $ps->bindParam(":fec", $fec);
             $ps->execute();
         }
     }

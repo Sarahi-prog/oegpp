@@ -15,7 +15,7 @@
             $administradores=array();
             foreach($filas as $f){
                 $adm = new Administradores();
-                $adm->setIdAdministrador($f[0]);
+                $adm->setid_admin($f[0]);
                 $adm->setUsuario($f[1]);
                 $adm->setPassword($f[2]);
                 $adm->setCorreo($f[3]);
@@ -34,7 +34,7 @@
             $administradores=array();
             foreach($filas as $f){
                 $adm = new Administradores();
-                $adm->setIdAdministrador($f[0]);
+                $adm->setid_admin($f[0]);
                 $adm->setUsuario($f[1]);
                 $adm->setPassword($f[2]);
                 $adm->setCorreo($f[3]);
@@ -52,23 +52,34 @@
             rol = :r
             WHERE id_administrador = :id";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":u", $administradores->getUsuario());
-            $ps->bindParam(":p", $administradores->getPassword());
-            $ps->bindParam(":c", $administradores->getCorreo());
-            $ps->bindParam(":v", $administradores->getVerificado());
-            $ps->bindParam(":r", $administradores->getRol());
-            $ps->bindParam(":id", $administradores->getIdAdministrador());
+            $u= $administradores->getUsuario();
+            $p= $administradores->getPassword();
+            $c= $administradores->getCorreo();
+            $v= $administradores->getVerificado();
+            $r= $administradores->getRol();
+            $id= $administradores->getid_admin();
+            $ps->bindParam(":u", $u);
+            $ps->bindParam(":p", $p);
+            $ps->bindParam(":c", $c);
+            $ps->bindParam(":v", $v);
+            $ps->bindParam(":r", $r);
+            $ps->bindParam(":id", $id);
             $ps->execute();
         }
 
         public function guardar(Administradores $administradores){
             $sql = "INSERT INTO administradores (usuario, password, correo, verificado, rol) VALUES (:u, :p, :c, :v, :r)";
             $ps=$this->db->prepare($sql);
-            $ps->bindParam(":u", $administradores->getUsuario());
-            $ps->bindParam(":p", $administradores->getPassword());
-            $ps->bindParam(":c", $administradores->getCorreo());
-            $ps->bindParam(":v", $administradores->getVerificado());
-            $ps->bindParam(":r", $administradores->getRol());
+            $u= $administradores->getUsuario();
+            $p= $administradores->getPassword();
+            $c= $administradores->getCorreo();
+            $v= $administradores->getVerificado();
+            $r= $administradores->getRol();
+            $ps->bindParam(":u", $u);
+            $ps->bindParam(":p", $p);
+            $ps->bindParam(":c", $c);
+            $ps->bindParam(":v", $v);
+            $ps->bindParam(":r", $r);
             $ps->execute();
         }
     }
