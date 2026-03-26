@@ -1,12 +1,12 @@
 <?php
-require_once './models/TrabajadoresModel.php';
+require_once '../models/TrabajadoresModel.php';
 
 class TrabajadoresController {
 
-    public function cargar() {
+    public function Cargar() {
         $model = new TrabajadoresModel();
         $trabajadores = $model->cargar();
-        require './views/viewCargarTrabajadores.php';
+        require '../views/viewCargarTrabajadores.php';
     }
 
     public function pruebas(){

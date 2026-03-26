@@ -194,3 +194,15 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+
+//REGISTRAR USUAARIO
+function nextStep(step) {
+    document.querySelectorAll(".step").forEach(s => s.style.display = "none");
+    document.getElementById("step" + step).style.display = "block";
+}
+
+function prevStep(step) {
+    document.querySelectorAll(".step").forEach(s => s.style.display = "none");
+    document.getElementById("step" + step).style.display = "block";
+}
