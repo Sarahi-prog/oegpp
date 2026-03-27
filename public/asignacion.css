@@ -2,7 +2,7 @@
    Variables de Tema (Fácil de modificar)
    ========================================= */
 :root {
-    --primary: #10b981;          /* Verde principal */
+    --primary: #0d6c4c;          /* Verde principal */
     --primary-hover: #059669;    /* Verde oscuro para hovers */
     --primary-light: #ecfdf5;    /* Verde muy claro para fondos */
     --text-dark: #0f172a;        /* Texto principal */

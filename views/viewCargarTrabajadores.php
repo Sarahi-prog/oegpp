@@ -1,1 +1,0 @@
-<tbody id="workersTableBody"></tbody>

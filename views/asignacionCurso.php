@@ -1,64 +1,23 @@
-<?php
-require_once("../controllers/TrabajadoresController.php");
-
-$controller = new TrabajadoresController();
-// $trabajadores = $controller->Cargar(); // Descomenta cuando tu controlador retorne la lista
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Lógica para guardar el trabajador...
-    // $mensaje = "✅ Registrado correctamente";
-}
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asignar Nuevo Curso - OEGPP</title>
-    <link rel="stylesheet" href="../public/asignacion.css">
+    <link rel="stylesheet" href="../public/dashStyles.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Estilos específicos para los botones pequeños dentro del formulario */
-        .btn-sm-action {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-add-new {
-            background-color: #f0fdf4;
-            color: #10b981;
-            border: 1px solid #10b981;
-        }
-        .btn-add-new:hover {
-            background-color: #10b981;
-            color: white;
-        }
-        .btn-cancel-new {
-            background-color: #fef2f2;
-            color: #ef4444;
-            border: 1px solid #ef4444;
-        }
-        .btn-cancel-new:hover {
-            background-color: #ef4444;
-            color: white;
-        }
-    </style>
 </head>
 <body>
 
-    <div class="container main-content">
-        <div class="section-header" style="margin-top: 30px;">
+    <?php include 'includes/menu.php'; ?>
+
+    <div class="container main-content" style="margin-top: 30px;">
+        <div class="section-header">
             <h2><i class="fas fa-user-graduate" style="color: #10b981;"></i> Asignar Nuevo Curso</h2>
             <p>Registra la capacitación de un trabajador en un curso específico.</p>
         </div>
 
-        <form action="../controllers/procesarAsignacion.php" method="POST" class="form-container">
+        <form action="index.php?accion=guardar_asignacion" method="POST" class="form-container">
             
             <fieldset>
                 <legend><i class="fas fa-address-card"></i> 1. Selección de Participante y Curso</legend>
@@ -70,11 +29,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="trabajador_id">Trabajador (DNI - Nombre):</label>
                         <select name="trabajador_id" id="trabajador_id" required>
                             <option value="">-- Seleccione un trabajador --</option>
-                            <option value="1">72345678 - Juan Perez</option> 
+                            <?php if (!empty($trabajadores)): ?>
+                                <?php foreach ($trabajadores as $t): ?>
+                                    <option value="<?= $t['id_trabajador'] ?>">
+                                        <?= htmlspecialchars($t['dni'] . ' - ' . $t['nombres'] . ' ' . $t['apellidos']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
                         <div style="text-align: right; margin-top: 8px;">
-                            <button type="button" class="btn-sm-action btn-add-new" onclick="toggleNuevoTrabajador(true)">
-                                <i class="fas fa-user-plus"></i> Añadir participante
+                            <button type="button" class="btn-icon btn-edit" onclick="toggleNuevoTrabajador(true)" style="background: #ecfdf5; color: #10b981; padding: 6px 12px; font-weight: 600;">
+                                <i class="fas fa-user-plus"></i> Añadir participante nuevo
                             </button>
                         </div>
                     </div>
@@ -82,8 +47,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div id="caja_nuevo_trabajador" style="display: none; width: 100%; border-left: 3px solid #10b981; padding-left: 15px; margin-bottom: 15px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                             <h4 style="margin: 0; color: #10b981;">Registrar Nuevo Trabajador</h4>
-                            <button type="button" class="btn-sm-action btn-cancel-new" onclick="toggleNuevoTrabajador(false)">
-                                <i class="fas fa-times"></i> Cancelar
+                            <button type="button" class="btn-icon btn-delete" onclick="toggleNuevoTrabajador(false)" style="padding: 6px 12px; font-weight: 600;">
+                                <i class="fas fa-times"></i> Cancelar nuevo
                             </button>
                         </div>
                         
@@ -106,15 +71,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <label>Correo (Opcional):</label>
                                 <input type="email" name="nuevo_correo" id="nuevo_correo" placeholder="ana@email.com">
                             </div>
-                            
+                            <div class="form-group">
+                                <label>Celular (Opcional):</label>
+                                <input type="text" name="nuevo_celular" id="nuevo_celular" placeholder="987654321">
+                            </div>
+                            <div class="form-group">
+                                <label>Área (Opcional):</label>
+                                <input type="text" name="nuevo_area" id="nuevo_area" placeholder="Ej: Logística">
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="curso_id">Curso a asignar:</label>
+                        <label for="curso_id">Curso o Diplomado a asignar:</label>
                         <select name="curso_id" id="curso_id" required>
                             <option value="">-- Seleccione un curso --</option>
-                            <option value="1">C001 - Gestión Pública Básica</option>
+                            <?php if (!empty($cursos)): ?>
+                                <?php foreach ($cursos as $c): ?>
+                                    <option value="<?= $c['id_curso'] ?>">
+                                        <?= htmlspecialchars($c['codigo_curso'] . ' - ' . $c['nombre_curso']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
                     </div>
                 </div>
@@ -128,7 +106,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="libro_id">Libro de Registro:</label>
                         <select name="libro_id" id="libro_id" required>
                             <option value="">-- Seleccione un libro --</option>
-                            <option value="1">Libro #1 (Certificados 2024)</option>
+                            <?php if (!empty($libros)): ?>
+                                <?php foreach ($libros as $l): ?>
+                                    <option value="<?= $l['id_libro'] ?>">
+                                        <?= htmlspecialchars(ucfirst($l['tipo']) . ' - Libro N° ' . $l['numero_libro'] . ' (' . $l['anio_inicio'] . ')') ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
                     </div>
                 </div>
@@ -156,24 +140,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="fecha_inicio">Fecha de Inicio:</label>
+                        <label for="fecha_inicio">Fecha de Inicio (Opcional):</label>
                         <input type="date" name="fecha_inicio" id="fecha_inicio">
                     </div>
 
                     <div class="form-group">
-                        <label for="fecha_fin">Fecha de Fin:</label>
+                        <label for="fecha_fin">Fecha de Fin (Opcional):</label>
                         <input type="date" name="fecha_fin" id="fecha_fin">
                     </div>
 
                     <div class="form-group">
-                        <label for="fecha_emision">Fecha de Emisión (Requerido):</label>
+                        <label for="fecha_emision">Fecha de Emisión (Obligatorio):</label>
                         <input type="date" name="fecha_emision" id="fecha_emision" required>
                     </div>
                 </div>
             </fieldset>
 
             <div class="form-actions">
-                <button type="button" class="btn btn-outline" onclick="window.location.href='index.php'">
+                <button type="button" class="btn btn-outline" onclick="window.location.href='index.php?accion=trabajadores'">
                     <i class="fas fa-times"></i> Cancelar
                 </button>
                 <button type="submit" class="btn btn-primary-green">
