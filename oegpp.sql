@@ -82,3 +82,15 @@ ALTER TABLE administradores
 ADD COLUMN rol BOOLEAN DEFAULT TRUE,
 ADD COLUMN verificado BOOLEAN DEFAULT FALSE;
 
+-- Agregar columnas distrito y provincia y descripcion
+ALTER TABLE libros_registro
+ADD COLUMN distrito VARCHAR(100),
+ADD COLUMN provincia VARCHAR(100)
+ADD COLUMN descripcion VARCHAR(100)
+-- Modificar el CHECK del campo tipo para incluir 'convenio'
+ALTER TABLE libros_registro
+DROP CONSTRAINT libros_registro_tipo_check;
+
+ALTER TABLE libros_registro
+ADD CONSTRAINT libros_registro_tipo_check
+CHECK (tipo IN ('certificados','diplomados','convenio','mixto'));
