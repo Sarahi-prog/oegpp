@@ -9,6 +9,7 @@ CREATE TABLE administradores (
     correo VARCHAR(120) NOT NULL UNIQUE
 	verifi
     ); 
+
 CREATE TABLE trabajadores ( 
     id_trabajador SERIAL PRIMARY KEY, 
     dni VARCHAR(15) NOT NULL UNIQUE, 
@@ -94,3 +95,37 @@ DROP CONSTRAINT libros_registro_tipo_check;
 ALTER TABLE libros_registro
 ADD CONSTRAINT libros_registro_tipo_check
 CHECK (tipo IN ('certificados','diplomados','convenio','mixto'));
+
+--Tablas para trazabilidad de error, actividades y sesiones
+
+CREATE TABLE actividad_logs (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT,
+    accion VARCHAR(50),
+    tabla_afectada VARCHAR(50),
+    registro_id INT,
+    descripcion TEXT,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE error_logs (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT,
+    mensaje TEXT,
+    tipo VARCHAR(50),
+    archivo VARCHAR(255),
+    linea INT,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+);
+
+CREATE TABLE sesiones (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT,
+    fecha_inicio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_fin TIMESTAMP,
+    activa BOOLEAN DEFAULT TRUE,
+);
+
+
+ALTER TABLE error_logs ADD COLUMN stack_trace TEXT;
+
