@@ -7,6 +7,19 @@ CREATE TABLE administradores (
     password VARCHAR(255) NOT NULL,
     correo VARCHAR(120) NOT NULL UNIQUE
     ); 
+
+
+
+    CREATE TABLE intentos_login (
+    id SERIAL PRIMARY KEY,
+    ip VARCHAR(45) NOT NULL,
+    usuario VARCHAR(100),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    exitoso BOOLEAN DEFAULT FALSE
+    );
+
+
+
 CREATE TABLE trabajadores ( 
     id_trabajador SERIAL PRIMARY KEY, 
     dni VARCHAR(15) NOT NULL UNIQUE, 
@@ -68,17 +81,7 @@ CREATE TABLE registros_capacitacion (
     );
 
 
-select * from libros_registro 
-where tipo ='certificados'
 
-
-ALTER TABLE trabajadores 
-ADD COLUMN celular VARCHAR(15),
-ADD COLUMN area VARCHAR(100);
-
-ALTER TABLE administradores
-ADD COLUMN rol BOOLEAN DEFAULT TRUE,
-ADD COLUMN verificado BOOLEAN DEFAULT FALSE;
 
 
 --Tablas para trazabilidad de error, actividades y sesiones
@@ -110,3 +113,31 @@ CREATE TABLE sesiones (
     fecha_fin TIMESTAMP,
     activa BOOLEAN DEFAULT TRUE,
 );
+
+-- Actualizar contraseñas existentes a hashed (ejecutar después de implementar hashing en PHP)
+-- Mejor: Crear un script PHP para hashear las existentes, ya que MD5 no es seguro.
+
+-- Para mayor seguridad, agregar índices si no existen
+CREATE INDEX IF NOT EXISTS idx_admin_usuario ON administradores (usuario);
+CREATE INDEX IF NOT EXISTS idx_admin_correo ON administradores (correo);
+CREATE INDEX IF NOT EXISTS idx_admin_correo ON administradores (correo);
+
+UPDATE administradores SET password = CONCAT('$2y$10$', SUBSTRING(MD5(RAND()), 1, 22), '$', password) WHERE LENGTH(password) < 60;
+
+ALTER TABLE trabajadores 
+ADD COLUMN celular VARCHAR(15),
+ADD COLUMN area VARCHAR(100);
+
+ALTER TABLE administradores
+ADD COLUMN rol BOOLEAN DEFAULT TRUE,
+ADD COLUMN verificado BOOLEAN DEFAULT FALSE;
+
+-- Agregar campos para seguridad y control de login
+ALTER TABLE administradores
+ADD COLUMN bloqueado BOOLEAN DEFAULT FALSE,
+ADD COLUMN fecha_bloqueo TIMESTAMP;
+
+-- Ajustar rol para que sea más flexible (si antes era BOOLEAN)
+ALTER TABLE administradores
+ALTER COLUMN rol TYPE VARCHAR(50) USING rol::VARCHAR,
+ALTER COLUMN rol SET DEFAULT 'regular';

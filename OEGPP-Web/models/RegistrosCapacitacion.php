@@ -11,6 +11,8 @@
         private $fecha_emision;
         private $folio;
         private $fecha_registro;
+        private $estado;
+
 
         public function getIdRegistro() {
             return $this->id_registro;

@@ -59,6 +59,39 @@
             }
             return $cursos;
         }
+
+        public function buscar($texto, $campo = null){
+            $texto = trim($texto);
+            if ($texto === '') {
+                return $this->cargar();
+            }
+            $allowedFields = ['id_curso', 'codigo_curso', 'nombre_curso', 'tipo', 'horas_totales'];
+            if ($campo !== null && in_array($campo, $allowedFields, true)) {
+                $sql = "SELECT * FROM obtener_cursos_cursos() WHERE $campo LIKE :q";
+            } else {
+                $sql = "SELECT * FROM obtener_cursos_cursos()
+                    WHERE id_curso::text LIKE :q
+                       OR codigo_curso LIKE :q
+                       OR nombre_curso LIKE :q
+                       OR tipo LIKE :q
+                       OR horas_totales::text LIKE :q";
+            }
+            $ps = $this->db->prepare($sql);
+            $ps->bindValue(':q', '%' . $texto . '%', PDO::PARAM_STR);
+            $ps->execute();
+            $filas=$ps->fetchall();
+            $cursos=array();
+            foreach($filas as $f){
+                $cur = new Cursos();
+                $cur->setIdCurso($f[0]);
+                $cur->setCodigoCurso($f[1]);
+                $cur->setNombreCurso($f[2]);
+                $cur->setTipo($f[3]);
+                $cur->setHorasTotales($f[4]);
+                array_push($cursos, $cur);
+            }
+            return $cursos;
+        }
         public function guardar(Cursos $curso){
             $sql = "INSERT INTO cursos ( 
             codigo_curso, 

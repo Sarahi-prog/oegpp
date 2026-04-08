@@ -28,6 +28,40 @@
             return $modulos;
         }
 
+        public function buscar($texto, $campo = null){
+            $texto = trim($texto);
+            if ($texto === '') {
+                return $this->cargar();
+            }
+            $allowedFields = ['curso_id', 'nombre_modulo', 'horas', 'fecha_inicio', 'fecha_fin'];
+            if ($campo !== null && in_array($campo, $allowedFields, true)) {
+                $sql = "SELECT * FROM modulos WHERE $campo LIKE :q";
+            } else {
+                $sql = "SELECT * FROM modulos
+                    WHERE curso_id::text LIKE :q
+                       OR nombre_modulo LIKE :q
+                       OR horas::text LIKE :q
+                       OR fecha_inicio::text LIKE :q
+                       OR fecha_fin::text LIKE :q";
+            }
+            $ps = $this->db->prepare($sql);
+            $ps->bindValue(':q', '%' . $texto . '%', PDO::PARAM_STR);
+            $ps->execute();
+            $filas=$ps->fetchall();
+            $modulos=array();
+            foreach($filas as $f){
+                $mod = new Modulos();
+                $mod->setIdModulo($f[0]);
+                $mod->setCursoId($f[1]);
+                $mod->setNombreModulo($f[2]);
+                $mod->setHoras($f[3]);
+                $mod->setFechaInicio($f[4]);
+                $mod->setFechaFin($f[5]);
+                array_push($modulos, $mod);
+            }
+            return $modulos;
+        }
+
         public function guardar(Modulos $modulo){
             $sql = "INSERT INTO modulos ( 
             curso_id, 

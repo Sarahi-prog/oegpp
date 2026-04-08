@@ -30,6 +30,48 @@
                 return $registroscapacitacion;
             }
 
+            public function buscar($texto, $campo = null){
+                $texto = trim($texto);
+                if ($texto === '') {
+                    return $this->cargar();
+                }
+                $allowedFields = ['trabajador_id', 'curso_id', 'libro_id', 'registro', 'horas_realizadas', 'fecha_inicio', 'fecha_fin', 'fecha_emision', 'folio'];
+                if ($campo !== null && in_array($campo, $allowedFields, true)) {
+                    $sql = "SELECT * FROM obtener_registrocapacitacion() WHERE $campo LIKE :q";
+                } else {
+                    $sql = "SELECT * FROM obtener_registrocapacitacion()
+                        WHERE trabajador_id::text LIKE :q
+                           OR curso_id::text LIKE :q
+                           OR libro_id::text LIKE :q
+                           OR registro LIKE :q
+                           OR horas_realizadas::text LIKE :q
+                           OR fecha_inicio::text LIKE :q
+                           OR fecha_fin::text LIKE :q
+                           OR fecha_emision::text LIKE :q
+                           OR folio LIKE :q";
+                }
+                $ps = $this->db->prepare($sql);
+                $ps->bindValue(':q', '%' . $texto . '%', PDO::PARAM_STR);
+                $ps->execute();
+                $filas=$ps->fetchall();
+                $registroscapacitacion=array();
+                foreach($filas as $f){
+                    $regc = new RegistrosCapacitacion();
+                    $regc->setIdRegistro($f[0]);
+                    $regc->setTrabajadorId($f[1]);
+                    $regc->setCursoId($f[2]);
+                    $regc->setLibroId($f[3]);
+                    $regc->setRegistro($f[4]);
+                    $regc->setHorasRealizadas($f[5]);
+                    $regc->setFechaInicio($f[6]);
+                    $regc->setFechaFin($f[7]);
+                    $regc->setFechaEmision($f[8]);
+                    $regc->setFolio($f[9]);
+                    array_push($registroscapacitacion, $regc);
+                }
+                return $registroscapacitacion;
+            }
+
             public function guardar(RegistrosCapacitacion $registroscapacitacion){
                 $sql = "INSERT INTO registros_capacitacion ( 
                 trabajador_id, 
