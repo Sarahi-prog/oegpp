@@ -4,66 +4,97 @@
     require_once 'helpers/loggers.php';
 
     class AdministradoresController{
+
         public function login() {
-            try {
-                if (isset($_POST['usuario']) && isset($_POST['password'])) {
-                    $usuario = $_POST['usuario'];
-                    $password = $_POST['password'];
+            try{
+                if (session_status() === PHP_SESSION_NONE) session_start();
+                // Si ya hay sesión activa, redirigir
+                if (isset($_SESSION['usuario'])) {
+                    header('Location: index.php?accion=paginainicio');
+                    exit;
+                }
+
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $usuario = $_POST['usuario'] ?? '';
+                    $password = $_POST['password'] ?? '';
                     $ip = $_SERVER['REMOTE_ADDR'];
 
                     $adminModel = new AdministradoresModel();
                     $intentosModel = new IntentosLoginModel();
+                    $sesionesModel = new SesionesModel();
 
-                    // 1. Verificar si la cuenta está bloqueada
+                    // Verificar si el usuario está bloqueado
                     $estado = $adminModel->estaBloqueado($usuario);
                     if ($estado && $estado['bloqueado']) {
-                        echo "La cuenta está bloqueada. Contacte al administrador para desbloquear.";
+                        $error = "La cuenta está bloqueada. Contacte al administrador.";
+                        require './views/viewLogin.php';
                         return;
                     }
 
-                    // 2. Validar credenciales
-                    $admin = new Administradores();
-                    $admin->setUsuario($usuario);
-                    $admin->setPassword($password);
+                    // Validar credenciales
+                    $resultado = $adminModel->validarLogin($usuario, $password);
 
-                    $resultado = $adminModel->validarLogin($admin);
-
-                    if ($resultado) {
-                        // Login correcto → registrar intento exitoso
-                        $log = new IntentosLogin();
-                        $log->setIp($ip);
-                        $log->setUsuario($usuario);
-                        $log->setExitoso(true);
+                    if ($resultado !== null) {
+                        // Registrar intento exitoso
+                        $log = new IntentosLogin($usuario, $ip, true);
                         $intentosModel->guardar($log);
 
-                        echo "Bienvenido, " . $resultado->getUsuario();
+                        // Crear sesión en tabla de sesiones
+                        $sesionesModel->crearSesion($resultado->getIdUsuario(), session_id(), $ip);
+
+                        // Guardar en $_SESSION
+                        $_SESSION['usuario'] = $resultado->getUsuario();
+                        $_SESSION['idusuario'] = $resultado->getIdUsuario();
+
+                        header('Location: index.php?accion=paginainicio');
+                        exit;
                     } else {
-                        // Login incorrecto → registrar intento fallido
-                        $log = new IntentosLogin();
-                        $log->setIp($ip);
-                        $log->setUsuario($usuario);
-                        $log->setExitoso(false);
+                        // Registrar intento fallido
+                        $log = new IntentosLogin($usuario, $ip, false);
                         $intentosModel->guardar($log);
 
-                        // 3. Contar intentos fallidos en 24h por usuario
-                        $fallidos = $intentosModel->verificarPorUsuario($usuario);
+                        // Contar intentos fallidos en últimas 24h
+                        $fallidos = $intentosModel->contarFallidos24h($usuario);
 
-                        if ($fallidos['total'] >= 30) {
+                        if ($fallidos >= 10) {
                             $adminModel->bloquearUsuario($usuario);
-                            echo "La cuenta ha sido bloqueada por exceso de intentos fallidos.";
+                            $error = "La cuenta ha sido bloqueada por exceso de intentos fallidos.";
                         } else {
-                            echo "Credenciales incorrectas. Intentos fallidos: " . $fallidos['total'];
+                            $error = "Credenciales incorrectas. Intentos fallidos: $fallidos";
                         }
+
+                        require './views/viewLogin.php';
                     }
                 } else {
                     require './views/viewLogin.php';
                 }
-            } catch (Exception $e) {
+            }catch(Exception $e){
                 Logger::error($e);
-                require './views/viewError.php';
             }
         }
 
+        public function logout() {
+            try{
+                if (session_status() === PHP_SESSION_NONE) session_start();
+
+                $sesionesModel = new SesionesModel();
+                if (isset($_SESSION['idusuario'])) {
+                    $sesionesModel->cerrarSesion($_SESSION['idusuario'], session_id());
+                }
+
+                session_unset();
+                session_destroy();
+                header('Location: index.php?accion=login');
+                exit;
+            } catch(Exception $e){
+                Logger::error($e);
+            }
+        }
+
+        public function paginainicio() {
+            require './helpers/verificacion.php';
+            require './views/viewPaginainicio.php';
+        }
         public function cargar(){
             try {
                 $model = new AdministradoresModel();

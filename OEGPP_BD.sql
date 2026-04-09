@@ -10,7 +10,7 @@ CREATE TABLE administradores (
 
 
 
-    CREATE TABLE intentos_login (
+CREATE TABLE intentos_login (
     id SERIAL PRIMARY KEY,
     ip VARCHAR(45) NOT NULL,
     usuario VARCHAR(100),
@@ -20,8 +20,8 @@ CREATE TABLE administradores (
 
 
 
-CREATE TABLE trabajadores ( 
-    id_trabajador SERIAL PRIMARY KEY, 
+CREATE TABLE clientes ( 
+    id_cliente SERIAL PRIMARY KEY, 
     dni VARCHAR(15) NOT NULL UNIQUE, 
     nombres VARCHAR(120) NOT NULL, 
     apellidos VARCHAR(120) NOT NULL, 
@@ -47,7 +47,7 @@ CREATE TABLE modulos (
 --Agregrando tabla notas_modulo para registrar las notas de cada módulo por trabajador, con referencia a los cursos y módulos correspondientes
 CREATE TABLE notas_modulo (
     id_nota SERIAL PRIMARY KEY,
-    trabajador_id INT NOT NULL REFERENCES trabajadores(id_trabajador) ON DELETE CASCADE UNIQUE,
+    cliente INT NOT NULL REFERENCES clientes(id_cliente) ON DELETE CASCADE UNIQUE,
     modulo_id INT NOT NULL REFERENCES modulos(id_modulo) ON DELETE CASCADE UNIQUE,
     nota DECIMAL(5,2) CHECK (nota >= 0 AND nota <= 20),
     fecha_registro DATE DEFAULT CURRENT_DATE
@@ -69,7 +69,7 @@ CREATE TABLE libros_registro (
 --tambien se guardara el folio para una facil busqueda.
 CREATE TABLE registros_capacitacion ( 
     id_registro SERIAL PRIMARY KEY, 
-    trabajador_id INT NOT NULL REFERENCES trabajadores(id_trabajador) ON DELETE CASCADE, 
+    clientes_id INT NOT NULL REFERENCES clientes(id_cliente) ON DELETE CASCADE, 
     curso_id INT NOT NULL REFERENCES cursos(id_curso) ON DELETE CASCADE, 
     libro_id INT NOT NULL REFERENCES libros_registro(id_libro) ON DELETE CASCADE, 
     registro INT NOT NULL, 
