@@ -9,7 +9,7 @@
             }
 
             public function cargar(){
-                $sql = "SELECT id_trabajador, dni, nombres, apellidos, correo, celular, area FROM trabajadores";
+                $sql = "SELECT id_cliente, dni, nombres, apellidos, correo, celular, area FROM clientes";
                 $ps=$this->db->prepare($sql);
                 $ps->execute();
                 $filas=$ps->fetchall();
@@ -32,12 +32,12 @@
                 if ($texto === '') {
                     return $this->cargar();
                 }
-                $allowedFields = ['id_trabajador', 'dni', 'nombres y apellidos', 'correo', 'celular', 'area'];
+                $allowedFields = ['id_cliente', 'dni', 'nombres y apellidos', 'correo', 'celular', 'area'];
                 if ($campo !== null && in_array($campo, $allowedFields, true)) {
-                    $sql = "SELECT id_trabajador, dni, concat(nombres, ' ', apellidos) AS nombres_apellidos, correo, celular, area FROM trabajadores WHERE $campo LIKE :q";
+                    $sql = "SELECT id_cliente, dni, concat(nombres, ' ', apellidos) AS nombres_apellidos, correo, celular, area FROM clientes WHERE $campo LIKE :q";
                 } else {
-                    $sql = "SELECT id_trabajador, dni, concat(nombres, ' ', apellidos) AS nombres_apellidos, correo, celular, area FROM trabajadores
-                        WHERE id_trabajador::text LIKE :q
+                    $sql = "SELECT id_cliente, dni, concat(nombres, ' ', apellidos) AS nombres_apellidos, correo, celular, area FROM clientes
+                        WHERE id_cliente::text LIKE :q
                            OR dni LIKE :q
                            OR concat(nombres, ' ', apellidos) LIKE :q
                            OR correo LIKE :q
@@ -63,14 +63,14 @@
                 return $trabajadores;
             }
             public function actualizar(Trabajadores $trabajador){
-                $sql = "UPDATE trabajadores SET 
+                $sql = "UPDATE clientes SET 
                 dni=:dni, 
                 nombres=:nom, 
                 apellidos=:ape, 
                 correo=:cor,
                 celular=:cel,
                 area=:are
-                WHERE id_trabajador=:id";
+                WHERE id_cliente=:id";
                 $ps=$this->db->prepare($sql);
                 $id= $trabajador->getIdTrabajador();
                 $dni= $trabajador->getDni();
@@ -89,7 +89,7 @@
                 $ps->execute();
             }
             public function guardar(Trabajadores $trabajador){
-                $sql = "INSERT INTO trabajadores 
+                $sql = "INSERT INTO clientes 
                 (dni, 
                 nombres, 
                 apellidos, 

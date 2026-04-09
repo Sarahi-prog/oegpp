@@ -91,72 +91,52 @@ class AdministradoresModel {
     }
 
     // --- Validar login ---
-    public function validarLogin(Administradores $administradores) {
+    public function validarLogin($usuario, $contrasena) {
         $sql = "SELECT * FROM administradores 
-                WHERE (correo = :c OR usuario = :u) AND verificado = true";
+                WHERE usuario = :usuario AND verificado = 1";
         $ps = $this->db->prepare($sql);
-        $ps->bindValue(':c', $administradores->getCorreo());
-        $ps->bindValue(':u', $administradores->getUsuario());
+        $ps->bindParam(':usuario', $usuario);
         $ps->execute();
-        $row = $ps->fetch(PDO::FETCH_ASSOC);
+        $fila = $ps->fetch(PDO::FETCH_ASSOC);
 
-        if ($row && password_verify($administradores->getPassword(), $row['password'])) {
-            // Verificar bloqueo
-            if ($row['bloqueado']) {
-                $fechaBloqueo = new DateTime($row['fecha_bloqueo']);
-                $ahora = new DateTime();
-                $diff = $ahora->diff($fechaBloqueo);
-
-                if ($diff->h < 24) {
-                    return false; // sigue bloqueado
-                } else {
-                    // desbloquear automáticamente
-                    $this->desbloquearUsuario($row['usuario']);
-                }
-            }
-            $adm = new Administradores();
-            $adm->setId_admin($row['id_admin']);
-            $adm->setUsuario($row['usuario']);
-            $adm->setCorreo($row['correo']);
-            $adm->setVerificado($row['verificado']);
-            $adm->setRol($row['rol']);
-            $adm->setBloqueado($row['bloqueado']);
-            $adm->setFechaBloqueo($row['fecha_bloqueo']);
-            return $adm;
+        if ($fila && password_verify($contrasena, $fila['password'])) {
+            $admin = new Administradores();
+            $admin->setId_admin($fila['id_admin']);
+            $admin->setUsuario($fila['usuario']);
+            return $admin;
         }
-        return false;
+        return null;
     }
 
     // --- Bloquear usuario ---
-    public function bloquearUsuario($usuario) {
+    public function bloquearAdministrador($id_admin) {
         $sql = "UPDATE administradores 
                 SET bloqueado = TRUE, fecha_bloqueo = NOW() 
-                WHERE usuario = :usuario";
+                WHERE id_admin = :id_admin";
         $ps = $this->db->prepare($sql);
-        $ps->bindParam(':usuario', $usuario, PDO::PARAM_STR);
+        $ps->bindParam(':id_admin', $id_admin, PDO::PARAM_STR);
         $ps->execute();
     }
 
     // --- Desbloquear usuario ---
-    public function desbloquearUsuario($usuario) {
+    public function desbloquearAdministrador($id_admin) {
         $sql = "UPDATE administradores 
                 SET bloqueado = FALSE, fecha_bloqueo = NULL 
-                WHERE usuario = :usuario";
+                WHERE id_admin = :id_admin";
         $ps = $this->db->prepare($sql);
-        $ps->bindParam(':usuario', $usuario, PDO::PARAM_STR);
+        $ps->bindParam(':id_admin', $id_admin, PDO::PARAM_STR);
         $ps->execute();
     }
 
     // --- Verificar estado de bloqueo ---
-    public function estaBloqueado($usuario) {
+    public function estaBloqueado($id_admin) {
         $sql = "SELECT bloqueado, fecha_bloqueo 
                 FROM administradores 
-                WHERE usuario = :usuario";
+                WHERE id_admin = :id_admin";
         $ps = $this->db->prepare($sql);
-        $ps->bindParam(':usuario', $usuario, PDO::PARAM_STR);
+        $ps->bindParam(':id_admin', $id_admin, PDO::PARAM_STR);
         $ps->execute();
         return $ps->fetch(PDO::FETCH_ASSOC);
     }
-
 }
 ?>

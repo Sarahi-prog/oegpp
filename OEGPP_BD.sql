@@ -8,8 +8,6 @@ CREATE TABLE administradores (
     correo VARCHAR(120) NOT NULL UNIQUE
     ); 
 
-
-
 CREATE TABLE intentos_login (
     id SERIAL PRIMARY KEY,
     ip VARCHAR(45) NOT NULL,
@@ -17,8 +15,6 @@ CREATE TABLE intentos_login (
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     exitoso BOOLEAN DEFAULT FALSE
     );
-
-
 
 CREATE TABLE clientes ( 
     id_cliente SERIAL PRIMARY KEY, 
@@ -63,6 +59,15 @@ CREATE TABLE libros_registro (
     fecha_fin DATE
     ); 
 
+ALTER TABLE libros_registro ADD COLUMN
+ distrito VARCHAR(300);
+
+ALTER TABLE libros_registro ADD COLUMN
+ provincia VARCHAR(300);
+
+ALTER TABLE libros_registro ADD COLUMN
+ descripcion VARCHAR(300);
+
 --El registro o codigo de un libro tiene la siguiente forma OEGPP-L(numero de libro aqui)
 --En vez de guardar COD se guardara Registro pues COD se considerara sin importancia
 --En registro solo se guardara el numero de orden mas no las iniciales del curso o diplomado
@@ -79,11 +84,6 @@ CREATE TABLE registros_capacitacion (
     fecha_emision DATE NOT NULL,
     folio VARCHAR(20)
     );
-
-
-
-
-
 --Tablas para trazabilidad de error, actividades y sesiones
 
 CREATE TABLE actividad_logs (
@@ -124,7 +124,7 @@ CREATE INDEX IF NOT EXISTS idx_admin_correo ON administradores (correo);
 
 UPDATE administradores SET password = CONCAT('$2y$10$', SUBSTRING(MD5(RAND()), 1, 22), '$', password) WHERE LENGTH(password) < 60;
 
-ALTER TABLE trabajadores 
+ALTER TABLE clientes 
 ADD COLUMN celular VARCHAR(15),
 ADD COLUMN area VARCHAR(100);
 
