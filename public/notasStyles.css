@@ -1,0 +1,337 @@
+/* ============================================================
+   ESTILOS PARA NOTAS Y CALIFICACIONES
+   Archivo: notasStyles.css
+   ============================================================ */
+
+/* [TIPOGRAFÍA GLOBAL] */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.main-content { 
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+/* ============================================================
+   [SECCIÓN DE CABECERA Y ACCIONES]
+   ============================================================ */
+.header-acciones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap; 
+    gap: 15px; 
+}
+
+.titulo-con-boton {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+}
+
+.btn-hamburguesa {
+    background: white;
+    border: 1px solid #e2e8f0;
+    font-size: 1.2rem;
+    color: #0f172a;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-hamburguesa:hover {
+    background-color: #f8fafc;
+    color: #44bd1f;
+    border-color: #44bd1f;
+}
+
+.directorio-title-container h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ============================================================
+   [LAYOUT PRINCIPAL Y PANELES]
+   ============================================================ */
+.dashboard-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+    overflow-x: hidden; 
+}
+
+#seccionRegistro {
+    width: 350px; 
+    flex-shrink: 0; 
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    opacity: 1;
+    visibility: visible;
+}
+
+#seccionRegistro.panel-oculto {
+    width: 0;
+    margin-left: -20px; 
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+}
+
+.side-panel {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 25px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    width: 350px; 
+    box-sizing: border-box; 
+}
+
+.side-panel h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: #0f172a;
+    margin-bottom: 20px;
+}
+
+/* ============================================================
+   [FORMULARIO DE NOTAS]
+   ============================================================ */
+.form-vertical-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 5px;
+}
+
+/* ¡CORRECCIÓN APLICADA AQUÍ! (box-sizing y width 100%) */
+.field-group input, 
+.field-group select {
+    width: 100%;
+    box-sizing: border-box; /* Previene el ensanchamiento al hacer clic */
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.field-group input:focus, 
+.field-group select:focus {
+    outline: none; 
+    border-color: #44bd1f; 
+    box-shadow: 0 0 0 4px rgba(68, 189, 31, 0.15); 
+}
+
+/* ============================================================
+   [SECCIÓN DE LA TABLA Y BÚSQUEDA]
+   ============================================================ */
+.table-section {
+    flex-grow: 1; 
+    width: 100%;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0; 
+}
+
+.search-bar {
+    display: flex;
+    justify-content: space-between; 
+    gap: 15px;
+    flex-wrap: wrap; 
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1; 
+    max-width: 500px; 
+    min-width: 250px; 
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 10px 10px 40px; 
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+.table-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    overflow-x: auto; 
+}
+
+.data-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    min-width: 700px; 
+}
+
+.data-table th { 
+    background: #f8fafc; 
+    padding: 15px; 
+    text-align: left; 
+    color: #64748b; 
+    font-weight: 700; 
+    font-size: 0.85rem;
+    text-transform: uppercase; 
+    white-space: nowrap; 
+}
+
+.data-table td { 
+    padding: 15px; 
+    border-top: 1px solid #f1f5f9; 
+    color: #1e293b;
+    vertical-align: middle;
+}
+
+.data-table tr:hover {
+    background-color: #f1f5f9; 
+}
+
+.id-column {
+    font-weight: 800;
+    color: #94a3b8;
+    width: 40px;
+    text-align: center;
+}
+
+/* Estilos específicos para los "Badges" (Etiquetas) de Estado de Notas */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   [BOTONES GLOBALES DE LA INTERFAZ]
+   ============================================================ */
+.btn-primary-green {
+    background-color: #44bd1f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; 
+    transition: background 0.2s;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box; /* Previene desbordamiento del botón */
+}
+
+.btn-primary-green:hover {
+    background-color: #38a318; 
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 5px;
+    color: #64748b;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.btn-icon:hover { 
+    transform: scale(1.2); 
+    color: #0f172a;
+}
+
+/* ============================================================
+   [DISEÑO RESPONSIVO]
+   ============================================================ */
+@media (max-width: 1024px) {
+    .dashboard-wrapper {
+        flex-direction: column; 
+    }
+
+    #seccionRegistro {
+        width: 100%; 
+    }
+
+    .side-panel {
+        width: 100%; 
+        margin-bottom: 10px; 
+    }
+
+    #seccionRegistro.panel-oculto {
+        width: 100%;
+        margin-left: 0;
+        margin-top: -20px;
+        height: 0; 
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding-top: 20px;
+        padding-bottom: 30px; 
+    }
+
+    .header-acciones {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .directorio-title-container h2 {
+        font-size: 1.5rem; 
+    }
+
+    .search-bar {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .search-wrapper {
+        max-width: 100%; 
+    }
+
+    .btn-primary-green {
+        width: 100%;
+        justify-content: center;
+    }
+}
