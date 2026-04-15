@@ -16,7 +16,7 @@
     <div class="container main-content">
         <div class="header-acciones">
             <div class="titulo-con-boton">
-                <button onclick="toggleRegistro()" class="btn-hamburguesa" title="Mostrar Formulario">
+                 <button onclick="toggleRegistro()" class="btn-hamburguesa" title="Mostrar/Ocultar Formulario">
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="directorio-title-container">
@@ -128,5 +128,7 @@
             </div> 
         </div> 
     </div> 
+    <script src="public/UniversalScript.js?v=<?= time(); ?>"></script>
+  
 </body>
 </html>

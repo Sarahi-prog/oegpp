@@ -169,6 +169,6 @@
         </div> 
     </div> 
     
-    <script src="public/capacitacionesScript.js?v=<?= time(); ?>"></script> -->
+    <script src="public/UniversalScript.js?v=<?= time(); ?>"></script>
 </body>
 </html>

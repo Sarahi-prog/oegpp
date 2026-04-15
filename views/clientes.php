@@ -34,7 +34,7 @@
             <div id="seccionRegistro">
                 <div class="side-panel">
                     <h3 style="margin-top: 0; margin-bottom: 20px;"><i class="fas fa-plus-circle"></i> Datos del Registro</h3>
-                    <form id="formTrabajadorAjax" action="index.php?accion=guardar_trabajador" method="POST">
+                    <form id="formTrabajadorAjax" action="index.php?accion=guardar_cliente" method="POST">
                         <div class="form-vertical-stack">
                             <div class="field-group">
                                 <label>DNI</label>
@@ -103,18 +103,18 @@
                             <tbody>
                                 <?php 
                                 $i = 1; 
-                                if (!empty($trabajadores)):
-                                    foreach ($trabajadores as $t): 
+                                if (!empty($clientes)):
+                                    foreach ($clientes as $c): 
                                 ?>
-                                <tr class="fila-trabajador">
+                                <tr class="fila-cliente">
                                     <td class="id-column"><?= $i++ ?></td>
-                                    <td><strong><?= htmlspecialchars($t['dni']) ?></strong></td>
-                                    <td><?= htmlspecialchars($t['nombres']) ?></td>
-                                    <td><?= htmlspecialchars($t['apellidos']) ?></td>
-                                    <td><?= htmlspecialchars($t['correo']) ?></td>
-                                    <td><?= htmlspecialchars($t['celular']) ?></td>
-                                    <td><?= htmlspecialchars($t['area']) ?></td>
-                                    <td><?= htmlspecialchars($t['estado']) ?></td>
+                                    <td><strong><?= htmlspecialchars($c['dni']) ?></strong></td>
+                                    <td><?= htmlspecialchars($c['nombres']) ?></td>
+                                    <td><?= htmlspecialchars($c['apellidos']) ?></td>
+                                    <td><?= htmlspecialchars($c['correo']) ?></td>
+                                    <td><?= htmlspecialchars($c['celular']) ?></td>
+                                    <td><?= htmlspecialchars($c['area']) ?></td>
+                                    <td><?= htmlspecialchars($c['estado']) ?></td>
                                     <td style="text-align: center; white-space: nowrap;">
                                         <button class="btn-icon btn-edit" title="Editar"><i class="fas fa-edit" style="color: #4a90e2;"></i></button>
                                         <button class="btn-icon btn-delete" title="Eliminar"><i class="fas fa-trash" style="color: #e24a4a;"></i></button>
@@ -142,6 +142,6 @@
         </div> 
     </div> 
     
-    <script src="public/clientesScript.js?v=<?= time(); ?>"></script>
+    <script src="public/UniversalScript.js?v=<?= time(); ?>"></script>
 </body>
 </html>

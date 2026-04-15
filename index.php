@@ -17,7 +17,7 @@ require_once './controllers/CursosController.php';
 require_once './controllers/ModulosController.php';
 require_once './controllers/NotasModuloController.php';
 require_once './controllers/RegistroCapacitacionController.php';
-
+require_once './controllers/LibrosRegistroController.php';
 
 // ==========================================
 // 2. CAPTURAR LA ACCIÓN (RUTAS)
@@ -35,6 +35,7 @@ $cursosController               = new CursosController();
 $modulosController              = new ModulosController();
 $notasModuloController          = new NotasModuloController();
 $registroCapacitacionController = new RegistroCapacitacionController();
+$librosRegistroController       = new LibrosRegistroController();
 
 // ==========================================
 // 4. EL SEMÁFORO (EVALUAR LA ACCIÓN)
@@ -104,7 +105,6 @@ switch($accion) {
     // [E] MÓDULO: NOTAS Y CAPACITACIONES
     // --------------------------------------
     case 'notas':
-    case 'notas_modulo':
         // IMPORTANTE: Abre la vista académica para gestionar las calificaciones
         $notasModuloController->listarNotas(); 
         break;
@@ -132,6 +132,26 @@ switch($accion) {
     case 'modificar_capacitacion':
         // Actualiza los datos de un registro de capacitación existente
         $registroCapacitacionController->modificar();
+        break;
+
+
+    // --------------------------------------
+    // [E] LIBRO REGISTRO
+    // 
+
+    case 'libros_registro':
+        // Muestra la lista de libros de registro
+        $librosRegistroController->cargar();
+        break;
+    
+    case 'guardar_libro':
+        // Procesa el formulario para registrar un nuevo libro de registro
+        $librosRegistroController->guardar();
+        break;
+
+    case 'modificar_libro':
+        // Actualiza los datos de un libro de registro existente
+        $librosRegistroController->modificar();
         break;
 
     // --------------------------------------

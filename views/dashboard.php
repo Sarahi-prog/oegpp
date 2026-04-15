@@ -21,15 +21,22 @@
                 <p class="hero-subtitle">Administra trabajadores, cursos, diplomados y certificaciones desde un solo lugar.</p>
                 
                 <div class="hero-buttons">
-                    <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=trabajadores'">
-                        <i class="fas fa-users"></i> Ver Trabajadores
+                    <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=clientes'">
+                        <i class="fas fa-users"></i> Ver Clientes
                     </button>
                     <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=cursos'">
                         <i class="fas fa-book-open"></i> Ver Cursos
                     </button>
-                    <button class="btn btn-outline-white" onclick="window.location.href='index.php?accion=nueva_asignacion'">
+                    <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=modulos'">
+                        <i class="fas fa-cogs"></i> Ver Módulos
+                    </button>
+                    <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=libros_registro'">
+                        <i class="fas fa-book"></i> Ver Libros
+                    </button>
+                    <button class="btn btn-outline-white" onclick="window.location.href='index.php?accion=registros_capacitacion'">
                         <i class="fas fa-plus"></i> Nueva Asignación
                     </button>
+                    
                 </div>
             </div>
         </div>
