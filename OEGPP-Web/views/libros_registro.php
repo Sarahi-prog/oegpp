@@ -13,7 +13,6 @@
 </head> 
 <body>
     <?php include 'includes/menu.php'; ?>
-
     <div class="container main-content">
     
         <div class="header-acciones">
@@ -118,29 +117,57 @@
                                 $i = 1; 
                                 if (!empty($libros)):
                                     foreach ($libros as $libro): 
-                                        $badgeClass = ($libro['tipo'] == 'diplomados') ? 'badge-diplomado' : 'badge-certificado';
-                                        
-                                        // Lógica para el estado del libro (Activo vs Cerrado)
-                                        $estaCerrado = !empty($libro['fecha_fin']);
+
+                                        // Obtener datos de forma segura
+                                        $tipo = $libro->getTipo() ?? '';
+                                        $numero = $libro->getNumeroLibro() ?? 0;
+                                        $anio = $libro->getAnioInicio() ?? '';
+                                        $provincia = $libro->getProvincia() ?? '';
+                                        $distrito = $libro->getDistrito() ?? '';
+                                        $fechaFin = $libro->getFechaFin() ?? '';
+
+                                        // Estilos dinámicos
+                                        $badgeClass = ($tipo == 'diplomados') ? 'badge-diplomado' : 'badge-certificado';
+
+                                        // Estado
+                                        $estaCerrado = !empty($fechaFin);
                                         $estadoClass = $estaCerrado ? 'estado-cerrado' : 'estado-activo';
                                         $estadoTexto = $estaCerrado ? 'Cerrado' : 'Activo';
-                                        
-                                        // Formato del nombre del libro (Ej. Libro 01)
-                                        $nombreLibro = "Libro " . str_pad($libro['numero_libro'], 2, "0", STR_PAD_LEFT);
+
+                                        // Nombre formateado
+                                        $nombreLibro = "Libro " . str_pad($numero, 2, "0", STR_PAD_LEFT);
                                 ?>
                                 <tr class="fila-libro">
                                     <td class="id-column"><?= $i++ ?></td>
                                     <td><strong><?= htmlspecialchars($nombreLibro) ?></strong></td>
-                                    <td><span class="badge <?= $badgeClass ?>"><?= ucfirst($libro['tipo']) ?></span></td>
-                                    <td><i class="far fa-calendar" style="color: #94a3b8; margin-right: 5px;"></i> <?= htmlspecialchars($libro['anio_inicio']) ?></td>
-                                    <td style="font-size: 0.9em; color: #475569;">
-                                        <?= htmlspecialchars($libro['provincia']) ?><br>
-                                        <span style="opacity: 0.7;"><?= htmlspecialchars($libro['distrito']) ?></span>
+                                    <td>
+                                        <span class="badge <?= $badgeClass ?>">
+                                            <?= htmlspecialchars(ucfirst($tipo)) ?>
+                                        </span>
                                     </td>
-                                    <td><span class="estado-indicador <?= $estadoClass ?>"><i class="fas <?= $estaCerrado ? 'fa-lock' : 'fa-check-circle' ?>"></i> <?= $estadoTexto ?></span></td>
+                                    <td>
+                                        <i class="far fa-calendar" style="color: #94a3b8; margin-right: 5px;"></i> 
+                                        <?= htmlspecialchars($anio) ?>
+                                    </td>
+                                    <td style="font-size: 0.9em; color: #475569;">
+                                        <?= htmlspecialchars($provincia) ?><br>
+                                        <span style="opacity: 0.7;">
+                                            <?= htmlspecialchars($distrito) ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="estado-indicador <?= $estadoClass ?>">
+                                            <i class="fas <?= $estaCerrado ? 'fa-lock' : 'fa-check-circle' ?>"></i> 
+                                            <?= $estadoTexto ?>
+                                        </span>
+                                    </td>
                                     <td style="text-align: center; white-space: nowrap;">
-                                        <button class="btn-icon btn-edit" title="Editar"><i class="fas fa-edit" style="color: #4a90e2;"></i></button>
-                                        <button class="btn-icon btn-delete" title="Eliminar"><i class="fas fa-trash" style="color: #e24a4a;"></i></button>
+                                        <button class="btn-icon btn-edit" title="Editar">
+                                            <i class="fas fa-edit" style="color: #4a90e2;"></i>
+                                        </button>
+                                        <button class="btn-icon btn-delete" title="Eliminar">
+                                            <i class="fas fa-trash" style="color: #e24a4a;"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 <?php 

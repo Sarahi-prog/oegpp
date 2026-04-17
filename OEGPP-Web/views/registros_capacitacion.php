@@ -126,25 +126,94 @@
                             <tbody>
                                 <?php 
                                 $i = 1; 
-                                // Asumiendo que la variable $capacitaciones trae los datos con JOINs desde tu BD
-                                if (!empty($capacitaciones)):
-                                    foreach ($capacitaciones as $c): 
+                                if (!empty($registroscapacitacion)):
+                                    foreach ($registroscapacitacion as $c): 
+
+                                        // 🔥 Datos seguros
+                                        $nombreTrabajador = $c->getTrabajadorId() ?? '';
+                                        $nombreCurso      = $c->getCursoId() ?? '';
+                                        $nombreLibro      = $c->getLibroId() ?? '';
+                                        $registro         = $c->getRegistro() ?? '';
+                                        $horas            = $c->getHorasRealizadas() ?? 0;
+                                        $fechaInicio      = $c->getFechaInicio() ?? '';
+                                        $fechaFin         = $c->getFechaFin() ?? '';
+                                        $fechaEmision     = $c->getFechaEmision() ?? '';
+                                        $folio            = $c->getFolio() ?? '';
+                                        // 🔥 Nuevos campos
+                                        $estado    = $c->getEstado();
+                                        $entregado = $c->getEntregado();
+                                        $link      = $c->getLinkr();
+                                        $qr        = $c->getQr();
+                                        $entregadopor = $c ->getEntregadopor();
+
+                                        // 🔥 Visual estado
+                                        $estadoTexto = ($estado) ? 'Activo' : 'Inactivo';
+                                        $estadoColor = ($estado) ? '#22c55e' : '#64748b';
+
+                                        // 🔥 Visual entregado
+                                        $entregadoTexto = ($entregado) ? 'Entregado' : 'Pendiente';
+                                        $entregadoColor = ($entregado) ? '#3b82f6' : '#f59e0b';
+
                                 ?>
                                 <tr class="fila-capacitacion">
                                     <td class="id-column"><?= $i++ ?></td>
-                                    <td><strong><?= htmlspecialchars($c['nombre_trabajador']) ?></strong></td>
-                                    <td><?= htmlspecialchars($c['nombre_curso']) ?></td>
-                                    <td><?= htmlspecialchars($c['nombre_libro']) ?></td>
-                                    <td><?= htmlspecialchars($c['registro']) ?></td>
-                                    <td><?= htmlspecialchars($c['horas_realizadas']) ?> h</td>
+
+                                    <td><strong><?= htmlspecialchars($nombreTrabajador) ?></strong></td>
+
+                                    <td><?= htmlspecialchars($nombreCurso) ?></td>
+
+                                    <td><?= htmlspecialchars($nombreLibro) ?></td>
+
+                                    <td><?= htmlspecialchars($registro) ?></td>
+
+                                    <td><?= htmlspecialchars($horas) ?> h</td>
+
                                     <td style="font-size: 0.9em; color: #475569;">
-                                        <?= htmlspecialchars($c['fecha_inicio']) ?> <br>
-                                        <?= htmlspecialchars($c['fecha_fin']) ?>
+                                        <?= htmlspecialchars($fechaInicio) ?> <br>
+                                        <span style="opacity: 0.7;"><?= htmlspecialchars($fechaFin) ?></span>
                                     </td>
-                                    <td><span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;"><?= htmlspecialchars($c['folio']) ?></span></td>
+
+                                    <!-- 🔥 FOLIO + ESTADO -->
+                                    <td>
+                                        <div style="display:flex; flex-direction:column; gap:4px;">
+                                            <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace;">
+                                                <?= htmlspecialchars($folio) ?>
+                                            </span>
+
+                                            <span style="font-size: 0.75rem; color: white; background: <?= $estadoColor ?>; padding: 2px 6px; border-radius: 4px; text-align:center;">
+                                                <?= $estadoTexto ?>
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- 🔥 ENTREGADO + LINKS -->
+                                    <td style="text-align:center;">
+                                        <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+
+                                            <span style="font-size: 0.75rem; color: white; background: <?= $entregadoColor ?>; padding: 2px 6px; border-radius: 4px;">
+                                                <?= $entregadoTexto ?>
+                                            </span>
+
+                                            <?php if (!empty($link)): ?>
+                                                <a href="<?= htmlspecialchars($link) ?>" target="_blank" title="Ver enlace">
+                                                    <i class="fas fa-link" style="color:#4a90e2;"></i>
+                                                </a>
+                                            <?php endif; ?>
+
+                                            <?php if (!empty($qr)): ?>
+                                                <i class="fas fa-qrcode" title="QR disponible" style="color:#22c55e;"></i>
+                                            <?php endif; ?>
+
+                                        </div>
+                                    </td>
+
                                     <td style="text-align: center; white-space: nowrap;">
-                                        <button class="btn-icon btn-edit" title="Editar"><i class="fas fa-edit" style="color: #4a90e2;"></i></button>
-                                        <button class="btn-icon btn-delete" title="Eliminar"><i class="fas fa-trash" style="color: #e24a4a;"></i></button>
+                                        <button class="btn-icon btn-edit" title="Editar">
+                                            <i class="fas fa-edit" style="color: #4a90e2;"></i>
+                                        </button>
+                                        <button class="btn-icon btn-delete" title="Eliminar">
+                                            <i class="fas fa-trash" style="color: #e24a4a;"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 <?php 
@@ -152,7 +221,7 @@
                                 else: 
                                 ?>
                                 <tr>
-                                    <td colspan="9" style="text-align: center; padding: 4rem 2rem;">
+                                    <td colspan="10" style="text-align: center; padding: 4rem 2rem;">
                                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.7;">
                                             <i class="fas fa-certificate" style="font-size: 4rem; color: #94a3b8; margin-bottom: 15px;"></i>
                                             <h4 style="margin: 0; color: #0f172a; font-size: 1.2rem; font-weight: 600;">Sin capacitaciones registradas</h4>
@@ -168,7 +237,7 @@
             </div> 
         </div> 
     </div> 
-    
+
     <script src="public/UniversalScript.js?v=<?= time(); ?>"></script>
 </body>
 </html>

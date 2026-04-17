@@ -1,14 +1,16 @@
 <?php
-require_once 'models/RegistroCapacitacion.php';
-require_once 'models/RegistroCapacitacionModel.php';
+require_once 'models/RegistrosCapacitacion.php';
+require_once 'models/RegistrosCapacitacionModel.php';
 require_once 'helpers/loggers.php';
 
 class RegistroCapacitacionController{
     public function cargar(){
         try {
             $model = new RegistroCapacitacionModel();
+            echo "SIN MODELO";
             $registroscapacitacion = $model->cargar();
-            require './views/viewCargarRegistrosCapacitacion.php';
+            echo "CON MODELO";
+            require './views/registros_capacitacion.php';
         } catch (Exception $e) {
             Logger::error($e);
         }
@@ -26,7 +28,8 @@ class RegistroCapacitacionController{
                 $model = new RegistroCapacitacionModel();
                 $model->guardar($registrocapacitacion);
             } else {
-                require './views/viewGuardarRegistroCapacitacion.php';
+                header("Location: index.php?accion=registros_capacitacion");
+                exit();
             }
         } catch (Exception $e) {
             Logger::error($e);

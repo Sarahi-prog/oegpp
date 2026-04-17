@@ -1,5 +1,5 @@
 <?php
-    class RegistrosCapacitacion{
+    class RegistroCapacitacion{
         private $id_registro;
         private $trabajador_id;
         private $curso_id;
@@ -12,7 +12,10 @@
         private $folio;
         private $fecha_registro;
         private $estado;
-
+        private $linkr;
+        private $qr;
+        private $entregado;
+        private $entregadopor;
 
         public function getIdRegistro() {
             return $this->id_registro;
@@ -79,6 +82,36 @@
         }
         public function setFolio($folio) {
             $this->folio = $folio;
+        }
+        public function getEstado() {
+            return $this->estado;
+        }
+        public function setEstado($estado) {
+            $this->estado = $estado;
+        }
+        public function getLinkr() {
+            return $this->linkr;
+        }
+        public function setLinkr($linkr) {
+            $this->linkr = $linkr;
+        }
+        public function getQr() {
+            return $this->qr;
+        }
+        public function setQr($qr) {
+            $this->qr = $qr;
+        }
+        public function getEntregado() {
+            return $this->entregado;
+        }
+        public function setEntregado($entregado) {
+            $this->entregado = $entregado;
+        }
+        public function getEntregadopor() {
+            return $this->entregadopor;
+        }
+        public function setEntregadopor($entregadopor) {
+            $this->entregadopor = $entregadopor;
         }
     }
 ?>

@@ -4,12 +4,11 @@
     require_once 'helpers/loggers.php';
 
     class LibrosRegistroController{
-
         public function cargar(){
             try {
                 $model = new LibrosRegistroModel();
                 $libros = $model->cargar();
-                require './views/viewCargarLibrosRegistro.php';
+                require './views/libros_registro.php';
             } catch (Exception $e) {
                 Logger::error($e);
             }
@@ -19,7 +18,7 @@
             try {
                 $model = new LibrosRegistroModel();
                 $libros = $model->cargarsinR();
-                require './views/viewCargarLibrosRegistroSinR.php';
+                require './views/libros_registroag.php';
             } catch (Exception $e) {
                 Logger::error($e);
             }
@@ -50,10 +49,15 @@
                     $libro->setNumeroLibro($_POST['numero_libro']);
                     $libro->setAnioInicio($_POST['anio_inicio']);
                     $libro->setFechaFin($_POST['fecha_fin']);
+                    $libro->setDistrito($_POST['distrito']);
+                    $libro->setProvincia($_POST['provincia']);
+                    $libro->setDescripcion($_POST['descripcion']);
                     $model = new LibrosRegistroModel();
                     $model->guardar($libro);
                 } else {
-                    require './views/viewGuardarLibroRegistro.php';
+                    header("Location: index.php?accion=libros_registro");
+                    exit();
+                    
                 }
             } catch (Exception $e) {
                 Logger::error($e);

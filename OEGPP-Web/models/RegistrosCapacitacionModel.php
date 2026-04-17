@@ -2,19 +2,50 @@
         require_once './config/DB.php';
         require_once 'RegistrosCapacitacion.php';
 
-        class RegistrosCapacitacionModel{
+        class RegistroCapacitacionModel{
             private $db;
             public function __construct(){
                 $this->db=DB::conectar();
             }
             public function cargar(){
-                $sql = "SELECT * FROM obtener_registrocapacitacion()";
+                $sql = "SELECT 
+                        rc.id_registro,
+
+                        -- 🔥 nombres con alias (IMPORTANTE)
+                        (cl.nombres || ' ' || cl.apellidos) AS nombre_trabajador,
+                        cs.nombre_curso AS nombre_curso,
+                        ('OEGPP-L' || lb.numero_libro) AS nombre_libro,
+
+                        rc.registro,
+                        rc.horas_realizadas,
+                        rc.fecha_inicio,
+                        rc.fecha_fin,
+                        rc.fecha_emision,
+                        rc.folio,
+                        rc.estado,
+                        rc.linkr,
+                        rc.qr,
+                        rc.entregado,
+                        rc.entregadopor
+
+                    FROM registros_capacitacion rc
+
+                    INNER JOIN clientes cl 
+                        ON rc.clientes_id = cl.id_cliente
+
+                    INNER JOIN cursos cs 
+                        ON rc.curso_id = cs.id_curso
+
+                    INNER JOIN libros_registro lb 
+                        ON rc.libro_id = lb.id_libro
+
+                    ORDER BY rc.id_registro;";
                 $ps=$this->db->prepare($sql);
                 $ps->execute();
                 $filas=$ps->fetchall();
                 $registroscapacitacion=array();
                 foreach($filas as $f){
-                    $regc = new RegistrosCapacitacion();
+                    $regc = new RegistroCapacitacion();
                     $regc->setIdRegistro($f[0]);
                     $regc->setTrabajadorId($f[1]);
                     $regc->setCursoId($f[2]);
@@ -25,6 +56,11 @@
                     $regc->setFechaFin($f[7]);
                     $regc->setFechaEmision($f[8]);
                     $regc->setFolio($f[9]);
+                    $regc->setEstado($f[10]);
+                    $regc->setLinkr($f[11]);
+                    $regc->setQr($f[12]);
+                    $regc->setentregado($f[13]);
+                    $regc->setEntregadopor($f[14]);
                     array_push($registroscapacitacion, $regc);
                 }
                 return $registroscapacitacion;

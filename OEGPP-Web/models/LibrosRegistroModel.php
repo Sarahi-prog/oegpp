@@ -9,7 +9,7 @@
         }
 
         public function cargar(){
-            $sql = "SELECT * FROM obtener_libros_registro()";
+            $sql = "SELECT * FROM libros_registro";
             $ps=$this->db->prepare($sql);
             $ps->execute();
             $filas=$ps->fetchall();
@@ -87,7 +87,8 @@
             $t= $libro->getTipo();
             $nl= $libro->getNumeroLibro();
             $ai= $libro->getAnioInicio();
-            $ff= $libro->getFechaFin();
+            $ff = $libro->getFechaFin();
+            $ff = !empty($ff) ? $ff : null;
             $dt= $libro->getDistrito();
             $pv= $libro->getProvincia();
             $dc= $libro->getDescripcion();
