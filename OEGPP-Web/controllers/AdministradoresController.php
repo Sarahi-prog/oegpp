@@ -5,6 +5,14 @@
 
     class AdministradoresController{
 
+        public function pruebas (){
+            try {
+                echo "hola ahhaaxo";
+                require './views/viewDashboard.php';
+            } catch (Exception $e) {
+                Logger::error($e);
+            }
+        }
         public function login() {
             try{
                 if (session_status() === PHP_SESSION_NONE) session_start();

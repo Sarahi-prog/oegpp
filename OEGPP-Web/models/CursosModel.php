@@ -8,7 +8,7 @@
             $this->db=DB::conectar();
         }
         public function cargar(){
-            $sql = "SELECT * FROM obtener_cursos();";
+            $sql = "SELECT * FROM cursos ORDER BY id_curso DESC;";
             $ps=$this->db->prepare($sql);
             $ps->execute();
             $filas=$ps->fetchall();

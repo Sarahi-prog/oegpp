@@ -55,7 +55,7 @@ class ErrorLogs {
         return $this->stack_trace;
     }
     public function setStackTrace($stack_trace){
-        $this->stack_trace = $stacktrace
-    }
+        $this->stack_trace = $stack_trace;
+    }  
 }
 ?>

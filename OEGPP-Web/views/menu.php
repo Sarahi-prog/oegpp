@@ -5,4 +5,7 @@
     <a href="index.php?accion=cargarcursos">
         <li>Cursos</li>
     </a>
+    <a href="index.php?accion=viewDashboard">
+        <li>Administradores</li>
+    </a>
 </nav>

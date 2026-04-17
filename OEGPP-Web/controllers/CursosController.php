@@ -9,7 +9,7 @@
             try {
                 $model = new CursosModel();
                 $cursos = $model->cargar();
-                require './views/viewCargarCursos.php';
+                require './views/cursos.php';
             } catch (Exception $e) {
                 Logger::error($e);
             }
@@ -19,7 +19,7 @@
             try {
                 $model = new CursosModel();
                 $cursos = $model->cargarsinR();
-                require './views/viewCargarCursosSinR.php';
+                require './views/cursos.php';
             } catch (Exception $e) {
                 Logger::error($e);
             }
@@ -48,11 +48,15 @@
                     $cursos->setCodigoCurso($_POST['codigo_curso']);
                     $cursos->setNombreCurso($_POST['nombre_curso']);
                     $cursos->setHorasTotales($_POST['horas_totales']);
+                    $cursos->setTipo($_POST['tipo']);
                     $model = new CursosModel();
                     $model->guardar($cursos);
-                } else {
-                    require './views/viewGuardarCurso.php';
                 }
+
+                // 🔥 Redirección correcta
+                header("Location: index.php?accion=cursos");
+                exit();
+
             } catch (Exception $e) {
                 Logger::error($e);
             }

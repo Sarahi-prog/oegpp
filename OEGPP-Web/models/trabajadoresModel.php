@@ -9,7 +9,7 @@
             }
 
             public function cargar(){
-                $sql = "SELECT id_cliente, dni, nombres, apellidos, correo, celular, area FROM clientes";
+                $sql = "SELECT id_cliente, dni, nombres, apellidos, correo, celular, area, estado FROM clientes";
                 $ps=$this->db->prepare($sql);
                 $ps->execute();
                 $filas=$ps->fetchall();
@@ -23,6 +23,7 @@
                     $fam->setCorreo($f[4]);
                     $fam->setCelular($f[5]);
                     $fam->setArea($f[6]);
+                    $fam->setEstado($f[7]);
                     array_push($trabajadores, $fam);
                 }
                 return $trabajadores;
@@ -58,6 +59,7 @@
                     $fam->setCorreo($f[4]);
                     $fam->setCelular($f[5]);
                     $fam->setArea($f[6]);
+                    $fam->setEstado($f[7]);
                     array_push($trabajadores, $fam);
                 }
                 return $trabajadores;
@@ -95,14 +97,16 @@
                 apellidos, 
                 correo, 
                 celular, 
-                area) 
+                area,
+                estado) 
                 VALUES 
                 (:dni, 
                 :nom, 
                 :ape, 
                 :cor, 
                 :cel, 
-                :are)";
+                :are,
+                :est)";
                 $ps=$this->db->prepare($sql);
                 $dni= $trabajador->getDni();
                 $nom= $trabajador->getNombres();
@@ -110,12 +114,14 @@
                 $cor= $trabajador->getCorreo();
                 $cel= $trabajador->getCelular();
                 $are= $trabajador->getArea();
+                $est= $trabajador->getEstado();
                 $ps->bindParam(":dni", $dni);
                 $ps->bindParam(":nom", $nom);
                 $ps->bindParam(":ape", $ape);
                 $ps->bindParam(":cor", $cor);
                 $ps->bindParam(":cel", $cel);
                 $ps->bindParam(":are", $are);
+                $ps->bindParam(":est", $est);
                 $ps->execute();
             }
         

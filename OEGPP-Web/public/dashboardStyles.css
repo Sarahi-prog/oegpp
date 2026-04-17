@@ -1,0 +1,137 @@
+/* --- 1. SECCIÓN HERO (TUS MEDIDAS) --- */
+.hero-banner {
+    position: relative;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 80px 0 60px 0; /* Tus medidas originales */
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 100%);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin: 0 0 15px 0;
+    letter-spacing: -1px;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    color: #94a3b8;
+    margin: 0 0 35px 0;
+    max-width: 650px;
+}
+
+/* --- 2. REJILLA DE ESTADÍSTICAS --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px; /* Tu gap original */
+    margin-bottom: 50px;
+}
+
+/* --- 3. DISEÑO DE LAS TARJETAS (TUS COLORES) --- */
+.stat-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    transition: 0.3s;
+}
+
+.stat-header {
+    height: 80px;
+    position: relative;
+    padding: 0 25px;
+}
+
+.stat-icon-wrapper {
+    position: absolute;
+    bottom: -20px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+/* Tus degradados originales */
+.green-gradient { background: linear-gradient(135deg, #10b981, #059669); }
+.green-gradient .stat-icon-wrapper { color: #10b981; }
+
+.blue-gradient { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.blue-gradient .stat-icon-wrapper { color: #3b82f6; }
+
+.orange-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.orange-gradient .stat-icon-wrapper { color: #f59e0b; }
+
+.purple-gradient { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.purple-gradient .stat-icon-wrapper { color: #8b5cf6; }
+
+.stat-body { padding: 35px 25px 25px 25px; }
+.stat-label { color: #64748b; font-weight: 700; text-transform: uppercase; font-size: 0.9rem; }
+.stat-value { font-size: 2rem; font-weight: 800; color: #0f172a; margin-top: 5px; }
+
+
+/* --- BOTONES DEL BANNER (HERO) --- */
+.hero-buttons {
+    display: flex;
+    /* [ESPACIADO] Aumentamos el hueco entre botones a 15px */
+    gap: 15px; 
+    margin-top: 30px;
+    flex-wrap: wrap; /* Para que en celular se pongan uno abajo del otro */
+}
+
+/* Estilo general para los botones del banner */
+.btn {
+    padding: 12px 20px; /* [TAMAÑO] Relleno interno: 12px arriba/abajo, 20px lados */
+    border-radius: 8px; /* [BORDES] Qué tan redondas son las esquinas */
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre el ícono y el texto del botón */
+    transition: 0.3s ease; /* Suaviza el cambio de color al pasar el mouse */
+    border: 1.5px solid transparent; /* Borde invisible por defecto */
+}
+
+/* Botón Verde (Primario) */
+.btn-primary-green {
+    background-color: #44bd1f;
+    color: white;
+}
+
+.btn-primary-green:hover {
+    background-color: #3a9e1a; /* Se oscurece un poco al pasar el mouse */
+    transform: translateY(-2px); /* Efecto de que se levanta un poquito */
+}
+
+/* Botón Blanco (Contorno) */
+.btn-outline-white {
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.5); /* Borde blanco medio transparente */
+    color: white;
+}
+
+.btn-outline-white:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Se ilumina apenas un poco */
+    border-color: white; /* El borde se pone blanco sólido */
+}

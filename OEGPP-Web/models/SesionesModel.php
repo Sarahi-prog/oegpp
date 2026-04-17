@@ -57,6 +57,13 @@
             return $sesiones;
         }
 
+        public function cerrarSesionActiva($usuarioId){
+            $sql = "UPDATE sesiones SET fecha_fin = NOW(), activa = FALSE WHERE usuario_id = :uid AND activa = TRUE";
+            $ps = $this->db->prepare($sql);
+            $ps->bindParam(':uid', $usuarioId);
+            $ps->execute();
+        }
+
         public function cerrarSesion($idSesion){
             $sql = "UPDATE sesiones SET fecha_fin = NOW(), activa = FALSE WHERE id = :id";
             $ps = $this->db->prepare($sql);
@@ -85,6 +92,16 @@
             $ps->bindParam(":ff", $ff);
             $ps->bindParam(":ac", $ac);
             $ps->execute();
+        }
+
+        
+
+        public function validarsesion($idSesion){
+            $sql = "SELECT * FROM sesiones WHERE id = :id AND activa = TRUE";
+            $ps = $this->db->prepare($sql);
+            $ps->bindParam(':id', $idSesion);
+            $ps->execute();
+            return $ps->fetch(PDO::FETCH_ASSOC) !== false;
         }
     }
 ?>
