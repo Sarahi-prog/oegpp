@@ -1,7 +1,6 @@
     <?php  
         require_once './config/DB.php';
         require_once 'RegistrosCapacitacion.php';
-
         class RegistroCapacitacionModel{
             private $db;
             public function __construct(){
@@ -10,13 +9,10 @@
             public function cargar(){
                 $sql = "SELECT 
                         rc.id_registro,
-
-                        -- 🔥 nombres con alias (IMPORTANTE)
                         (cl.nombres || ' ' || cl.apellidos) AS nombre_trabajador,
                         cs.nombre_curso AS nombre_curso,
                         ('OEGPP-L' || lb.numero_libro) AS nombre_libro,
-
-                        rc.registro,
+                        (cs.codigo_curso||'-'||rc.registro),
                         rc.horas_realizadas,
                         rc.fecha_inicio,
                         rc.fecha_fin,
@@ -27,18 +23,13 @@
                         rc.qr,
                         rc.entregado,
                         rc.entregadopor
-
                     FROM registros_capacitacion rc
-
                     INNER JOIN clientes cl 
                         ON rc.clientes_id = cl.id_cliente
-
                     INNER JOIN cursos cs 
                         ON rc.curso_id = cs.id_curso
-
                     INNER JOIN libros_registro lb 
                         ON rc.libro_id = lb.id_libro
-
                     ORDER BY rc.id_registro;";
                 $ps=$this->db->prepare($sql);
                 $ps->execute();
@@ -107,28 +98,11 @@
                 }
                 return $registroscapacitacion;
             }
-
+            
             public function guardar(RegistrosCapacitacion $registroscapacitacion){
-                $sql = "INSERT INTO registros_capacitacion ( 
-                trabajador_id, 
-                curso_id,
-                libro_id, 
-                registro, 
-                horas_realizadas,
-                fecha_inicio, 
-                fecha_fin, 
-                fecha_emision, 
-                folio)
-                    VALUES (
-                    :tid,
-                    :cid,
-                    :lid,
-                    :r,
-                    :hr,
-                    :fi,
-                    :ff,
-                    :fe,
-                    :f)";
+                $sql = "INSERT INTO registros_capacitacion (trabajador_id, curso_id,
+                libro_id, registro, horas_realizadas,fecha_inicio, fecha_fin, fecha_emision, folio)
+                    VALUES (:tid, :cid, :lid, :r, :hr, :fi, :ff, :fe, :f)";
                 $ps=$this->db->prepare($sql);
                 $tid= $registroscapacitacion->getTrabajadorId();
                 $cid= $registroscapacitacion->getCursoId();
@@ -139,7 +113,6 @@
                 $ff= $registroscapacitacion->getFechaFin();
                 $fe= $registroscapacitacion->getFechaEmision();
                 $f= $registroscapacitacion->getFolio();
-                
                 $ps->bindParam(":tid", $tid);
                 $ps->bindParam(":cid", $cid);
                 $ps->bindParam(":lid", $lid);

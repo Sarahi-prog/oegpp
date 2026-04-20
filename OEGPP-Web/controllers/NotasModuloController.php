@@ -2,7 +2,6 @@
 require_once 'models/NotasModuloModel.php';
 require_once 'models/NotasModulo.php';
 require_once 'helpers/loggers.php';
-
 class NotasModuloController {
     public function cargar(){
         try {
@@ -13,7 +12,6 @@ class NotasModuloController {
             Logger::error($e);
         }
     }
-
     public function guardar(){
         try {
             if(isset($_POST['id_modulo']) && isset($_POST['id_trabajador']) && isset($_POST['nota'])){
@@ -47,5 +45,4 @@ class NotasModuloController {
         }
     }
 }
-
 ?>

@@ -1,20 +1,31 @@
 <?php
 require_once 'models/RegistrosCapacitacion.php';
 require_once 'models/RegistrosCapacitacionModel.php';
+require_once 'models/CursosModel.php';
+require_once 'models/TrabajadoresModel.php';
+require_once 'models/LibrosRegistroModel.php';
 require_once 'helpers/loggers.php';
 
 class RegistroCapacitacionController{
     public function cargar(){
         try {
             $model = new RegistroCapacitacionModel();
-            echo "SIN MODELO";
             $registroscapacitacion = $model->cargar();
-            echo "CON MODELO";
+
+            $modelCurso = new CursosModel();
+            $cursos = $modelCurso->cargar();
+
+            $modelTrabajador = new TrabajadoresModel();
+            $trabajadores = $modelTrabajador->cargar();
+
+            $modelLibro = new LibrosRegistroModel();
+            $libros = $modelLibro->cargar();
             require './views/registros_capacitacion.php';
         } catch (Exception $e) {
             Logger::error($e);
         }
     }
+
     public function guardar(){
         try {
             if(isset($_POST['id_trabajador']) && isset($_POST['id_curso']) && isset($_POST['fecha_emision']) && isset($_POST['folio']) && isset($_POST['fecha_registro']) && isset($_POST['estado'])){

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Personal - OEGPP</title>
+    <title>Gestión de Clientes - OEGPP</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -22,8 +22,8 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="directorio-title-container">
-                    <h2><i class="fas fa-users-cog"></i> Gestión de Trabajadores</h2>
-                    <p style="margin: 5px 0 0 0; color: #64748b;">Administra la lista de trabajadores.</p>
+                    <h2><i class="fas fa-users-cog"></i> Gestión de Clientes</h2>
+                    <p style="margin: 5px 0 0 0; color: #64748b;">Administra la lista de clientes.</p>
                 </div>
             </div>
      
@@ -150,7 +150,6 @@
             </div> 
         </div> 
     </div> 
-    
     <script src="public/UniversalScript.js?v=<?= time(); ?>"></script>
 </body>
 </html>

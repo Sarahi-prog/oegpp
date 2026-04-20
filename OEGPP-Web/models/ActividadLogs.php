@@ -7,7 +7,7 @@ class ActividadLogs {
     private $registro_id;
     private $descripcion;
     private $fecha;
-
+    
     public function getId() {
         return $this->id;
     }
