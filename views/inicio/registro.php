@@ -16,10 +16,13 @@ if (isset($_SESSION['admin_id'])) {
     <link rel="stylesheet" href="public/login.css">
     <style>
         body {
-            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-            min-height: 100vh;
-            font-family: 'Poppins', sans-serif;
-        }
+    background: 
+        linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+        url("https://5092991.fs1.hubspotusercontent-na1.net/hubfs/5092991/Blog%20notas%20maestrias%20y%20diplomados/Gesti%C3%B3n%20empresarial%20efectiva%206.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
 
         .container {
             min-height: 100vh;
@@ -439,7 +442,7 @@ if (isset($_SESSION['admin_id'])) {
     <div class="container">
         <header class="header">
             <div class="logo">
-                <img src="public/images/logo.jpg" alt="OEGPP Logo" class="logo-img" onerror="this.style.display='none'">
+                <img src="public/images/logo.png" alt="OEGPP Logo" class="logo-img" onerror="this.style.display='none'">
                 <div class="logo-text">OEGPP<span>.</span></div>
             </div>
             <nav class="nav">
@@ -471,12 +474,16 @@ if (isset($_SESSION['admin_id'])) {
                     </label>
                     <input type="email" id="correo" name="correo" required placeholder="tu@email.com">
                 </div>
-
-                <div style="text-align: center; margin: 20px 0; position: relative;">
-                    <div style="height: 1px; background: linear-gradient(90deg, transparent, #27ae60, transparent); margin: 10px 0;"></div>
-                    <span style="background: rgba(255, 255, 255, 0.9); padding: 0 15px; color: #27ae60; font-weight: 600; font-size: 14px; position: relative; top: -8px;">
-                        <i class="fas fa-lock"></i> CONTRASEÑA
-                    </span>
+                <div class="form-group">
+                    <label for="rol">
+                        <i class="fas fa-user-tag"></i> Tipo de Cuenta Solicitada
+                    </label>
+                    <select id="rol" name="rol" required style="width: 100%; padding: 15px 20px 15px 45px; border: 2px solid #e9ecef; border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 15px; background: #f8f9fa; color: #2c3e50;">
+                        <option value="" disabled selected>Selecciona un rol...</option>
+                        <option value="asistente">Asistente</option>
+                        <option value="administrador">Administrador</option>
+                    </select>
+                     <small><i class="fas fa-info-circle"></i> El administrador revisará tu solicitud de rol</small>
                 </div>
 
                 <div class="form-group">
@@ -500,15 +507,6 @@ if (isset($_SESSION['admin_id'])) {
                         <i class="fas fa-shield-alt"></i> Confirmar Contraseña
                     </label>
                     <input type="password" id="confirmar_password" name="confirmar_password" required placeholder="Repite tu contraseña">
-                </div>
-
-                <div class="form-group">
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                        <input type="checkbox" id="terminos" required style="width: 18px; height: 18px; accent-color: #27ae60;">
-                        <span style="font-weight: 400; font-size: 14px;">
-                            <i class="fas fa-handshake"></i> Acepto los <a href="#" style="color: #27ae60; text-decoration: none; font-weight: 600;">términos y condiciones</a> de uso
-                        </span>
-                    </label>
                 </div>
 
                 <button type="submit" class="btn-registro">
@@ -579,6 +577,7 @@ if (isset($_SESSION['admin_id'])) {
             const datos = {
                 usuario: document.getElementById('usuario').value.trim().toLowerCase(),
                 correo: document.getElementById('correo').value.trim().toLowerCase(),
+                rol: document.getElementById('rol').value,
                 password: document.getElementById('password').value,
                 confirmar_password: document.getElementById('confirmar_password').value
             };

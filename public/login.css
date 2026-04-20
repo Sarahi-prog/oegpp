@@ -6,7 +6,9 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #0b3b2f 0%, #1a6d4e 100%);
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                url('images/enrique.jpg') no-repeat center center fixed #0b3b2f;
+    background-size: cover;
     min-height: 100vh;
     color: #1a2a3a;
     overflow-x: hidden;
