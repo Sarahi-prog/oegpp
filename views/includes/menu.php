@@ -28,6 +28,13 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
                 <a href="#" class="menu-item <?= ($pagina_actual == 'cursos') ? 'active' : '' ?>">
                     <i class="fas fa-chart-bar"></i> Cursos
                 </a>
+
+                <?php if (isset($_SESSION['admin_general']) && $_SESSION['admin_general'] === true): ?>
+                <a href="index.php?accion=autorizacionUsuarios" class="menu-item <?= ($pagina_actual == 'autorizacion') ? 'active' : '' ?>" style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; margin-top: 5px;">
+                    <i class="fas fa-user-shield"></i> Autorizaciones
+                </a>
+                <?php endif; ?>
+
                 <?php if (!empty($_SESSION['admin_usuario']) || !empty($_SESSION['admin_correo'])): ?>
                 <div class="admin-info">
                     <div class="admin-card">

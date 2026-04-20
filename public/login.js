@@ -1,154 +1,89 @@
+// public/login.js - Versión simplificada SOLO para login
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Crear partículas animadas
-    function createParticles() {
-        const particlesContainer = document.createElement('div');
-        particlesContainer.className = 'particles';
-        document.body.appendChild(particlesContainer);
-        
-        const particleCount = 50;
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            const size = Math.random() * 6 + 2;
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = Math.random() * 15 + 8 + 's';
-            particle.style.animationDelay = Math.random() * 5 + 's';
-            particlesContainer.appendChild(particle);
-        }
-    }
-    createParticles();
     
-    // Elementos del modal de login
+    // ===== ELEMENTOS DEL MODAL DE LOGIN =====
     const modal = document.getElementById('loginModal');
     const showLoginBtn = document.getElementById('showLoginBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const loginForm = document.getElementById('loginForm');
     const alertMessage = document.getElementById('alertMessage');
     const loginBtn = document.getElementById('loginBtn');
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePasswordBtn');
+    const passwordInput = document.getElementById('loginPassword');
     const usuarioInput = document.getElementById('usuario');
     const rememberCheck = document.getElementById('rememberMe');
     
-    // Elementos del modal de registro
-    const registerModal = document.getElementById('registerAdminModal');
-    const registerAdminBtn = document.getElementById('registerAdminBtn');
-    const closeRegisterModalBtn = document.getElementById('closeRegisterModalBtn');
-    const registerForm = document.getElementById('registerAdminForm');
-    const registerAlertMessage = document.getElementById('registerAlertMessage');
-    
-    // Abrir modal de login
-    if (showLoginBtn) {
+    // ===== ABRIR MODAL =====
+    if (showLoginBtn && modal) {
         showLoginBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            if (modal) {
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-                if (usuarioInput) usuarioInput.focus();
-            }
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            if (usuarioInput) usuarioInput.focus();
         });
     }
     
-    // Cerrar modal de login
-    if (closeModalBtn) {
+    // ===== CERRAR MODAL =====
+    if (closeModalBtn && modal) {
         closeModalBtn.addEventListener('click', function() {
-            if (modal) {
-                modal.classList.remove('show');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            if (loginForm) loginForm.reset();
+            // Limpiar mensaje de error
+            const alertDiv = document.querySelector('.alert-message');
+            if (alertDiv) alertDiv.style.display = 'none';
+        });
+    }
+    
+    // ===== CERRAR MODAL CLIC FUERA =====
+    if (modal) {
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
                 document.body.style.overflow = 'auto';
                 if (loginForm) loginForm.reset();
             }
         });
     }
     
-    // Abrir modal de registro
-    if (registerAdminBtn) {
-        registerAdminBtn.addEventListener('click', function() {
-            if (modal) {
-                modal.classList.remove('show');
-            }
-            if (registerModal) {
-                registerModal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            }
-        });
-    }
-    
-    // Cerrar modal de registro
-    if (closeRegisterModalBtn) {
-        closeRegisterModalBtn.addEventListener('click', function() {
-            if (registerModal) {
-                registerModal.classList.remove('show');
-                document.body.style.overflow = 'auto';
-                if (registerForm) registerForm.reset();
-                if (registerAlertMessage) registerAlertMessage.classList.remove('show');
-            }
-        });
-    }
-    
-    // Cerrar modales al hacer clic fuera
-    window.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            if (modal) {
-                modal.classList.remove('show');
-                document.body.style.overflow = 'auto';
-                if (loginForm) loginForm.reset();
-            }
-        }
-        if (e.target === registerModal) {
-            if (registerModal) {
-                registerModal.classList.remove('show');
-                document.body.style.overflow = 'auto';
-                if (registerForm) registerForm.reset();
-                if (registerAlertMessage) registerAlertMessage.classList.remove('show');
-            }
+    // ===== MOSTRAR/OCULTAR CONTRASEÑA =====
+if (togglePassword && passwordInput) {
+    togglePassword.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            togglePassword.classList.remove('fa-eye-slash');
+            togglePassword.classList.add('fa-eye');
+        } else {
+            passwordInput.type = 'password';
+            togglePassword.classList.remove('fa-eye');
+            togglePassword.classList.add('fa-eye-slash');
         }
     });
+}
     
-    // Mostrar/ocultar contraseña en login
-    if (togglePassword && passwordInput) {
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-        });
-    }
-
-    // Mostrar/ocultar contraseña en registro
-    window.toggleRegisterPassword = function(inputId, icon) {
-        const input = document.getElementById(inputId);
-        if (!input) return;
-        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-        input.setAttribute('type', type);
-        icon.classList.toggle('fa-eye');
-        icon.classList.toggle('fa-eye-slash');
-    };
-    
-    // Función para mostrar alerta en login
+    // ===== FUNCIÓN PARA MOSTRAR ALERTA =====
     function showAlert(message, type) {
-        if (!alertMessage) return;
-        alertMessage.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i><span>${message}</span>`;
-        alertMessage.className = `alert-message alert-${type} show`;
-        setTimeout(function() {
-            if (alertMessage) {
-                alertMessage.classList.remove('show');
+        // Buscar o crear elemento de alerta
+        let alertDiv = document.querySelector('.alert-message');
+        if (!alertDiv) {
+            alertDiv = document.createElement('div');
+            alertDiv.className = 'alert-message';
+            if (loginForm) {
+                loginForm.insertBefore(alertDiv, loginForm.firstChild);
             }
-        }, 5000);
-    }
-    
-    // Función para mostrar alerta en registro
-    function showRegisterAlert(message, type) {
-        if (!registerAlertMessage) return;
-        registerAlertMessage.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i><span>${message}</span>`;
-        registerAlertMessage.className = `alert-message alert-${type} show`;
+        }
+        
+        alertDiv.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i><span>${message}</span>`;
+        alertDiv.className = `alert-message alert-${type} show`;
+        alertDiv.style.display = 'block';
+        
         setTimeout(function() {
-            registerAlertMessage.classList.remove('show');
+            alertDiv.style.display = 'none';
         }, 5000);
     }
     
-    // Guardar credenciales
+    // ===== GUARDAR CREDENCIALES =====
     function guardarCredenciales(usuario) {
         if (rememberCheck && rememberCheck.checked && usuario) {
             localStorage.setItem('rememberedUser', usuario);
@@ -157,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Cargar credenciales
+    // ===== CARGAR CREDENCIALES =====
     function cargarCredenciales() {
         const rememberedUser = localStorage.getItem('rememberedUser');
         if (rememberedUser && usuarioInput) {
@@ -168,164 +103,82 @@ document.addEventListener('DOMContentLoaded', function() {
     
     cargarCredenciales();
     
-    // Envío del formulario de login
-if (loginForm) {
-    loginForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const usuario = usuarioInput ? usuarioInput.value.trim() : '';
-        const password = passwordInput ? passwordInput.value : '';
-        
-        if (!usuario || !password) {
-            showAlert('Complete todos los campos', 'error');
-            if (!usuario) usuarioInput.style.animation = 'shake 0.3s';
-            if (!password) passwordInput.style.animation = 'shake 0.3s';
-            setTimeout(() => {
-                if (usuarioInput) usuarioInput.style.animation = '';
-                if (passwordInput) passwordInput.style.animation = '';
-            }, 300);
-            return;
-        }
-        
-        if (loginBtn) {
-            loginBtn.disabled = true;
-            loginBtn.classList.add('loading');
-            loginBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Validando...';
-        }
-        
-        try {
-            const response = await fetch('controllers/procesarLogin.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ usuario, password })
-            });
+    // ===== ENVÍO DEL FORMULARIO DE LOGIN =====
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            const data = await response.json();
+            const usuario = usuarioInput ? usuarioInput.value.trim() : '';
+            const password = passwordInput ? passwordInput.value : '';
             
-            if (data.success) {
-                guardarCredenciales(usuario);
-                showAlert(data.message, 'success');
-                setTimeout(function() {
-                    window.location.href = 'index.php?accion=inicio';
-                }, 1500);
-            } else {
-                showAlert(data.message, 'error');
+            // Validar campos
+            if (!usuario || !password) {
+                showAlert('❌ Complete todos los campos', 'error');
+                if (!usuario && usuarioInput) {
+                    usuarioInput.style.animation = 'shake 0.3s';
+                    setTimeout(() => { if(usuarioInput) usuarioInput.style.animation = ''; }, 300);
+                }
+                if (!password && passwordInput) {
+                    passwordInput.style.animation = 'shake 0.3s';
+                    setTimeout(() => { if(passwordInput) passwordInput.style.animation = ''; }, 300);
+                }
+                return;
+            }
+            
+            // Mostrar loading en el botón
+            if (loginBtn) {
+                loginBtn.disabled = true;
+                loginBtn.classList.add('loading');
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Validando...';
+            }
+            
+            try {
+                // Enviar al controlador PHP mediante POST normal (no fetch)
+                // Creamos un formulario temporal
+                const formData = new FormData();
+                formData.append('usuario', usuario);
+                formData.append('password', password);
+                
+                const response = await fetch('index.php?accion=procesar_login', {
+                    method: 'POST',
+                    body: formData
+                });
+                    
+                const text = await response.text();
+                
+                // Verificar si hubo redirección (éxito)
+                if (response.redirected || text.includes('Location:') || response.url.includes('accion=inicio')) {
+                    guardarCredenciales(usuario);
+                    showAlert('✅ Inicio de sesión exitoso', 'success');
+                    setTimeout(function() {
+                        window.location.href = 'index.php?accion=inicio';
+                    }, 1000);
+                } else {
+                    // Si hay mensaje de error en sesión
+                    showAlert('❌ Usuario o contraseña incorrectos', 'error');
+                    if (loginBtn) {
+                        loginBtn.disabled = false;
+                        loginBtn.classList.remove('loading');
+                        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Ingresar';
+                    }
+                    if (passwordInput) {
+                        passwordInput.value = '';
+                        passwordInput.focus();
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('❌ Error al conectar con el servidor', 'error');
                 if (loginBtn) {
                     loginBtn.disabled = false;
                     loginBtn.classList.remove('loading');
                     loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Ingresar';
                 }
-                if (passwordInput) {
-                    passwordInput.value = '';
-                    passwordInput.focus();
-                    passwordInput.style.animation = 'shake 0.3s';
-                    setTimeout(() => {
-                        passwordInput.style.animation = '';
-                    }, 300);
-                }
-            }
-        } catch (error) {
-            showAlert('Error al conectar con el servidor', 'error');
-            if (loginBtn) {
-                loginBtn.disabled = false;
-                loginBtn.classList.remove('loading');
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Ingresar';
-            }
-        }
-    });
-}
-    
-    // Registro de Administrador
-    if (registerForm) {
-        registerForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Obtener valores del formulario
-            const nombre = document.getElementById('reg_nombre').value.trim();
-            const email = document.getElementById('reg_email').value.trim();
-            const usuario = document.getElementById('reg_usuario').value.trim();
-            const password = document.getElementById('reg_password').value;
-            const confirmPassword = document.getElementById('reg_confirm_password').value;
-            
-            // Validaciones
-            if (!nombre || !email || !usuario || !password || !confirmPassword) {
-                showRegisterAlert('Todos los campos son obligatorios', 'error');
-                return;
-            }
-            
-            // Validar formato de email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showRegisterAlert('Ingrese un correo electrónico válido', 'error');
-                return;
-            }
-            
-            // Validar longitud de contraseña
-            if (password.length < 6) {
-                showRegisterAlert('La contraseña debe tener al menos 6 caracteres', 'error');
-                return;
-            }
-            
-            // Validar que las contraseñas coincidan
-            if (password !== confirmPassword) {
-                showRegisterAlert('Las contraseñas no coinciden', 'error');
-                return;
-            }
-            
-            // Deshabilitar botón mientras se procesa
-            const submitBtn = registerForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Registrando...';
-            
-            try {
-                // ✅ RUTA CORREGIDA
-                const response = await fetch('controllers/registrar_admin.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        nombre: nombre,
-                        email: email,
-                        usuario: usuario,
-                        password: password
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showRegisterAlert(data.message, 'success');
-                    // Limpiar formulario y cerrar modal después de 2 segundos
-                    setTimeout(() => {
-                        registerForm.reset();
-                        if (registerModal) {
-                            registerModal.classList.remove('show');
-                        }
-                        // Abrir modal de login
-                        if (modal) {
-                            modal.classList.add('show');
-                        }
-                        document.body.style.overflow = 'hidden';
-                        // Limpiar alerta
-                        if (registerAlertMessage) {
-                            registerAlertMessage.classList.remove('show');
-                        }
-                    }, 2000);
-                } else {
-                    showRegisterAlert(data.message, 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalText;
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showRegisterAlert('Error al conectar con el servidor', 'error');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
             }
         });
     }
     
-    // Enter para enviar en login
+    // ===== ENTER PARA ENVIAR =====
     if (passwordInput) {
         passwordInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && loginForm) {
@@ -334,38 +187,60 @@ if (loginForm) {
         });
     }
     
-    // Enter para enviar en registro
-    const regConfirmPassword = document.getElementById('reg_confirm_password');
-    if (regConfirmPassword) {
-        regConfirmPassword.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && registerForm) {
-                registerForm.dispatchEvent(new Event('submit'));
+    if (usuarioInput) {
+        usuarioInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && loginForm) {
+                loginForm.dispatchEvent(new Event('submit'));
             }
         });
     }
     
-    // Efecto hover en feature cards
-    const cards = document.querySelectorAll('.feature-card');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transition = 'all 0.3s';
+    // ===== BOTÓN DE REGISTRO DE USUARIO =====
+    const registerUserBtn = document.getElementById('registerUserBtn');
+    if (registerUserBtn) {
+        registerUserBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'index.php?accion=registroUsuario';
         });
-    });
+    }
     
-    // Animación de números en estadísticas (opcional)
-    const stats = document.querySelectorAll('.stat-number');
-    stats.forEach(stat => {
-        const target = parseInt(stat.innerText);
-        let current = 0;
-        const increment = target / 50;
-        const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-                stat.innerText = target;
-                clearInterval(timer);
-            } else {
-                stat.innerText = Math.floor(current);
-            }
-        }, 30);
-    });
+    // ===== ANIMACIÓN DE SHAKE =====
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .alert-message {
+            display: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            animation: fadeIn 0.3s ease;
+        }
+        .alert-message.alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-message.alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-message.show {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .btn-login.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+    `;
+    document.head.appendChild(style);
 });

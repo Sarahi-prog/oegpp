@@ -9,22 +9,21 @@ class SolicitudesRegistroModel {
     }
 
     // 1. Crear nueva solicitud de registro
-    public function crearSolicitud($usuario, $correo, $password) {
+    public function crearSolicitud($usuario, $correo, $password, $rol) {
         try {
-            $password_hash = password_hash($password, PASSWORD_BCRYPT);
+            // Insertar en la tabla solicitudes_registro (NO en administradores)
+            $sql = "INSERT INTO solicitudes_registro (usuario, correo, password_hash, rol, estado, fecha_solicitud) 
+                    VALUES (:usuario, :correo, :password, :rol, 'pendiente', CURRENT_TIMESTAMP)";
             
-            $sql = "INSERT INTO solicitudes_registro 
-                    (usuario, correo, password_hash, estado) 
-                    VALUES (?, ?, ?, 'pendiente')
-                    RETURNING id_solicitud";
+            $ps = $this->conexion->prepare($sql);
+            $ps->bindValue(":usuario", $usuario);
+            $ps->bindValue(":correo", $correo);
+            $ps->bindValue(":password", $password); // Ya debe venir encriptado del controlador
+            $ps->bindValue(":rol", $rol);
             
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->execute([$usuario, $correo, $password_hash]);
-            
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $resultado['id_solicitud'] ?? false;
+            return $ps->execute();
         } catch (PDOException $e) {
-            error_log("Error al crear solicitud: " . $e->getMessage());
+            error_log("Error en crearSolicitud: " . $e->getMessage());
             return false;
         }
     }
@@ -86,36 +85,43 @@ class SolicitudesRegistroModel {
 
     // 5. Aprobar solicitud (y crear usuario en trabajadores si es necesario)
     public function aprobarSolicitud($id_solicitud, $id_admin) {
-        try {
-            $this->conexion->beginTransaction();
-            
-            // Obtener datos de la solicitud
-            $solicitud = $this->obtenerSolicitud($id_solicitud);
-            if (!$solicitud) {
-                throw new Exception("Solicitud no encontrada");
-            }
-
-            // Actualizar estado a aprobado
-            $sql = "UPDATE solicitudes_registro 
-                    SET estado = 'aprobado', 
-                        fecha_autorizacion = CURRENT_TIMESTAMP,
-                        autorizado_por = ?
-                    WHERE id_solicitud = ?";
-            
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->execute([$id_admin, $id_solicitud]);
-
-            // Crear trabajador asociado si es necesario
-            // (Opcional: solo si tienes una tabla trabajadores que se vincule con usuarios)
-            
-            $this->conexion->commit();
-            return true;
-        } catch (Exception $e) {
-            $this->conexion->rollBack();
-            error_log("Error al aprobar solicitud: " . $e->getMessage());
-            return false;
+    try {
+        $this->conexion->beginTransaction();
+        
+        // 1. Obtener datos de la solicitud
+        $solicitud = $this->obtenerSolicitud($id_solicitud);
+        if (!$solicitud) {
+            throw new Exception("Solicitud no encontrada");
         }
+
+        // 2. Actualizar estado a aprobado
+        $sql = "UPDATE solicitudes_registro 
+                SET estado = 'aprobado', 
+                    fecha_autorizacion = CURRENT_TIMESTAMP,
+                    autorizado_por = ?
+                WHERE id_solicitud = ?";
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute([$id_admin, $id_solicitud]);
+
+        // 3. ✅ INSERTAR en la tabla administradores para que pueda hacer login
+        $sqlInsert = "INSERT INTO administradores (usuario, correo, password, rol, verificado) 
+                      VALUES (:usuario, :correo, :password, :rol, true)";
+        $ps = $this->conexion->prepare($sqlInsert);
+        $ps->bindValue(":usuario", $solicitud['usuario']);
+        $ps->bindValue(":correo",  $solicitud['correo']);
+        $ps->bindValue(":password", $solicitud['password_hash']); // Ya está hasheada con bcrypt
+        $ps->bindValue(":rol",     $solicitud['rol']);
+        $ps->execute();
+
+        $this->conexion->commit();
+        return true;
+
+    } catch (Exception $e) {
+        $this->conexion->rollBack();
+        error_log("Error al aprobar solicitud: " . $e->getMessage());
+        return false;
     }
+}
 
     // 6. Rechazar solicitud
     public function rechazarSolicitud($id_solicitud, $id_admin, $motivo = null) {
@@ -184,26 +190,15 @@ class SolicitudesRegistroModel {
         }
     }
 
-    // 10. Obtener solicitud aprobada por usuario y contraseña (para login)
-    public function verificarCredencialesSolicitud($usuario, $password) {
+    // 10. Eliminar solicitud
+    public function eliminarSolicitud($id_solicitud) {
         try {
-            $sql = "SELECT * FROM solicitudes_registro 
-                    WHERE usuario = ? AND estado = 'aprobado'
-                    LIMIT 1";
-            
+            $sql = "DELETE FROM solicitudes_registro WHERE id_solicitud = ?";
             $stmt = $this->conexion->prepare($sql);
-            $stmt->execute([$usuario]);
-            
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if ($resultado && password_verify($password, $resultado['password_hash'])) {
-                return $resultado;
-            }
-            
-            return null;
+            return $stmt->execute([$id_solicitud]);
         } catch (PDOException $e) {
-            error_log("Error al verificar credenciales: " . $e->getMessage());
-            return null;
+            error_log("Error al eliminar solicitud: " . $e->getMessage());
+            return false;
         }
     }
 }
