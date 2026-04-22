@@ -22,8 +22,8 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="directorio-title-container">
-                    <h2><i class="fas fa-users-cog"></i> Gestión de Trabajadores</h2>
-                    <p style="margin: 5px 0 0 0; color: #64748b;">Administra la lista de trabajadores.</p>
+                    <h2><i class="fas fa-users-cog"></i> Gestión de Clientes</h2>
+                    <p style="margin: 5px 0 0 0; color: #64748b;">Administra la lista de clientes.</p>
                 </div>
             </div>
      
@@ -32,13 +32,13 @@
         <div class="dashboard-wrapper">
             
             <div id="seccionRegistro">
-                <div class="side-panel">
-                    <h3 style="margin-top: 0; margin-bottom: 20px;"><i class="fas fa-plus-circle"></i> Datos del Registro</h3>
-                    <form id="formTrabajadorAjax" action="index.php?accion=guardar_cliente" method="POST">
-                        <div class="form-vertical-stack">
+            <div class="side-panel">
+                <h3 id="form-title"><i class="fas fa-plus-circle"></i> Datos del Registro</h3>
+                    <form id="formCliente" action="index.php?accion=guardarCliente" method="POST">                    <div class="form-vertical-stack">
+                    <input type="hidden" name="id_cliente" id="id_cliente_form" value="">                      
                             <div class="field-group">
                                 <label>DNI</label>
-                                <input type="text" name="dni" required placeholder="00000000" maxlength="8">
+                                <input type="text" name="dni" id="dni_input" required placeholder="00000000" maxlength="8">
                             </div>
                             <div class="field-group">
                                 <label>Nombres</label>
@@ -67,9 +67,11 @@
                                     <option value="Inactivo">Inactivo</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary-green" style="width: 100%; justify-content: center; margin-top: 10px;">
-                                <i class="fas fa-save"></i> Guardar Cliente
+                            <button id="btn-submit-form" class="btn btn-primary-green">
+                                <i class="fas fa-save"></i>
+                                <span>Guardar Cliente</span>
                             </button>
+                        </div>
                         </div>
                     </form>
                 </div>
@@ -116,8 +118,17 @@
                                     <td><?= htmlspecialchars($c['area']) ?></td>
                                     <td><?= htmlspecialchars($c['estado']) ?></td>
                                     <td style="text-align: center; white-space: nowrap;">
-                                        <button class="btn-icon btn-edit" title="Editar"><i class="fas fa-edit" style="color: #4a90e2;"></i></button>
-                                        <button class="btn-icon btn-delete" title="Eliminar"><i class="fas fa-trash" style="color: #e24a4a;"></i></button>
+                                        <button class="btn-icon btn-edit" 
+                                                title="Editar" 
+                                                onclick='editarCliente(<?= json_encode($c) ?>)'>
+                                            <i class="fas fa-edit" style="color: #4a90e2;"></i>
+                                        </button>
+
+                                        <button class="btn-icon btn-delete" 
+                                                title="Eliminar" 
+                                                onclick="confirmarEliminar(<?= $c['id_cliente'] ?>)">
+                                            <i class="fas fa-trash" style="color: #e24a4a;"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 <?php 
@@ -143,5 +154,7 @@
     </div> 
     
     <script src="public/UniversalScript.js?v=<?= time(); ?>"></script>
+    <script src="public/clientesScript.js?v=<?= time(); ?>"></script>
+
 </body>
 </html>

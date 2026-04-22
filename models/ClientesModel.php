@@ -3,16 +3,16 @@ require_once './config/DB.php';
 
 class ClientesModel {
     private $conexion;
+    public $ultimoError;
 
     public function __construct() {
-        $this->conexion = DB::conectar(); 
+        $this->conexion = DB::conectar();
+        $this->ultimoError = null;
     }
 
-    // 1. Obtener Clientes (Lista completa para la tabla)
     public function cargar() {
         try {
-            // Seleccionamos solo las columnas reales de tu tabla 'clientes'
-            $query = "SELECT id_cliente, dni, nombres, apellidos, correo, estado FROM clientes ORDER BY id_cliente DESC";
+            $query = "SELECT id_cliente, dni, nombres, apellidos, correo, celular, area, estado FROM clientes ORDER BY id_cliente DESC";
             $stmt = $this->conexion->query($query);
             return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         } catch (PDOException $e) {
@@ -20,13 +20,10 @@ class ClientesModel {
         }
     }
 
-    // 2. Guardar Nuevo Cliente
-    // Ajustado a tu tabla: id_cliente, dni, nombres, apellidos, correo, estado
     public function guardarNuevoCliente($cliente) {
         try {
-            // Eliminamos 'celular' y 'area' porque no existen en tu tabla SQL
-            $sql = "INSERT INTO clientes (dni, nombres, apellidos, correo, estado) 
-                    VALUES (?, ?, ?, ?, ?) RETURNING id_cliente";
+            $sql = "INSERT INTO clientes (dni, nombres, apellidos, correo, celular, area, estado) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id_cliente";
             
             $stmt = $this->conexion->prepare($sql);
             $stmt->execute([
@@ -34,6 +31,8 @@ class ClientesModel {
                 $cliente->getNombres(),
                 $cliente->getApellidos(),
                 $cliente->getCorreo(),
+                $cliente->getCelular(),
+                $cliente->getArea(),
                 $cliente->getEstado() // 'Activo' o 'Inactivo'
             ]);
             
@@ -41,15 +40,59 @@ class ClientesModel {
             return $resultado ? $resultado['id_cliente'] : null; 
             
         } catch (PDOException $e) {
-            // Es mejor registrar el error que matar el proceso con die()
+            // Registrar el error y guardar el mensaje para depuración
+            $this->ultimoError = $e->getMessage();
             error_log("Error BD (Clientes): " . $e->getMessage());
             return null;
         }
     }
 
-    /* Nota: 'cargarCursos' y 'cargarLibros' no deberían estar aquí, 
-       deberían estar en sus propios modelos (CursosModel y LibrosModel). 
-       Sin embargo, si los necesitas para un "formulario rápido", están bien definidos.
-    */
+    public function modificar($cliente) {
+        try {
+            $sql = "UPDATE clientes SET 
+                        dni = ?, 
+                        nombres = ?, 
+                        apellidos = ?, 
+                        correo = ?, 
+                        celular = ?, 
+                        area = ?, 
+                        estado = ? 
+                    WHERE id_cliente = ?";
+            
+            $stmt = $this->conexion->prepare($sql);
+            return $stmt->execute([
+                $cliente->getDni(),
+                $cliente->getNombres(),
+                $cliente->getApellidos(),
+                $cliente->getCorreo(),
+                $cliente->getCelular(),
+                $cliente->getArea(),
+                $cliente->getEstado(),
+                $cliente->getIdCliente() // El ID es necesario para el WHERE
+            ]);
+        } catch (PDOException $e) {
+            $this->ultimoError = $e->getMessage();
+            error_log("Error al modificar cliente: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function eliminar($id_cliente) {
+        try {
+            $sql = "DELETE FROM clientes WHERE id_cliente = ?";
+            $stmt = $this->conexion->prepare($sql);
+            return $stmt->execute([$id_cliente]);
+        } catch (PDOException $e) {
+            $this->ultimoError = $e->getMessage();
+            error_log("Error al eliminar cliente: " . $e->getMessage());
+            
+            // Nota: Si el cliente tiene capacitaciones registradas, 
+            // PostgreSQL lanzará un error de restricción de llave foránea.
+            return false;
+        }
+    }
+
+
+
 }
 ?>

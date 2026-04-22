@@ -11,13 +11,15 @@ class RegistroCapacitacionModel {
 
     public function cargar() {
         $sql = "SELECT rc.*, 
-                       t.nombres || ' ' || t.apellidos AS nombre_trabajador,
-                       c.nombre_curso,
-                       l.tipo || ' ' || l.numero_libro AS nombre_libro
+                       cl.nombres || ' ' || cl.apellidos AS nombre_cliente,
+                       cl.dni,
+                       cu.nombre_curso,
+                       li.tipo || ' ' || li.numero_libro AS nombre_libro
                 FROM registros_capacitacion rc
-                LEFT JOIN trabajadores t ON rc.trabajador_id = t.id_trabajador
-                LEFT JOIN cursos c ON rc.curso_id = c.id_curso
-                LEFT JOIN libros_registro l ON rc.libro_id = l.id_libro
+                -- CORRECCIÓN: rc.clientes_id (con 's')
+                LEFT JOIN clientes cl ON rc.clientes_id = cl.id_cliente
+                LEFT JOIN cursos cu ON rc.curso_id = cu.id_curso
+                LEFT JOIN libros_registro li ON rc.libro_id = li.id_libro
                 ORDER BY rc.id_registro DESC";
 
         $ps = $this->db->prepare($sql);
@@ -27,8 +29,9 @@ class RegistroCapacitacionModel {
     }
 
     public function guardar(RegistroCapacitacion $registro) {
+        // CORRECCIÓN: clientes_id (con 's')
         $sql = "INSERT INTO registros_capacitacion (
-                    trabajador_id,
+                    clientes_id,
                     curso_id,
                     libro_id,
                     registro,
@@ -38,7 +41,7 @@ class RegistroCapacitacionModel {
                     fecha_emision,
                     folio
                 ) VALUES (
-                    :trabajador_id,
+                    :clientes_id,
                     :curso_id,
                     :libro_id,
                     :registro,
@@ -51,20 +54,20 @@ class RegistroCapacitacionModel {
 
         $ps = $this->db->prepare($sql);
 
-        $trabajador_id = $registro->getTrabajadorId();
+        $cliente_id = $registro->getClienteId(); // Mantengo el método de tu clase
         $curso_id = $registro->getCursoId();
         $libro_id = $registro->getLibroId();
         $registro_num = $registro->getRegistro();
         $horas_realizadas = $registro->getHorasRealizadas();
         
-        // CORRECCIÓN: Convertir textos vacíos a valores nulos reales para PostgreSQL
         $fecha_inicio = $registro->getFechaInicio() === '' ? null : $registro->getFechaInicio();
         $fecha_fin = $registro->getFechaFin() === '' ? null : $registro->getFechaFin();
         $fecha_emision = $registro->getFechaEmision() === '' ? null : $registro->getFechaEmision();
         
         $folio = $registro->getFolio();
 
-        $ps->bindParam(':trabajador_id', $trabajador_id);
+        // CORRECCIÓN: bindParam a :clientes_id
+        $ps->bindParam(':clientes_id', $cliente_id);
         $ps->bindParam(':curso_id', $curso_id);
         $ps->bindParam(':libro_id', $libro_id);
         $ps->bindParam(':registro', $registro_num);
@@ -77,8 +80,9 @@ class RegistroCapacitacionModel {
     }
 
     public function modificar(RegistroCapacitacion $registro) {
+        // CORRECCIÓN: clientes_id (con 's')
         $sql = "UPDATE registros_capacitacion SET 
-                    trabajador_id = :trabajador_id,
+                    clientes_id = :clientes_id,
                     curso_id = :curso_id,
                     libro_id = :libro_id,
                     registro = :registro,
@@ -92,13 +96,12 @@ class RegistroCapacitacionModel {
         $ps = $this->db->prepare($sql);
 
         $id_registro = $registro->getIdRegistro();
-        $trabajador_id = $registro->getTrabajadorId();
+        $cliente_id = $registro->getClienteId();
         $curso_id = $registro->getCursoId();
         $libro_id = $registro->getLibroId();
         $registro_num = $registro->getRegistro();
         $horas_realizadas = $registro->getHorasRealizadas();
         
-        // CORRECCIÓN: Convertir textos vacíos a valores nulos reales para PostgreSQL
         $fecha_inicio = $registro->getFechaInicio() === '' ? null : $registro->getFechaInicio();
         $fecha_fin = $registro->getFechaFin() === '' ? null : $registro->getFechaFin();
         $fecha_emision = $registro->getFechaEmision() === '' ? null : $registro->getFechaEmision();
@@ -106,7 +109,8 @@ class RegistroCapacitacionModel {
         $folio = $registro->getFolio();
 
         $ps->bindParam(':id_registro', $id_registro);
-        $ps->bindParam(':trabajador_id', $trabajador_id);
+        // CORRECCIÓN: bindParam a :clientes_id
+        $ps->bindParam(':clientes_id', $cliente_id);
         $ps->bindParam(':curso_id', $curso_id);
         $ps->bindParam(':libro_id', $libro_id);
         $ps->bindParam(':registro', $registro_num);
@@ -116,6 +120,27 @@ class RegistroCapacitacionModel {
         $ps->bindParam(':fecha_emision', $fecha_emision);
         $ps->bindParam(':folio', $folio);
         $ps->execute();
+    }
+
+    public function buscarPorDni($dni) {
+        $sql = "SELECT rc.*, 
+                       cl.nombres || ' ' || cl.apellidos AS nombre_cliente,
+                       cl.dni,
+                       cu.nombre_curso,
+                       li.tipo || ' ' || li.numero_libro AS nombre_libro
+                FROM registros_capacitacion rc
+                -- CORRECCIÓN: rc.clientes_id (con 's')
+                LEFT JOIN clientes cl ON rc.clientes_id = cl.id_cliente
+                LEFT JOIN cursos cu ON rc.curso_id = cu.id_curso
+                LEFT JOIN libros_registro li ON rc.libro_id = li.id_libro
+                WHERE cl.dni = :dni
+                ORDER BY rc.fecha_emision DESC";
+
+        $ps = $this->db->prepare($sql);
+        $ps->bindParam(':dni', $dni, PDO::PARAM_STR);
+        $ps->execute();
+        
+        return $ps->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>

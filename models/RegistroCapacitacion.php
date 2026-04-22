@@ -1,7 +1,7 @@
 <?php
     class RegistroCapacitacion{
         private $id_registro;
-        private $trabajador_id;
+        private $cliente_id;
         private $curso_id;
         private $libro_id;
         private $registro;
@@ -19,11 +19,11 @@
         public function setIdRegistro($id_registro) {
             $this->id_registro = $id_registro;
         }
-        public function getTrabajadorId() {
-            return $this->trabajador_id;
+        public function getClienteId() {
+            return $this->cliente_id;
         }
-        public function setTrabajadorId($trabajador_id) {
-            $this->trabajador_id = $trabajador_id;
+        public function setClienteId($cliente_id) {
+            $this->cliente_id = $cliente_id;
         }
         public function getCursoId() {
             return $this->curso_id;
