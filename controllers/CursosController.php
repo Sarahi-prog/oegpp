@@ -1,37 +1,65 @@
 <?php
-require_once 'models/CursosModel.php';
-require_once 'models/Cursos.php';
+    require_once 'models/CursosModel.php';
+    require_once 'models/Cursos.php';
+    require_once 'helpers/loggers.php';
 
-class CursosController{
-    public function cargar(){
-        $model = new CursosModel();
-        $cursos = $model->cargar();
-        require './views/viewCargarCursos.php';
-    }
-    public function cargarD(){
-        $model = new CursosModel();
-        $cursos = $model->cargarD();
-        require './views/viewCargarCursosD.php';
-    }
-    public function cargarC(){
-        $model = new CursosModel();
-        $cursos = $model->cargarC();
-        require './views/viewCargarCursosC.php';
-    }
-    public function guardar(){
-        if(isset($_POST['codigo_curso']) && isset($_POST['nombre_curso']) && isset($_POST['tipo']) && isset($_POST['horas_totales'])){
-            $curso = new Cursos();
-            $curso->setCodigoCurso($_POST['codigo_curso']);
-            $curso->setNombreCurso($_POST['nombre_curso']);
-            $curso->setTipo($_POST['tipo']);
-            $curso->setHorasTotales($_POST['horas_totales']);
-            $model = new CursosModel();
-            $model->guardar($curso);
+    class CursosController{
 
-            header("Location: index.php?controller=cursos&action=cargar");
-        } else {
-            require './views/viewGuardarCurso.php';
+        public function cargar(){
+            try {
+                $model = new CursosModel();
+                $cursos = $model->cargar();
+                require './views/cursos.php';
+            } catch (Exception $e) {
+                Logger::error($e);
+            }
+        }
+
+        public function cargarsinR(){
+            try {
+                $model = new CursosModel();
+                $cursos = $model->cargarsinR();
+                require './views/cursos.php';
+            } catch (Exception $e) {
+                Logger::error($e);
+            }
+        }
+
+        public function modificar(){
+            try {
+                if(isset($_POST['id_curso']) && isset($_POST['codigo_curso']) && isset($_POST['nombre_curso']) && isset($_POST['horas_totales'])){
+                    $cursos = new Cursos();
+                    $cursos->setid_curso($_POST['id_curso']);
+                    $cursos->setCodigoCurso($_POST['codigo_curso']);
+                    $cursos->setNombreCurso($_POST['nombre_curso']);
+                    $cursos->setHorasTotales($_POST['horas_totales']);
+                    $model = new CursosModel();
+                    $model->modificar($cursos);
+                }
+            } catch (Exception $e) {
+                Logger::error($e);
+            }
+        }
+
+        public function guardar(){
+            try {
+                if(isset($_POST['codigo_curso']) && isset($_POST['nombre_curso']) && isset($_POST['horas_totales'])){
+                    $cursos = new Cursos();
+                    $cursos->setCodigoCurso($_POST['codigo_curso']);
+                    $cursos->setNombreCurso($_POST['nombre_curso']);
+                    $cursos->setHorasTotales($_POST['horas_totales']);
+                    $cursos->setTipo($_POST['tipo']);
+                    $model = new CursosModel();
+                    $model->guardar($cursos);
+                }
+
+                // 🔥 Redirección correcta
+                header("Location: index.php?accion=cursos");
+                exit();
+
+            } catch (Exception $e) {
+                Logger::error($e);
+            }
         }
     }
-}
 ?>

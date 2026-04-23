@@ -10,7 +10,11 @@ $archivos = [
     'TrabajadoresController.php',
     'LoginController.php',
     'VerificacionController.php',
-    'SolicitudesRegistroController.php'
+    'SolicitudesRegistroController.php',
+    'CursosController.php',
+    'LibrosRegistroController.php',
+    'RegistrosCapacitacionController.php',
+    'NotasModuloController.php'
 ];
 
 foreach ($archivos as $archivo) {
@@ -48,7 +52,10 @@ $controllerTrabajadores = new TrabajadoresController();
 $controllerLogin        = new LoginController();
 $controllerVerificacion = new VerificacionController();
 $controllerSolicitudes  = new SolicitudesRegistroController();
-
+$controllerCursos       = new CursosController();
+$controllerLibros       = new LibrosRegistroController();
+$controllerRegistrosCapacitacion = new RegistroCapacitacionController();
+$controllerNotasModulo = new NotasModuloController();
 // 6. ENRUTAMIENTO (SWITCH)
 switch ($accion) {
     
@@ -86,40 +93,46 @@ switch ($accion) {
     case 'autorizacionUsuarios':
         $controllerSolicitudes->mostrarVista();
         break;
-
     case 'obtenerHistorialSolicitudes':
         $controllerSolicitudes->obtenerHistorial();
         break;
-
     case 'aprobarSolicitud':
         $controllerSolicitudes->aprobarSolicitud();
         break;
-
     case 'rechazarSolicitud':
         $controllerSolicitudes->rechazarSolicitud();
         break;
-
     case 'eliminarSolicitud':
         $controllerSolicitudes->eliminarSolicitud();
         break;
-
     // --- GESTIÓN DE TRABAJADORES ---
     case 'inicio':
         require_once __DIR__ . '/views/dashboard.php';
         break;
-
-    case 'trabajadores':
+    case 'cursos':
+        $controllerCursos->cargar();
+        break;
+    case 'libros_registro':
+        $controllerLibros->cargar();
+        break;
+    case 'clientes':
         $controllerTrabajadores->listarTrabajadores();
         break;
-
     case 'nueva_asignacion':
         $controllerTrabajadores->mostrarFormularioAsignacion();
         break;
-
+    case 'notas':
+        $controllerNotasModulo->cargar();
+        break;
     case 'guardar_asignacion':
         $controllerTrabajadores->procesarAsignacion();
         break;
-
+    case 'registros_capacitacion':
+        $controllerRegistrosCapacitacion->cargar();
+        break;
+    case 'guardar_registro_capacitacion':
+        $controllerRegistrosCapacitacion->guardar();
+        break;
     // --- DEFAULT: ERROR 404 ---
     default:
         http_response_code(404);

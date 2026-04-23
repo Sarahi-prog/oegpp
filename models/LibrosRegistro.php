@@ -5,6 +5,9 @@
         private $numero_libro;
         private $anio_inicio;
         private $fecha_fin;
+        private $distrito;
+        private $provincia;
+        private $descripcion;
 
 
         public function getIdLibro() {
@@ -36,6 +39,25 @@
         }
         public function setFechaFin($fecha_fin) {
             $this->fecha_fin = $fecha_fin;
+        }
+
+        public function getDistrito() {
+            return $this->distrito;
+        }
+        public function setDistrito($distrito) {
+            $this->distrito = $distrito;
+        }
+        public function getProvincia() {
+            return $this->provincia;
+        }
+        public function setProvincia($provincia) {
+            $this->provincia = $provincia;
+        }
+        public function getDescripcion() {
+            return $this->descripcion;
+        }
+        public function setDescripcion($descripcion) {
+            $this->descripcion = $descripcion;
         }
     }
 ?>

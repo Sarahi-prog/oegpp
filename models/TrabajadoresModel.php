@@ -1,77 +1,128 @@
-<?php
-require_once './config/DB.php'; 
+    <?php  
+        require_once './config/DB.php';
+        require_once 'Trabajadores.php';
 
-class TrabajadoresModel {
-    private $conexion;
+        class TrabajadoresModel{
+            private $db;
+            public function __construct(){
+                $this->db=DB::conectar();
+            }
 
-    public function __construct() {
-        $this->conexion = DB::conectar(); 
-    }
-
-    // 1. Obtener Trabajadores
-    public function cargar() {
-        try {
-            $query = "SELECT * FROM trabajadores ORDER BY id_trabajador DESC";
-            $stmt = $this->conexion->query($query);
-            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultados ? $resultados : [];
-        } catch (PDOException $e) { return []; }
-    }
-
-    // 2. Obtener Cursos (Para el formulario)
-    public function cargarCursos() {
-        try {
-            $query = "SELECT id_curso, codigo_curso, nombre_curso FROM cursos ORDER BY nombre_curso ASC";
-            $stmt = $this->conexion->query($query);
-            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultados ? $resultados : [];
-        } catch (PDOException $e) { return []; }
-    }
-
-    // 3. Obtener Libros (Para el formulario)
-    public function cargarLibros() {
-        try {
-            $query = "SELECT id_libro, tipo, numero_libro, anio_inicio FROM libros_registro ORDER BY id_libro DESC";
-            $stmt = $this->conexion->query($query);
-            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $resultados ? $resultados : [];
-        } catch (PDOException $e) { return []; }
-    }
-
-    // 4. Guardar Nuevo Trabajador
-    public function guardarNuevoTrabajador($dni, $nombres, $apellidos, $correo, $celular, $area) {
-        try {
-            $sql = "INSERT INTO trabajadores (dni, nombres, apellidos, correo, celular, area) 
-                    VALUES (?, ?, ?, ?, ?, ?) RETURNING id_trabajador";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->execute([$dni, $nombres, $apellidos, $correo, $celular, $area]);
-            
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $resultado['id_trabajador']; 
-        } catch (PDOException $e) {
-            die("Error BD (Trabajador): " . $e->getMessage());
+            public function cargar(){
+                $sql = "SELECT id_cliente, dni, nombres, apellidos, correo, celular, area, estado FROM clientes";
+                $ps=$this->db->prepare($sql);
+                $ps->execute();
+                $filas=$ps->fetchall();
+                $trabajadores=array();
+                foreach($filas as $f){
+                    $fam = new Trabajadores();
+                    $fam->setIdTrabajador($f[0]);
+                    $fam->setDni($f[1]);
+                    $fam->setNombres($f[2]);
+                    $fam->setApellidos($f[3]);
+                    $fam->setCorreo($f[4]);
+                    $fam->setCelular($f[5]);
+                    $fam->setArea($f[6]);
+                    $fam->setEstado($f[7]);
+                    array_push($trabajadores, $fam);
+                }
+                return $trabajadores;
+            }
+            public function buscar($texto, $campo = null){
+                $texto = trim($texto);
+                if ($texto === '') {
+                    return $this->cargar();
+                }
+                $allowedFields = ['id_cliente', 'dni', 'nombres y apellidos', 'correo', 'celular', 'area'];
+                if ($campo !== null && in_array($campo, $allowedFields, true)) {
+                    $sql = "SELECT id_cliente, dni, concat(nombres, ' ', apellidos) AS nombres_apellidos, correo, celular, area FROM clientes WHERE $campo LIKE :q";
+                } else {
+                    $sql = "SELECT id_cliente, dni, concat(nombres, ' ', apellidos) AS nombres_apellidos, correo, celular, area FROM clientes
+                        WHERE id_cliente::text LIKE :q
+                           OR dni LIKE :q
+                           OR concat(nombres, ' ', apellidos) LIKE :q
+                           OR correo LIKE :q
+                           OR celular LIKE :q
+                           OR area LIKE :q";
+                }
+                $ps=$this->db->prepare($sql);
+                $ps->bindValue(':q', '%' . $texto . '%', PDO::PARAM_STR);
+                $ps->execute();
+                $filas=$ps->fetchall();
+                $trabajadores=array();
+                foreach($filas as $f){
+                    $fam = new Trabajadores();
+                    $fam->setIdTrabajador($f[0]);
+                    $fam->setDni($f[1]);
+                    $fam->setNombres($f[2]);
+                    $fam->setApellidos($f[3]);
+                    $fam->setCorreo($f[4]);
+                    $fam->setCelular($f[5]);
+                    $fam->setArea($f[6]);
+                    $fam->setEstado($f[7]);
+                    array_push($trabajadores, $fam);
+                }
+                return $trabajadores;
+            }
+            public function actualizar(Trabajadores $trabajador){
+                $sql = "UPDATE clientes SET 
+                dni=:dni, 
+                nombres=:nom, 
+                apellidos=:ape, 
+                correo=:cor,
+                celular=:cel,
+                area=:are
+                WHERE id_cliente=:id";
+                $ps=$this->db->prepare($sql);
+                $id= $trabajador->getIdTrabajador();
+                $dni= $trabajador->getDni();
+                $nom= $trabajador->getNombres();
+                $ape= $trabajador->getApellidos();
+                $cor= $trabajador->getCorreo();
+                $cel= $trabajador->getCelular();
+                $are= $trabajador->getArea();
+                $ps->bindParam(":id", $trabajador->getIdTrabajador());
+                $ps->bindParam(":dni", $trabajador->getDni());
+                $ps->bindParam(":nom", $trabajador->getNombres());
+                $ps->bindParam(":ape", $trabajador->getApellidos());
+                $ps->bindParam(":cor", $trabajador->getCorreo());
+                $ps->bindParam(":cel", $trabajador->getCelular());
+                $ps->bindParam(":are", $trabajador->getArea());
+                $ps->execute();
+            }
+            public function guardar(Trabajadores $trabajador){
+                $sql = "INSERT INTO clientes 
+                (dni, 
+                nombres, 
+                apellidos, 
+                correo, 
+                celular, 
+                area,
+                estado) 
+                VALUES 
+                (:dni, 
+                :nom, 
+                :ape, 
+                :cor, 
+                :cel, 
+                :are,
+                :est)";
+                $ps=$this->db->prepare($sql);
+                $dni= $trabajador->getDni();
+                $nom= $trabajador->getNombres();
+                $ape= $trabajador->getApellidos();
+                $cor= $trabajador->getCorreo();
+                $cel= $trabajador->getCelular();
+                $are= $trabajador->getArea();
+                $est= $trabajador->getEstado();
+                $ps->bindParam(":dni", $dni);
+                $ps->bindParam(":nom", $nom);
+                $ps->bindParam(":ape", $ape);
+                $ps->bindParam(":cor", $cor);
+                $ps->bindParam(":cel", $cel);
+                $ps->bindParam(":are", $are);
+                $ps->bindParam(":est", $est);
+                $ps->execute();
+            }
         }
-    }
-
-    // 5. Asignar el Curso (INSERT en registros_capacitacion)
-    public function asignarCurso($trabajador_id, $curso_id, $libro_id, $registro, $horas_realizadas, $fecha_inicio, $fecha_fin, $fecha_emision, $folio) {
-        try {
-            // Manejo de fechas nulas (En tu BD fecha_inicio y fecha_fin permiten nulos)
-            $fecha_inicio = !empty($fecha_inicio) ? $fecha_inicio : null;
-            $fecha_fin = !empty($fecha_fin) ? $fecha_fin : null;
-
-            $sql = "INSERT INTO registros_capacitacion 
-                    (trabajador_id, curso_id, libro_id, registro, horas_realizadas, fecha_inicio, fecha_fin, fecha_emision, folio) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            
-            $stmt = $this->conexion->prepare($sql);
-            return $stmt->execute([
-                $trabajador_id, $curso_id, $libro_id, $registro, 
-                $horas_realizadas, $fecha_inicio, $fecha_fin, $fecha_emision, $folio
-            ]);
-        } catch (PDOException $e) {
-            die("Error BD (Asignación): " . $e->getMessage());
-        }
-    }
-}
-?>
+    ?>

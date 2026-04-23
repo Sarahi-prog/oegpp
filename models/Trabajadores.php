@@ -5,6 +5,9 @@ class Trabajadores {
     private $nombres;
     private $apellidos;
     private $correo;
+    private $celular;
+    private $area;
+    private $estado;
 
 
     // Getters y setters
@@ -46,6 +49,24 @@ class Trabajadores {
 
     public function setCorreo($correo) {
         $this->correo = $correo;
+    }
+    public function getCelular() {
+        return $this->celular;
+    }
+    public function setCelular($celular) {
+        $this->celular = $celular;
+    }
+    public function getArea() {
+        return $this->area;
+    }
+    public function setArea($area) {
+        $this->area = $area;
+    }
+    public function getEstado() {
+        return $this->estado;
+    }
+    public function setEstado($estado) {
+        $this->estado = $estado;
     }
 }
 ?>

@@ -7,6 +7,8 @@ class ErrorLogs {
     private $archivo;
     private $linea;
     private $fecha;
+    private $stack_trace;
+
     public function getId() {
         return $this->id;
     }
@@ -49,6 +51,11 @@ class ErrorLogs {
     public function setFecha($fecha) {
         $this->fecha = $fecha;
     }
+    public function getStackTrace(){
+        return $this->stack_trace;
+    }
+    public function setStackTrace($stack_trace){
+        $this->stack_trace = $stack_trace;
+    }  
 }
-
 ?>

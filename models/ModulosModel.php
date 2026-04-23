@@ -8,24 +8,47 @@
             $this->db=DB::conectar();
         }
 
-
-        public function cargar(){
-            $sql = "SELECT * FROM obtener_modulos()";
-            $ps=$this->db->prepare($sql);
+        public function cargar() {
+            $sql = "SELECT id_nota, clientes_id, modulo_id, nota, fecha_registro  
+                    FROM notas_modulo";
+            $ps = $this->db->prepare($sql);
             $ps->execute();
-            $filas=$ps->fetchall();
-            $modulos=array();
-            foreach($filas as $f){
-                $mod = new Modulos();
-                $mod->setIdModulo($f[0]);
-                $mod->setCursoId($f[1]);
-                $mod->setNombreModulo($f[2]);
-                $mod->setHoras($f[3]);
-                $mod->setFechaInicio($f[4]);
-                $mod->setFechaFin($f[5]);
-                array_push($modulos, $mod);
+            $filas = $ps->fetchAll(PDO::FETCH_ASSOC);
+
+            $notas = [];
+            foreach ($filas as $f) {
+                $nota = new NotasModulo();
+                $nota->setIdNota($f['id_nota']);
+                $nota->setTrabajadorId($f['clientes_id']);
+                $nota->setModuloId($f['modulo_id']);
+                $nota->setNota($f['nota']);
+                $nota->setFechaRegistro($f['fecha_registro']);
+                $notas[] = $nota;
             }
-            return $modulos;
+            return $notas;
+        }
+
+        public function cargarPorCurso($cursoId) {
+            $sql = "SELECT nm.id_nota, nm.clientes_id, nm.modulo_id, nm.nota, nm.fecha_registro 
+                    FROM notas_modulo nm
+                    INNER JOIN modulos m ON nm.modulo_id = m.id_modulo
+                    WHERE m.curso_id = :cid";
+            $ps = $this->db->prepare($sql);
+            $ps->bindParam(":cid", $cursoId, PDO::PARAM_INT);
+            $ps->execute();
+            $filas = $ps->fetchAll(PDO::FETCH_ASSOC);
+
+            $notas = [];
+            foreach ($filas as $f) {
+                $nota = new NotasModulo();
+                $nota->setIdNota($f['id_nota']);
+                $nota->setTrabajadorId($f['clientes_id']);
+                $nota->setModuloId($f['modulo_id']);
+                $nota->setNota($f['nota']);
+                $nota->setFechaRegistro($f['fecha_registro']);
+                $notas[] = $nota;
+            }
+            return $notas;
         }
 
         public function guardar(Modulos $modulo){
@@ -54,7 +77,6 @@
             $ps->bindParam(":ff", $ff);
             $ps->execute();
         }
-
 
         public function modificar(Modulos $modulo){
             $sql = "UPDATE modulos SET 

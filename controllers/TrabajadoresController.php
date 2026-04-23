@@ -16,6 +16,31 @@ class TrabajadoresController {
         require './views/trabajadores.php'; 
     }
 
+    private function modificar(){
+        try {
+            if(isset($_POST['id_trabajador']) && isset($_POST['dni']) && isset($_POST['nombres']) && isset($_POST['apellidos'])){
+                $trabajador = $this->mapearDatosFormulario();
+                $trabajador->setIdTrabajador($_POST['id_trabajador']);
+                $model = new TrabajadoresModel();
+                $model->modificar($trabajador);
+            }
+        } catch (Exception $e) {
+            Logger::error($e);
+        }
+    }
+
+    private function mapearDatosFormulario() {
+        $trabajador = new Trabajadores(); 
+        $trabajador->setDni($_POST['dni']);
+        $trabajador->setNombres($_POST['nombres']);
+        $trabajador->setApellidos($_POST['apellidos']);
+        $trabajador->setCorreo(!empty($_POST['correo']) ? $_POST['correo'] : null);
+        $trabajador->setCelular(!empty($_POST['celular']) ? $_POST['celular'] : null);
+        $trabajador->setArea(!empty($_POST['area']) ? $_POST['area'] : null);
+        $trabajador->setEstado($_POST['estado'] ?? 'Activo');
+        return $trabajador;
+    }
+
     // --- AQUÍ CARGAMOS LOS DATOS REALES PARA EL FORMULARIO ---
     public function mostrarFormularioAsignacion() {
         $model = new TrabajadoresModel();

@@ -8,23 +8,50 @@
             $this->db=DB::conectar();
         }
 
-        public function cargar(){
-            $sql = "SELECT * FROM obtener_notas_modulo()";
-            $ps=$this->db->prepare($sql);
-            $ps->execute();
-            $filas=$ps->fetchall();
-            $notas=array();
-            foreach($filas as $f){
-                $nota = new NotasModulo();
-                $nota->setIdNota($f[0]);
-                $nota->setTrabajadorId($f[1]);
-                $nota->setModuloId($f[2]);
-                $nota->setNota($f[3]);
-                $nota->setFechaRegistro($f[4]);
-                array_push($notas, $nota);
+            public function cargar() {
+                $sql = "SELECT id_nota, clientes_id, modulo_id, nota, fecha_registro  
+                        FROM notas_modulo";
+                $ps = $this->db->prepare($sql);
+                $ps->execute();
+                $filas = $ps->fetchAll(PDO::FETCH_ASSOC);
+
+                $notas = [];
+                foreach ($filas as $f) {
+                    $nota = new NotasModulo();
+                    $nota->setIdNota($f['id_nota']);
+                    $nota->setTrabajadorId($f['clientes_id']);
+                    $nota->setModuloId($f['modulo_id']);
+                    $nota->setNota($f['nota']);
+                    $nota->setFechaRegistro($f['fecha_registro']);
+                    $notas[] = $nota;
+                }
+                return $notas;
             }
-            return $notas;
-        }
+
+            public function cargarPorCurso($cursoId) {
+                $sql = "SELECT nm.id_nota, nm.cliente_id, nm.modulo_id, nm.nota, nm.fecha_registro 
+                        FROM notas_modulo nm
+                        INNER JOIN modulos m ON nm.modulo_id = m.id_modulo
+                        WHERE m.curso_id = :cid";
+                $ps = $this->db->prepare($sql);
+                $ps->bindParam(":cid", $cursoId, PDO::PARAM_INT);
+                $ps->execute();
+                $filas = $ps->fetchAll(PDO::FETCH_ASSOC);
+
+                $notas = [];
+                foreach ($filas as $f) {
+                    $nota = new NotasModulo();
+                    $nota->setIdNota($f['id_nota']);
+                    $nota->setTrabajadorId($f['clientes_id']);
+                    $nota->setModuloId($f['modulo_id']);
+                    $nota->setNota($f['nota']);
+                    $nota->setFechaRegistro($f['fecha_registro']);
+                    $notas[] = $nota;
+                }
+                return $notas;
+            }
+
+
         public function modificar(NotasModulo $notas){
             $sql = "UPDATE notas_modulo SET 
                 trabajador_id=:tid, 

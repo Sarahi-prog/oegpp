@@ -39,7 +39,7 @@ if ($data && isset($data['usuario']) && isset($data['password'])) {
         
         $rolLower = strtolower($_SESSION['rol']);
         // Guardamos si es admin general para los menús
-        $_SESSION['admin_general'] = ($rolLower === 'administrador general' || $rolLower === 'administrador' || $esAdminMaestro);
+        $_SESSION['admin_general'] = ($rolLower === 'administrador general' || $rolLower === 'administrador' || $rolLower === 'general' || $esAdminMaestro);
         $_SESSION['login_time'] = time();
         
         // 4. RESPUESTA DE ÉXITO

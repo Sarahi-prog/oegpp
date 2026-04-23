@@ -1,278 +1,159 @@
-<?php
-
-// Verificar si el usuario está logueado
-if(!isset($_SESSION['admin_id'])) {
-    header("Location: index.php?accion=login");
-    exit();
-}
-
-// Definir página actual para el menú
-if (!isset($pagina_actual)) {
-    $pagina_actual = 'trabajadores';
-}
-
-// Incluir configuración de base de datos
-$config_path = __DIR__ . '/../config/DB.php';
-if (!file_exists($config_path)) {
-    die("Error: Archivo de configuración no encontrado en " . $config_path);
-}
-require_once $config_path;
-
-// Verificar que la clase DB existe
-if (!class_exists('DB')) {
-    die("Error: Clase DB no encontrada");
-}
-
-// Crear conexión
-$db = DB::conectar();
-if (!$db) {
-    die("Error: No se pudo establecer conexión con la base de datos");
-}
-
-// Consultar trabajadores
-$query = "SELECT id_trabajador, dni, nombres, apellidos, area, celular 
-          FROM trabajadores 
-          ORDER BY apellidos ASC";
-
-try {
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-    $trabajadores = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch(PDOException $e) {
-    $trabajadores = [];
-    error_log("Error al cargar trabajadores: " . $e->getMessage());
-}
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Directorio de Trabajadores - OEGPP</title>
-    <link rel="stylesheet" href="public/dashStyles.css?v=<?php echo time(); ?>">   
+    <title>Gestión de Clientes - OEGPP</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="public/menuStyles.css?v=<?= time(); ?>">
+    <link rel="stylesheet" href="public/clientesStyles.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Estilos adicionales para la tabla */
-        .oculto-por-busqueda {
-            display: none !important;
-        }
-    </style>
-</head>
+</head> 
 <body>
+    <?php include 'includes/menu.php'; ?>
 
-    <?php 
-    // CORREGIDO: ruta del menu
-    $menu_path = __DIR__ . '/includes/menu.php';
-    if (file_exists($menu_path)) {
-        include $menu_path; 
-    } else {
-        echo "<!-- Menu no encontrado en: " . $menu_path . " -->";
-    }
-    ?>
-
-    <div class="container main-content" style="margin-top: 40px;">
-        
-        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-            <div class="section-title" style="margin: 0;">
-                <h2><i class="fas fa-users" style="color: #10b981; margin-right: 10px;"></i> Directorio de Trabajadores</h2>
-                <p style="margin-top: 5px;">Listado completo de trabajadores registrados en el sistema.</p>
+    <div class="container main-content">
+    
+        <div class="header-acciones">
+            <div class="titulo-con-boton">
+                <button onclick="toggleRegistro()" class="btn-hamburguesa" title="Mostrar/Ocultar Formulario">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="directorio-title-container">
+                    <h2><i class="fas fa-users-cog"></i> Gestión de Clientes</h2>
+                    <p style="margin: 5px 0 0 0; color: #64748b;">Administra la lista de clientes.</p>
+                </div>
             </div>
-            <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=nueva_asignacion'">
-                <i class="fas fa-plus"></i> Nueva Asignación
-            </button>
+     
         </div>
 
-        <div class="search-bar" style="margin-top: 20px;">
-            <div class="search-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="buscadorTabla" placeholder="Buscar por DNI, Nombre o Apellido..." class="search-input">
-            </div>
-            <button class="btn btn-outline" id="btnExportarPDF"><i class="fas fa-download"></i> Exportar PDF</button>
-        </div>
+        <div class="dashboard-wrapper">
+            
+            <div id="seccionRegistro">
+                <div class="side-panel">
+                    <h3 style="margin-top: 0; margin-bottom: 20px;"><i class="fas fa-plus-circle"></i> Datos del Registro</h3>
+                    <form id="formTrabajadorAjax" action="index.php?accion=guardar_cliente" method="POST">
+                        <div class="form-vertical-stack">
+                            <div class="field-group">
+                                <label>DNI</label>
+                                <input type="text" name="dni" required placeholder="00000000" maxlength="8">
+                            </div>
+                            <div class="field-group">
+                                <label>Nombres</label>
+                                <input type="text" name="nombres" required>
+                            </div>
+                            <div class="field-group">
+                                <label>Apellidos</label>
+                                <input type="text" name="apellidos" required>
+                            </div>
+                            <div class="field-group">
+                                <label>Correo</label>
+                                <input type="email" name="correo" placeholder="usuario@correo.com">
+                            </div>
+                            <div class="field-group">
+                                <label>Celular</label>
+                                <input type="text" name="celular" placeholder="000 000 000">
+                            </div>
+                            <div class="field-group">
+                                <label>Área</label>
+                                <input type="text" name="area" placeholder="Ej. Ingeniería">
+                            </div>
+                            <div class="field-group">
+                                <label>Estado</label>
+                                <select name="estado" class="form-select">
+                                    <option value="Activo">Activo</option>
+                                    <option value="Inactivo">Inactivo</option>
+                                </select>
+                            </div>
+                                <input type="hidden" name="id_trabajador" id="id_trabajador">
+                                <!-- el resto de tus campos se queda igual -->
 
-        <div class="table-container">
-            <div class="table-wrapper">
-                <table class="data-table" id="tablaTrabajadores">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>DNI</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Área / Celular</th>
-                            <th class="text-right">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($trabajadores) && is_array($trabajadores)): ?>
-                            <?php foreach ($trabajadores as $t): ?> 
-                            <tr class="fila-dato" data-id="<?= $t['id_trabajador'] ?>">
-                                <td><?= htmlspecialchars($t['id_trabajador']) ?></td>
-                                <td><strong><?= htmlspecialchars($t['dni']) ?></strong></td>
-                                <td><?= htmlspecialchars($t['nombres']) ?></td>
-                                <td><?= htmlspecialchars($t['apellidos']) ?></td>
-                                <td>
-                                    <div style="font-size: 0.85rem; color: #64748b;">
-                                        <?= !empty($t['area']) ? htmlspecialchars($t['area']) : 'Sin área' ?><br>
-                                        <i class="fas fa-phone-alt" style="font-size: 0.75rem;"></i> 
-                                        <?= !empty($t['celular']) ? htmlspecialchars($t['celular']) : '-' ?>
-                                    </div>
-                                </td>
-                                <td class="text-right">
-                                    <button class="btn-icon btn-edit" onclick="editarTrabajador(<?= $t['id_trabajador'] ?>)" title="Editar">
-                                        <i class="fas fa-pen"></i>
-                                    </button>
-                                    <button class="btn-icon btn-delete" onclick="eliminarTrabajador(<?= $t['id_trabajador'] ?>)" title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr class="fila-vacia">
-                                <td colspan="6" style="text-align:center; padding: 50px 20px;">
-                                    <i class="fas fa-folder-open" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 15px; display:block;"></i>
-                                    <h3 style="color: #475569; margin-bottom: 5px;">No hay trabajadores registrados</h3>
-                                    <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px;">Aún no has agregado a ningún trabajador a la base de datos.</p>
-                                    <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=nueva_asignacion'">
-                                        Registrar el primero
-                                    </button>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                            <button type="submit" class="btn btn-primary-green" style="width: 100%; justify-content: center; margin-top: 10px;">
+                                <i class="fas fa-save"></i> Guardar Cliente
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <div class="table-footer">
-                <p class="footer-text">
-                    Mostrando <span class="highlight-green" id="displayCount"><?= is_array($trabajadores) ? count($trabajadores) : 0 ?></span> registros
-                </p>
-            </div>
-        </div>
-    </div>
+            <div class="table-section">
+                <div class="search-bar">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="buscadorTabla" class="search-input" placeholder="Buscar por DNI, Nombre o Área...">
+                    </div>
+                    <button class="btn btn-outline"><i class="fas fa-file-export"></i> Exportar</button>
+                </div>
 
-    <script>
-        // Función para buscar en la tabla
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputBusqueda = document.getElementById('buscadorTabla');
-            const filas = document.querySelectorAll('#tablaTrabajadores tbody tr.fila-dato');
-            const contadorVisible = document.getElementById('displayCount');
-
-            if(inputBusqueda && filas.length > 0) {
-                inputBusqueda.addEventListener('keyup', function(e) {
-                    const texto = e.target.value.toLowerCase();
-                    let visibles = 0;
-
-                    filas.forEach(fila => {
-                        const dni = fila.querySelector('td:nth-child(2)')?.textContent.toLowerCase() || '';
-                        const nombres = fila.querySelector('td:nth-child(3)')?.textContent.toLowerCase() || '';
-                        const apellidos = fila.querySelector('td:nth-child(4)')?.textContent.toLowerCase() || '';
-                        
-                        const contenidoFila = `${dni} ${nombres} ${apellidos}`;
-                        
-                        if(contenidoFila.includes(texto)) {
-                            fila.classList.remove('oculto-por-busqueda');
-                            visibles++;
-                        } else {
-                            fila.classList.add('oculto-por-busqueda');
-                        }
-                    });
-
-                    if(contadorVisible) {
-                        contadorVisible.textContent = visibles;
-                    }
-                });
-            }
-
-            // Botón de exportar PDF
-            const btnPDF = document.getElementById('btnExportarPDF');
-            if(btnPDF) {
-                btnPDF.addEventListener('click', function() {
-                    exportarPDF();
-                });
-            }
-        });
-
-        // Función para editar trabajador
-        function editarTrabajador(id) {
-            if(confirm('¿Deseas editar este trabajador?')) {
-                window.location.href = `editar_trabajador.php?id=${id}`;
-            }
-        }
-
-        // Función para eliminar trabajador
-        function eliminarTrabajador(id) {
-            if(confirm('¿Estás seguro de eliminar este trabajador? Esta acción no se puede deshacer.')) {
-                fetch('api_trabajadores.php', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        alert('Trabajador eliminado correctamente');
-                        location.reload();
-                    } else {
-                        alert('Error al eliminar: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error al conectar con el servidor');
-                });
-            }
-        }
-
-        // Función para exportar a PDF
-        function exportarPDF() {
-            const filasVisibles = document.querySelectorAll('#tablaTrabajadores tbody tr.fila-dato:not(.oculto-por-busqueda)');
-            
-            if(filasVisibles.length === 0) {
-                alert('No hay datos para exportar');
-                return;
-            }
-            
-            let contenido = '<html><head><meta charset="UTF-8"><title>Directorio de Trabajadores</title>';
-            contenido += '<style>';
-            contenido += 'table { border-collapse: collapse; width: 100%; }';
-            contenido += 'th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }';
-            contenido += 'th { background-color: #10b981; color: white; }';
-            contenido += '</style></head><body>';
-            contenido += '<h1>Directorio de Trabajadores</h1>';
-            contenido += '<p>Fecha: ' + new Date().toLocaleDateString() + '</p>';
-            contenido += '<table>';
-            contenido += '<tr><th>ID</th><th>DNI</th><th>Nombres</th><th>Apellidos</th><th>Área</th><th>Celular</th></tr>';
-            
-            filasVisibles.forEach(fila => {
-                const id = fila.querySelector('td:nth-child(1)')?.textContent || '';
-                const dni = fila.querySelector('td:nth-child(2)')?.textContent || '';
-                const nombres = fila.querySelector('td:nth-child(3)')?.textContent || '';
-                const apellidos = fila.querySelector('td:nth-child(4)')?.textContent || '';
-                const areaCelular = fila.querySelector('td:nth-child(5)')?.textContent || '';
-                const [area, celular] = areaCelular.split('\n');
-                
-                contenido += `<tr>
-                    <td>${id}</td>
-                    <td>${dni}</td>
-                    <td>${nombres}</td>
-                    <td>${apellidos}</td>
-                    <td>${area.trim()}</td>
-                    <td>${celular?.trim() || '-'}</td>
-                </tr>`;
-            });
-            
-            contenido += '</table></body></html>';
-            
-            const ventana = window.open('', '_blank');
-            ventana.document.write(contenido);
-            ventana.document.close();
-            ventana.print();
-        }
-    </script>
+                <div class="table-card">
+                    <div class="table-container">
+                        <table class="data-table" id="tablaPrincipal">
+                            <thead>
+                                <tr>
+                                    <th>#</th> 
+                                    <th>DNI</th>
+                                    <th>NOMBRES</th>
+                                    <th>APELLIDOS</th>
+                                    <th>CORREO</th>
+                                    <th>CELULAR</th>
+                                    <th>AREA</th>
+                                    <th>ESTADO</th> 
+                                    <th style="text-align: center;">ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                $i = 1; 
+                                if (!empty($trabajadores)):
+                                    foreach ($trabajadores as $t): 
+                                        $id_trabajador = $t->getIdTrabajador();
+                                        $dni = $t->getDni() ?? '';
+                                        $nombres = $t->getNombres() ?? '';
+                                        $apellidos = $t->getApellidos() ?? '';
+                                        $correo = $t->getCorreo() ?? '';
+                                        $celular = $t->getCelular() ?? '';
+                                        $area = $t->getArea() ?? '';
+                                        $estado = $t->getEstado() ?? '';
+                                ?>
+                                <tr class="fila-cliente">
+                                    <td class="id-column"><?= $i++ ?></td>
+                                    <td><strong><?= htmlspecialchars($dni) ?></strong></td>
+                                    <td><?= htmlspecialchars($nombres) ?></td>
+                                    <td><?= htmlspecialchars($apellidos) ?></td>
+                                    <td><?= htmlspecialchars($correo) ?></td>
+                                    <td><?= htmlspecialchars($celular) ?></td>
+                                    <td><?= htmlspecialchars($area) ?></td>
+                                    <td><?= htmlspecialchars($estado) ?></td>
+                                    <td><?= htmlspecialchars($estado)?></td>
+                                    <td style="text-align: center; white-space: nowrap;">
+                                        <button class="btn-icon btn-edit" title="Editar"><i class="fas fa-edit" style="color: #4a90e2;"></i></button>
+                                        <button class="btn-icon btn-delete" title="Eliminar"><i class="fas fa-trash" style="color: #e24a4a;"></i></button>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    endforeach; 
+                                else: 
+                                ?>
+                                <tr>
+                                    <td colspan="9" style="text-align: center; padding: 4rem 2rem;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.7;">
+                                            <i class="fas fa-folder-open" style="font-size: 4rem; color: #94a3b8; margin-bottom: 15px;"></i>
+                                            <h4 style="margin: 0; color: #0f172a; font-size: 1.2rem; font-weight: 600;">Sin registros encontrados</h4>
+                                            <p style="margin: 5px 0 0 0; color: #64748b; font-size: 0.95rem;">Utiliza el botón superior para agregar a tu primer trabajador.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+    </div> 
+    <script src="public/universalScript.js?v=<?= time(); ?>"></script>
+    <script src="public/clientesScript.js?v=<?= time(); ?>"></script>
 </body>
 </html>

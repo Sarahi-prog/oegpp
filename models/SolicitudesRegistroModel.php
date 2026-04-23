@@ -85,43 +85,43 @@ class SolicitudesRegistroModel {
 
     // 5. Aprobar solicitud (y crear usuario en trabajadores si es necesario)
     public function aprobarSolicitud($id_solicitud, $id_admin) {
-    try {
-        $this->conexion->beginTransaction();
-        
-        // 1. Obtener datos de la solicitud
-        $solicitud = $this->obtenerSolicitud($id_solicitud);
-        if (!$solicitud) {
-            throw new Exception("Solicitud no encontrada");
+        try {
+            $this->conexion->beginTransaction();
+            
+            // 1. Obtener datos de la solicitud
+            $solicitud = $this->obtenerSolicitud($id_solicitud);
+            if (!$solicitud) {
+                throw new Exception("Solicitud no encontrada");
+            }
+
+            // 2. Actualizar estado a aprobado
+            $sql = "UPDATE solicitudes_registro 
+                    SET estado = 'aprobado', 
+                        fecha_autorizacion = CURRENT_TIMESTAMP,
+                        autorizado_por = ?
+                    WHERE id_solicitud = ?";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->execute([$id_admin, $id_solicitud]);
+
+            // 3. ✅ INSERTAR en la tabla administradores para que pueda hacer login
+            $sqlInsert = "INSERT INTO administradores (usuario, correo, password, rol, verificado) 
+                        VALUES (:usuario, :correo, :password, :rol, true)";
+            $ps = $this->conexion->prepare($sqlInsert);
+            $ps->bindValue(":usuario", $solicitud['usuario']);
+            $ps->bindValue(":correo",  $solicitud['correo']);
+            $ps->bindValue(":password", $solicitud['password_hash']); // Ya está hasheada con bcrypt
+            $ps->bindValue(":rol",     $solicitud['rol']);
+            $ps->execute();
+
+            $this->conexion->commit();
+            return true;
+
+        } catch (Exception $e) {
+            $this->conexion->rollBack();
+            error_log("Error al aprobar solicitud: " . $e->getMessage());
+            return false;
         }
-
-        // 2. Actualizar estado a aprobado
-        $sql = "UPDATE solicitudes_registro 
-                SET estado = 'aprobado', 
-                    fecha_autorizacion = CURRENT_TIMESTAMP,
-                    autorizado_por = ?
-                WHERE id_solicitud = ?";
-        $stmt = $this->conexion->prepare($sql);
-        $stmt->execute([$id_admin, $id_solicitud]);
-
-        // 3. ✅ INSERTAR en la tabla administradores para que pueda hacer login
-        $sqlInsert = "INSERT INTO administradores (usuario, correo, password, rol, verificado) 
-                      VALUES (:usuario, :correo, :password, :rol, true)";
-        $ps = $this->conexion->prepare($sqlInsert);
-        $ps->bindValue(":usuario", $solicitud['usuario']);
-        $ps->bindValue(":correo",  $solicitud['correo']);
-        $ps->bindValue(":password", $solicitud['password_hash']); // Ya está hasheada con bcrypt
-        $ps->bindValue(":rol",     $solicitud['rol']);
-        $ps->execute();
-
-        $this->conexion->commit();
-        return true;
-
-    } catch (Exception $e) {
-        $this->conexion->rollBack();
-        error_log("Error al aprobar solicitud: " . $e->getMessage());
-        return false;
     }
-}
 
     // 6. Rechazar solicitud
     public function rechazarSolicitud($id_solicitud, $id_admin, $motivo = null) {
