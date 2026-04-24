@@ -1,47 +1,51 @@
 /* ============================================================
-   CONFIGURACIÓN MAESTRA DE MÁRGENES
+   CONTAINER
    ============================================================ */
 .container {
-    max-width: 1400px; /* Tu medida original */
-    margin: 0 auto; 
-    padding: 0 40px;   /* Tu margen lateral original */
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
     width: 100%;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
-/* Evita que el contenido salte cuando aparece el scrollbar */
 html { overflow-y: scroll; }
 
 /* ============================================================
-   DISEÑO DE LA BARRA DE NAVEGACIÓN (TUS ESTILOS ORIGINALES)
+   NAVBAR
    ============================================================ */
 .navbar {
-    background-color: #ffffff;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    background: var(--color-bg, #ffffff);  /* usa variable o fallback */
+    border-bottom: 1px solid #e2e8f0;
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid #e2e8f0;
+    width: 100%;
 }
 
 .navbar-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px;
+    height: 64px;
+    padding: 0 20px;
 }
 
+/* ============================================================
+   LOGO — tamaño controlado con object-fit: contain
+   ============================================================ */
 .navbar-brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     text-decoration: none;
     color: #0f172a;
 }
 
 .logo-img-container {
-    width: 74px;
-    height: 50px;
+    width: 40px;        /* ← ajusta este valor para el tamaño deseado */
+    height: 40px;
+    flex-shrink: 0;
     overflow: hidden;
     border-radius: 8px;
 }
@@ -49,49 +53,117 @@ html { overflow-y: scroll; }
 .logo-img-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;   /* evita deformación */
+    display: block;
 }
 
-.navbar-menu { display: flex; gap: 8px; }
+/* ============================================================
+   BRAND TEXT
+   ============================================================ */
+.brand-text h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.brand-text p {
+    font-size: 0.68rem;
+    color: #64748b;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin: 2px 0 0;
+}
+
+/* ============================================================
+   MENÚ ESCRITORIO
+   ============================================================ */
+.navbar-menu {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
 
 .menu-item {
     text-decoration: none;
     color: #64748b;
     font-weight: 500;
-    padding: 8px 14px;
+    font-size: 0.9rem;
+    padding: 7px 13px;
     border-radius: 8px;
-    transition: 0.2s;
-    font-size: 0.95rem;
+    transition: background 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
 }
 
-.menu-item:hover, .menu-item.active {
+.menu-item:hover,
+.menu-item.active {
     background: #ecfdf5;
-    color: #44bd1f;
+    color: #2a9d5c;
 }
 
-
-/* --- LADO IZQUIERDO: TEXTOS DE LA MARCA --- */
-.brand-text h1 {
-    font-size: 1.2rem;
-    margin: 0; /* Quitamos márgenes para controlar el espacio manualmente */
-    font-weight: 800;
-    line-height: 1;
-    color: #0f172a;
+/* ============================================================
+   HAMBURGER BUTTON
+   ============================================================ */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    background: none;
+    border: none;
 }
 
-.brand-text p {
-    font-size: 0.7rem;
-    color: #64748b;
-    /* [ESPACIADO] Este margen arriba separa el subtítulo del nombre OEGPP */
-    margin-top: 4px; 
-    margin-bottom: 0;
-    letter-spacing: 1px;
-    font-weight: 600;
+.hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #0f172a;
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.2s ease;
 }
 
-/* --- LADO DERECHO: BOTONES DEL MENÚ --- */
-.navbar-menu {
-    display: flex;
-    /* [ESPACIADO] Espacio entre Inicio, Trabajadores, Cursos, etc. */
-    gap: 12px; 
+/* Animación X al abrir */
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ============================================================
+   MENÚ MÓVIL COLAPSABLE
+   ============================================================ */
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 16px;
+    border-top: 1px solid #e2e8f0;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.mobile-menu.open {
+    max-height: 400px;
+    padding: 8px 16px 12px;
+}
+
+.mobile-menu .menu-item {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .container { padding: 0 15px; }
+    .navbar-menu { display: none; }      /* oculta menú horizontal */
+    .hamburger { display: flex; }        /* muestra botón */
+    .mobile-menu { display: flex; }      /* activa el panel */
+
+    .brand-text h1 { font-size: 1rem; }
+    .brand-text p  { font-size: 0.6rem; }
 }

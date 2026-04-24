@@ -244,6 +244,45 @@
         box-shadow: var(--card-shadow);
     }
 
+
+    /* --- BOTÓN EXPORTAR TECH --- */
+.btn-exportar {
+    background: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.btn-exportar i {
+    color: var(--tech-blue); /* Azul para diferenciarlo de "Guardar" */
+    font-size: 1.1rem;
+}
+
+.btn-exportar:hover {
+    background-color: var(--tech-blue-soft);
+    border-color: var(--tech-blue);
+    color: var(--tech-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.btn-exportar:active {
+    transform: translateY(0);
+}
+
+
+
     /* Tarjeta de la Tabla */
     .table-card {
         background: #ffffff;

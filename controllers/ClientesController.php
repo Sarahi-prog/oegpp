@@ -31,7 +31,7 @@ class ClientesController {
             if (!empty($id_cliente)) {
                 // --- MODO EDICIÓN ---
                 $cliente->setIdCliente($id_cliente);
-                if ($this->model->modificar($cliente)) {
+                if ($this->model->modificarCliente($cliente)) {
                     header("Location: index.php?accion=clientes&msg=actualizado");
                     exit();
                 } else {
@@ -39,7 +39,7 @@ class ClientesController {
                 }
             } else {
                 // --- MODO NUEVO ---
-                $idGenerado = $this->model->guardarNuevoCliente($cliente);
+                $idGenerado = $this->model->guardarCliente($cliente);
                 if ($idGenerado !== null) {
                     header("Location: index.php?accion=clientes&msg=guardado");
                     exit();
@@ -69,7 +69,7 @@ class ClientesController {
             $cliente = $this->mapearDatosFormulario();
             $cliente->setIdCliente($_POST['id_cliente']); // Asignamos el ID oculto del form
 
-            if($this->model->modificar($cliente)) {
+            if($this->model->modificarCliente($cliente)) {
                 header("Location: index.php?accion=clientes&msg=actualizado");
                 exit();
             } else {
@@ -86,7 +86,7 @@ class ClientesController {
     public function eliminarCliente() {
         if(isset($_GET['id'])) {
             $id = $_GET['id'];
-            if($this->model->eliminar($id)) {
+            if($this->model->eliminarCliente($id)) {
                 header("Location: index.php?accion=clientes&msg=eliminado");
                 exit();
             } else {
@@ -107,7 +107,7 @@ class ClientesController {
         $cliente->setCorreo(!empty($_POST['correo']) ? $_POST['correo'] : null);
         $cliente->setCelular(!empty($_POST['celular']) ? $_POST['celular'] : null);
         $cliente->setArea(!empty($_POST['area']) ? $_POST['area'] : null);
-        $cliente->setEstado($_POST['estado'] ?? 'Activo');
+        $cliente->setEstado($_POST['estado'] ?? '0Activo');
         return $cliente;
     }
 }

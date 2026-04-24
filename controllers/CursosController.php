@@ -1,37 +1,77 @@
 <?php
-require_once 'models/CursosModel.php';
-require_once 'models/Cursos.php';
+require_once './models/CursosModel.php';
+require_once './models/Cursos.php';
 
-class CursosController{
-    public function cargar(){
-        $model = new CursosModel();
-        $cursos = $model->cargar();
-        require './views/Cursos.php';
+class CursosController {
+    private $model;
+
+    public function __construct() {
+        $this->model = new CursosModel();
     }
-    public function cargarD(){
-        $model = new CursosModel();
-        $cursos = $model->cargarD();
-        require './views/viewCargarCursosD.php';
+
+    // Carga todos los cursos
+    public function cargar() {
+        $cursos = $this->model->cargarCurso();
+        require './views/cursos.php';
     }
-    public function cargarC(){
-        $model = new CursosModel();
-        $cursos = $model->cargarC();
-        require './views/viewCargarCursosC.php';
+
+    // LLAMADO A DIPLOMADOS (cargarD)
+    public function cargarD() {
+        $cursos = $this->model->cargarD();
+        require './views/cursos.php'; // Usa la misma vista o una específica
     }
-    public function guardar(){
-        if(isset($_POST['codigo_curso']) && isset($_POST['nombre_curso']) && isset($_POST['tipo']) && isset($_POST['horas_totales'])){
+
+    // LLAMADO A CERTIFICADOS (cargarC)
+    public function cargarC() {
+        $cursos = $this->model->cargarC();
+        require './views/cursos.php';
+    }
+
+    public function modificarCurso() {
+        if (isset($_POST['id_curso'])) {
+            $curso = new Cursos();
+            $curso->setIdCurso($_POST['id_curso']);
+            $curso->setCodigoCurso($_POST['codigo_curso']);
+            $curso->setNombreCurso($_POST['nombre_curso']);
+            $curso->setTipo($_POST['tipo']);
+            $curso->setHorasTotales($_POST['horas_totales']);
+
+            if ($this->model->modificarCurso($curso)) {
+                header("Location: index.php?accion=cursos");
+            }
+        }
+    }
+
+    public function guardarCurso() {
+        if (isset($_POST['codigo_curso']) && isset($_POST['nombre_curso']) && isset($_POST['tipo']) && isset($_POST['horas_totales'])) {
             $curso = new Cursos();
             $curso->setCodigoCurso($_POST['codigo_curso']);
             $curso->setNombreCurso($_POST['nombre_curso']);
             $curso->setTipo($_POST['tipo']);
             $curso->setHorasTotales($_POST['horas_totales']);
-            $model = new CursosModel();
-            $model->guardar($curso);
 
-            header("Location: index.php?controller=cursos&action=cargar");
+            if ($this->model->guardarCurso($curso)) {
+                header("Location: index.php?accion=cursos");
+            }
         } else {
-            require './views/viewGuardarCurso.php';
+            require './views/cursos.php';
         }
     }
+
+        public function eliminarCurso() {
+        if (isset($_GET['id'])) {
+            $id_curso = $_GET['id'];
+
+            if ($this->model->eliminarCurso($id_curso)) {
+                header("Location: index.php?accion=cursos&res=eliminado");
+                exit();
+            } else {
+                echo "Error: No se pudo eliminar. Es posible que el curso esté referenciado en otra tabla.";
+            }
+        } else {
+            echo "Error: No se recibió un ID válido para eliminar.";
+        }
+    }
+
 }
 ?>

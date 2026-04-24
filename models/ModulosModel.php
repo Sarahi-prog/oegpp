@@ -10,8 +10,42 @@
 
 
         public function cargar(){
-            $sql =  "SELECT * FROM modulos ORDER BY id_modulo DESC;";
+            $sql = "SELECT * FROM obtener_modulos()";
             $ps=$this->db->prepare($sql);
+            $ps->execute();
+            $filas=$ps->fetchall();
+            $modulos=array();
+            foreach($filas as $f){
+                $mod = new Modulos();
+                $mod->setIdModulo($f[0]);
+                $mod->setCursoId($f[1]);
+                $mod->setNombreModulo($f[2]);
+                $mod->setHoras($f[3]);
+                $mod->setFechaInicio($f[4]);
+                $mod->setFechaFin($f[5]);
+                array_push($modulos, $mod);
+            }
+            return $modulos;
+        }
+
+        public function buscar($texto, $campo = null){
+            $texto = trim($texto);
+            if ($texto === '') {
+                return $this->cargar();
+            }
+            $allowedFields = ['curso_id', 'nombre_modulo', 'horas', 'fecha_inicio', 'fecha_fin'];
+            if ($campo !== null && in_array($campo, $allowedFields, true)) {
+                $sql = "SELECT * FROM modulos WHERE $campo LIKE :q";
+            } else {
+                $sql = "SELECT * FROM modulos
+                    WHERE curso_id::text LIKE :q
+                       OR nombre_modulo LIKE :q
+                       OR horas::text LIKE :q
+                       OR fecha_inicio::text LIKE :q
+                       OR fecha_fin::text LIKE :q";
+            }
+            $ps = $this->db->prepare($sql);
+            $ps->bindValue(':q', '%' . $texto . '%', PDO::PARAM_STR);
             $ps->execute();
             $filas=$ps->fetchall();
             $modulos=array();
@@ -56,21 +90,21 @@
         }
 
 
-        public function modificar(Modulos $modulo){
+        public function modificar(Modulos $modulo) {
             $sql = "UPDATE modulos SET 
-            curso_id=:cid, 
-            nombre_modulo=:nm, 
-            horas=:h, 
-            fecha_inicio=:fi,
-            fecha_fin=:ff
-                WHERE id_modulo=:id";
-            $ps=$this->db->prepare($sql);
-            $id= $modulo->getIdModulo();
-            $cid= $modulo->getCursoId();
-            $nm= $modulo->getNombreModulo();
-            $h= $modulo->getHoras();
-            $fi= $modulo->getFechaInicio();
-            $ff= $modulo->getFechaFin();
+                curso_id = :cid,
+                nombre_modulo = :nm,
+                horas = :h,
+                fecha_inicio = :fi,
+                fecha_fin = :ff
+                WHERE id_modulo = :id";
+            $ps = $this->db->prepare($sql);
+            $id = $modulo->getIdModulo();
+            $cid = $modulo->getCursoId();
+            $nm = $modulo->getNombreModulo();
+            $h = $modulo->getHoras();
+            $fi = $modulo->getFechaInicio();
+            $ff = $modulo->getFechaFin();
             $ps->bindParam(":id", $id);
             $ps->bindParam(":cid", $cid);
             $ps->bindParam(":nm", $nm);

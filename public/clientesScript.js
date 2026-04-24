@@ -12,24 +12,25 @@ function confirmarEliminar(id) {
  * Prepara el formulario lateral para editar un cliente existente.
  * @param {Object} cliente - Objeto con los datos del cliente traídos desde el JSON del botón.
  */
+/**
+ * Prepara el formulario lateral para editar un cliente existente.
+ */
 function editarCliente(cliente) {
-    // 1. Visibilidad del panel (si está oculto por el botón hamburguesa)
     const seccion = document.getElementById('seccionRegistro');
     if (seccion.classList.contains('panel-oculto')) {
-        toggleRegistro(); // Asumiendo que esta función existe en UniversalScript.js
+        toggleRegistro(); 
     }
 
-    // 2. Referencias a elementos
     const form = document.getElementById('formCliente');
     const title = document.getElementById('form-title');
     const btnSubmit = document.getElementById('btn-submit-form');
-    const btnCancelar = document.getElementById('btn-cancelar');
+    const btnCancelar = document.getElementById('btn-cancelar'); 
 
-    // 3. Cambio de modo: Registro -> Edición
+    // 1. Cambio de modo: Registro -> Edición
     form.action = "index.php?accion=modificar_cliente";
     title.innerHTML = '<i class="fas fa-edit"></i> Editar Cliente';
     
-    // 4. Llenado de campos (Asegúrate que los nombres coincidan con el objeto PHP)
+    // 2. Llenado de campos
     document.getElementById('id_cliente_form').value = cliente.id_cliente;
     form.querySelector('input[name="dni"]').value = cliente.dni;
     form.querySelector('input[name="nombres"]').value = cliente.nombres;
@@ -39,17 +40,21 @@ function editarCliente(cliente) {
     form.querySelector('input[name="area"]').value = cliente.area;
     form.querySelector('select[name="estado"]').value = cliente.estado;
 
-    // 5. UI: Feedback visual de que estamos editando
+    // 3. UI: CAMBIO A COLOR AZUL
     btnSubmit.querySelector('span').innerText = "Actualizar Datos";
-    btnSubmit.classList.replace('btn-primary-green', 'btn-primary-blue'); // Si existe estilo azul
-    btnCancelar.style.display = 'block'; // Mostrar botón cancelar
     
-    // Scroll suave hacia el formulario en móviles
+    // Aplicamos el color azul directamente
+    btnSubmit.style.backgroundColor = "#007bff"; // Azul primario
+    btnSubmit.style.borderColor = "#0069d9";
+    btnSubmit.style.color = "#ffffff"; // Aseguramos que el texto sea blanco
+
+    if (btnCancelar) btnCancelar.style.display = 'block'; 
+    
     seccion.scrollIntoView({ behavior: 'smooth' });
 }
 
 /**
- * Restablece el formulario a su estado original de "Nuevo Registro".
+ * Restablece el formulario al estado original (Verde)
  */
 function resetearFormulario() {
     const form = document.getElementById('formCliente');
@@ -61,7 +66,11 @@ function resetearFormulario() {
     
     const btnSubmit = document.getElementById('btn-submit-form');
     btnSubmit.querySelector('span').innerText = "Guardar Cliente";
-    btnSubmit.classList.add('btn-primary-green');
     
-    document.getElementById('btn-cancelar').style.display = 'none';
+    // VOLVER AL VERDE ORIGINAL
+    btnSubmit.style.backgroundColor = "#28a745"; 
+    btnSubmit.style.borderColor = "#218838";
+    
+    const btnCancelar = document.getElementById('btn-cancelar');
+    if (btnCancelar) btnCancelar.style.display = 'none';
 }

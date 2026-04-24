@@ -1,20 +1,23 @@
 <?php
+ 
 class DB {
     public static function conectar() {
-        $host = "127.0.0.1";
-        $port = "4050"; 
-        $dbname = "oegpp";
-        $user = "postgres";
-        $password = "123";
-
+        $host     = "aws-1-us-west-2.pooler.supabase.com";
+        $port     = "5432";
+        $dbname   = "postgres";
+        $user     = "postgres.tprhfmrbkpqtqsvlmxym";
+        $password = "loussianaJ9";
+ 
         try {
-            $cn = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $password);
-            $cn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $cn;
+            $conn = new PDO(
+                "pgsql:host=$host;port=$port;dbname=$dbname",
+                $user,
+                $password
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $conn;
         } catch (PDOException $e) {
             die("Error de conexión: " . $e->getMessage());
         }
     }
 }
-?>
-

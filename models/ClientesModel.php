@@ -14,26 +14,27 @@ class ClientesModel {
         try {
             $query = "SELECT id_cliente, dni, nombres, apellidos, correo, celular, area, estado FROM clientes ORDER BY id_cliente DESC";
             $stmt = $this->conexion->query($query);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        } catch (PDOException $e) {
-            return [];
-        }
+
+            return $stmt->fetchAll(PDO::FETCH_OBJ) ?: []; 
+            } catch (PDOException $e) {
+                return [];
+            }
     }
 
-    public function guardarNuevoCliente($cliente) {
+    public function guardarCliente($cliente) {
         try {
             $sql = "INSERT INTO clientes (dni, nombres, apellidos, correo, celular, area, estado) 
                     VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id_cliente";
             
             $stmt = $this->conexion->prepare($sql);
             $stmt->execute([
-                $cliente->getDni(),
-                $cliente->getNombres(),
-                $cliente->getApellidos(),
-                $cliente->getCorreo(),
-                $cliente->getCelular(),
-                $cliente->getArea(),
-                $cliente->getEstado() // 'Activo' o 'Inactivo'
+                $cliente->getDni($_POST['dni']),
+                $cliente->getNombres($_POST['nombres']),
+                $cliente->getApellidos($_POST['apellidos']),
+                $cliente->getCorreo($_POST['correo']),
+                $cliente->getCelular($_POST['celular']),
+                $cliente->getArea($_POST['area']),
+                $cliente->getEstado($_POST['estado']) // 'Activo' o 'Inactivo'
             ]);
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -47,7 +48,7 @@ class ClientesModel {
         }
     }
 
-    public function modificar($cliente) {
+    public function modificarCliente($cliente) {
         try {
             $sql = "UPDATE clientes SET 
                         dni = ?, 
@@ -61,14 +62,14 @@ class ClientesModel {
             
             $stmt = $this->conexion->prepare($sql);
             return $stmt->execute([
-                $cliente->getDni(),
-                $cliente->getNombres(),
-                $cliente->getApellidos(),
-                $cliente->getCorreo(),
-                $cliente->getCelular(),
-                $cliente->getArea(),
-                $cliente->getEstado(),
-                $cliente->getIdCliente() // El ID es necesario para el WHERE
+                $cliente->getDni($_POST['dni']),
+                $cliente->getNombres($_POST['nombres']),
+                $cliente->getApellidos($_POST['apellidos']),
+                $cliente->getCorreo($_POST['correo']),
+                $cliente->getCelular($_POST['celular']),
+                $cliente->getArea($_POST['area']),
+                $cliente->getEstado($_POST['estado']),
+                $cliente->getIdCliente($_POST['id_cliente']) // El ID es necesario para el WHERE
             ]);
         } catch (PDOException $e) {
             $this->ultimoError = $e->getMessage();
@@ -77,7 +78,7 @@ class ClientesModel {
         }
     }
 
-    public function eliminar($id_cliente) {
+    public function eliminarCliente($id_cliente) {
         try {
             $sql = "DELETE FROM clientes WHERE id_cliente = ?";
             $stmt = $this->conexion->prepare($sql);

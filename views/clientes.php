@@ -15,7 +15,6 @@
     <?php include 'includes/menu.php'; ?>
 
     <div class="container main-content">
-    
         <div class="header-acciones">
             <div class="titulo-con-boton">
                 <button onclick="toggleRegistro()" class="btn-hamburguesa" title="Mostrar/Ocultar Formulario">
@@ -26,16 +25,16 @@
                     <p style="margin: 5px 0 0 0; color: #64748b;">Administra la lista de clientes.</p>
                 </div>
             </div>
-     
         </div>
 
         <div class="dashboard-wrapper">
-            
             <div id="seccionRegistro">
-            <div class="side-panel">
-                <h3 id="form-title"><i class="fas fa-plus-circle"></i> Datos del Registro</h3>
-                    <form id="formCliente" action="index.php?accion=guardarCliente" method="POST">                    <div class="form-vertical-stack">
-                    <input type="hidden" name="id_cliente" id="id_cliente_form" value="">                      
+                <div class="side-panel">
+                    <h3 id="form-title"><i class="fas fa-plus-circle"></i> Datos del Registro</h3>
+                    <form id="formCliente" action="index.php?accion=guardarCliente" method="POST">
+                        <div class="form-vertical-stack">
+                            <input type="hidden" name="id_cliente" id="id_cliente_form" value="">
+                            
                             <div class="field-group">
                                 <label>DNI</label>
                                 <input type="text" name="dni" id="dni_input" required placeholder="00000000" maxlength="8">
@@ -67,11 +66,18 @@
                                     <option value="Inactivo">Inactivo</option>
                                 </select>
                             </div>
-                            <button id="btn-submit-form" class="btn btn-primary-green">
-                                <i class="fas fa-save"></i>
-                                <span>Guardar Cliente</span>
-                            </button>
-                        </div>
+
+                            <div class="form-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+                                <button type="submit" id="btn-submit-form" class="btn btn-primary-green" style="flex: 1;">
+                                    <i class="fas fa-save"></i>
+                                    <span>Guardar Cliente</span>
+                                </button>
+
+                                <button type="button" id="btn-cancelar" onclick="resetearFormulario()" 
+                                        class="btn btn-secondary" style="display: none; background-color: #64748b; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -83,7 +89,10 @@
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" id="buscadorTabla" class="search-input" placeholder="Buscar por DNI, Nombre o Área...">
                     </div>
-                    <button class="btn btn-outline"><i class="fas fa-file-export"></i> Exportar</button>
+                    <button class="btn-exportar" onclick="exportarCursos()">
+                        <i class="fas fa-file-export"></i>
+                        <span>Exportar Datos</span>
+                    </button>
                 </div>
 
                 <div class="table-card">
@@ -104,19 +113,20 @@
                             </thead>
                             <tbody>
                                 <?php 
-                                $i = 1; 
-                                if (!empty($clientes)):
-                                    foreach ($clientes as $c): 
+                                    $i = 1; 
+                                    if (!empty($clientes)):
+                                        foreach ($clientes as $c): 
                                 ?>
                                 <tr class="fila-cliente">
                                     <td class="id-column"><?= $i++ ?></td>
-                                    <td><strong><?= htmlspecialchars($c['dni']) ?></strong></td>
-                                    <td><?= htmlspecialchars($c['nombres']) ?></td>
-                                    <td><?= htmlspecialchars($c['apellidos']) ?></td>
-                                    <td><?= htmlspecialchars($c['correo']) ?></td>
-                                    <td><?= htmlspecialchars($c['celular']) ?></td>
-                                    <td><?= htmlspecialchars($c['area']) ?></td>
-                                    <td><?= htmlspecialchars($c['estado']) ?></td>
+                                    <td><strong><?= htmlspecialchars($c->dni) ?></strong></td>
+                                    <td><?= htmlspecialchars($c->nombres) ?></td>
+                                    <td><?= htmlspecialchars($c->apellidos) ?></td>
+                                    <td><?= htmlspecialchars($c->correo) ?></td>
+                                    <td><?= htmlspecialchars($c->celular) ?></td>
+                                    <td><?= htmlspecialchars($c->area) ?></td>
+                                    <td><?= htmlspecialchars($c->estado) ?></td>
+                                    
                                     <td style="text-align: center; white-space: nowrap;">
                                         <button class="btn-icon btn-edit" 
                                                 title="Editar" 
@@ -126,21 +136,21 @@
 
                                         <button class="btn-icon btn-delete" 
                                                 title="Eliminar" 
-                                                onclick="confirmarEliminar(<?= $c['id_cliente'] ?>)">
+                                                onclick="confirmarEliminar(<?= $c->id_cliente ?>)">
                                             <i class="fas fa-trash" style="color: #e24a4a;"></i>
                                         </button>
                                     </td>
                                 </tr>
                                 <?php 
-                                    endforeach; 
-                                else: 
+                                        endforeach; 
+                                    else: 
                                 ?>
                                 <tr>
                                     <td colspan="9" style="text-align: center; padding: 4rem 2rem;">
                                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.7;">
                                             <i class="fas fa-folder-open" style="font-size: 4rem; color: #94a3b8; margin-bottom: 15px;"></i>
                                             <h4 style="margin: 0; color: #0f172a; font-size: 1.2rem; font-weight: 600;">Sin registros encontrados</h4>
-                                            <p style="margin: 5px 0 0 0; color: #64748b; font-size: 0.95rem;">Utiliza el botón superior para agregar a tu primer trabajador.</p>
+                                            <p style="margin: 5px 0 0 0; color: #64748b; font-size: 0.95rem;">Utiliza el panel lateral para agregar a tu primer cliente.</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -155,6 +165,5 @@
     
     <script src="public/UniversalScript.js?v=<?= time(); ?>"></script>
     <script src="public/clientesScript.js?v=<?= time(); ?>"></script>
-
 </body>
 </html>
