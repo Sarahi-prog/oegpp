@@ -8,35 +8,37 @@ require_once 'helpers/loggers.php';
 
 class NotasModuloController {
 
-    public function cargar() {
-        try {
-            $modelNotas = new NotasModuloModel();
-            $modelCursos = new CursosModel();
-            $modelTrabajadores = new TrabajadoresModel();
-            $modelModulos = new ModulosModel();
+        public function cargar() {
+            try {
+                $modelNotas = new NotasModuloModel();
+                $modelCursos = new CursosModel();
+                $modelClientes = new ClientesModel(); // antes TrabajadoresModel
+                $modelModulos = new ModulosModel();
 
-            // Cargar todos los cursos
-            $cursos = $modelCursos->cargar();
+                // Cargar todos los cursos
+                $cursos = $modelCursos->cargar();
 
-            // Capturar curso seleccionado
-            $cursoSeleccionado = isset($_GET['curso_id']) ? $_GET['curso_id'] : null;
+                // Capturar curso seleccionado
+                $cursoSeleccionado = isset($_GET['curso_id']) ? $_GET['curso_id'] : null;
 
-            // Inicializar variables
-            $modulos = [];
-            $trabajadores = [];
-            $notas = [];
+                // Inicializar variables
+                $modulos = [];
+                $clientes = [];
+                $pivotes = [];
 
-            if (!empty($cursoSeleccionado)) {
-                // Filtrar módulos y notas por curso
-                $modulos = $modelModulos->cargarPorCurso($cursoSeleccionado);
-                $trabajadores = $modelTrabajadores->cargar();
-                $notas = $modelNotas->cargarPorCurso($cursoSeleccionado);
+                if (!empty($cursoSeleccionado)) {
+                    // Filtrar módulos y notas por curso usando el pivote
+                    $modulos = $modelModulos->cargarPorCurso($cursoSeleccionado);
+                    $clientes = $modelClientes->cargar();
+                    $pivotes = $modelNotas->cargarPivotPorCurso($cursoSeleccionado);
+                }
+
+                require './views/notas.php';
+            } catch (Exception $e) {
+                Logger::error($e);
             }
-            require './views/notas.php';
-        } catch (Exception $e) {
-            Logger::error($e);
         }
-    }
+
 
     public function guardar() {
         try {

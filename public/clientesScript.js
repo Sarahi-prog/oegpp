@@ -1,36 +1,21 @@
-/**
- * Confirma la eliminación con una alerta nativa.
- * @param {number} id - ID del cliente a eliminar.
- */
-function confirmarEliminar(id) {
-    if (confirm("¿Estás seguro de eliminar este registro? Esta acción es irreversible.")) {
-        window.location.href = "index.php?accion=eliminar_cliente&id=" + id;
-    }
-}
-
-/**
- * Prepara el formulario lateral para editar un cliente existente.
- * @param {Object} cliente - Objeto con los datos del cliente traídos desde el JSON del botón.
- */
+// clientesScript.js
+// Función para editar un cliente (internamente trabajador)
 function editarCliente(cliente) {
-    // 1. Visibilidad del panel (si está oculto por el botón hamburguesa)
     const seccion = document.getElementById('seccionRegistro');
     if (seccion.classList.contains('panel-oculto')) {
-        toggleRegistro(); // Asumiendo que esta función existe en UniversalScript.js
+        toggleRegistro(); // Mostrar panel si está oculto
     }
 
-    // 2. Referencias a elementos
-    const form = document.getElementById('formCliente');
-    const title = document.getElementById('form-title');
-    const btnSubmit = document.getElementById('btn-submit-form');
-    const btnCancelar = document.getElementById('btn-cancelar');
+    const form = document.getElementById('formTrabajadorAjax');
+    const title = document.querySelector('#seccionRegistro h3');
+    const btnSubmit = form.querySelector('button[type="submit"]');
 
-    // 3. Cambio de modo: Registro -> Edición
+    // Cambiar acción a modificar
     form.action = "index.php?accion=modificar_cliente";
     title.innerHTML = '<i class="fas fa-edit"></i> Editar Cliente';
-    
-    // 4. Llenado de campos (Asegúrate que los nombres coincidan con el objeto PHP)
-    document.getElementById('id_cliente_form').value = cliente.id_cliente;
+
+    // Llenar campos con los datos del cliente
+    document.getElementById('id_trabajador').value = cliente.id_trabajador;
     form.querySelector('input[name="dni"]').value = cliente.dni;
     form.querySelector('input[name="nombres"]').value = cliente.nombres;
     form.querySelector('input[name="apellidos"]').value = cliente.apellidos;
@@ -39,29 +24,53 @@ function editarCliente(cliente) {
     form.querySelector('input[name="area"]').value = cliente.area;
     form.querySelector('select[name="estado"]').value = cliente.estado;
 
-    // 5. UI: Feedback visual de que estamos editando
-    btnSubmit.querySelector('span').innerText = "Actualizar Datos";
-    btnSubmit.classList.replace('btn-primary-green', 'btn-primary-blue'); // Si existe estilo azul
-    btnCancelar.style.display = 'block'; // Mostrar botón cancelar
-    
-    // Scroll suave hacia el formulario en móviles
-    seccion.scrollIntoView({ behavior: 'smooth' });
+    // Cambiar estilo del botón
+    btnSubmit.innerHTML = '<i class="fas fa-save"></i> Actualizar Cliente';
+    btnSubmit.classList.remove('btn-primary-green');
+    btnSubmit.classList.add('btn-primary-blue');
 }
 
-/**
- * Restablece el formulario a su estado original de "Nuevo Registro".
- */
-function resetearFormulario() {
-    const form = document.getElementById('formCliente');
+// Función para resetear el formulario a modo "nuevo registro"
+function resetearFormularioCliente() {
+    const form = document.getElementById('formTrabajadorAjax');
+    const title = document.querySelector('#seccionRegistro h3');
+    const btnSubmit = form.querySelector('button[type="submit"]');
+
     form.reset();
-    form.action = "index.php?accion=guardarCliente";
-    
-    document.getElementById('id_cliente_form').value = "";
-    document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle"></i> Datos del Registro';
-    
-    const btnSubmit = document.getElementById('btn-submit-form');
-    btnSubmit.querySelector('span').innerText = "Guardar Cliente";
+    form.action = "index.php?accion=guardar_cliente";
+    document.getElementById('id_trabajador').value = "";
+
+    title.innerHTML = '<i class="fas fa-plus-circle"></i> Datos del Registro';
+    btnSubmit.innerHTML = '<i class="fas fa-save"></i> Guardar Cliente';
+    btnSubmit.classList.remove('btn-primary-blue');
     btnSubmit.classList.add('btn-primary-green');
-    
-    document.getElementById('btn-cancelar').style.display = 'none';
 }
+
+// Ejemplo de cómo enganchar los botones de la tabla
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-edit').forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+            // Aquí deberías tener los datos del cliente en JS.
+            // Si los pasas como atributos data-* en el botón, puedes leerlos así:
+            const cliente = {
+                id_trabajador: btn.dataset.id,
+                dni: btn.dataset.dni,
+                nombres: btn.dataset.nombres,
+                apellidos: btn.dataset.apellidos,
+                correo: btn.dataset.correo,
+                celular: btn.dataset.celular,
+                area: btn.dataset.area,
+                estado: btn.dataset.estado
+            };
+            editarCliente(cliente);
+        });
+    });
+
+    document.querySelectorAll('.btn-delete').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            if (confirm("¿Estás seguro de eliminar este cliente?")) {
+                window.location.href = "index.php?accion=eliminar_cliente&id=" + btn.dataset.id;
+            }
+        });
+    });
+});

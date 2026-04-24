@@ -24,20 +24,39 @@
             }
         }
 
-        public function modificar(){
+        public function modificar() {
             try {
-                if(isset($_POST['id_libro']) && isset($_POST['tipo']) && isset($_POST['numero_libro']) && isset($_POST['anio_inicio']) && isset($_POST['fecha_fin'])){
-                    $libro = new LibrosRegistro();
-                    $libro->setid_libro($_POST['id_libro']);
-                    $libro->setTipo($_POST['tipo']);
-                    $libro->setNumeroLibro($_POST['numero_libro']);
-                    $libro->setAnioInicio($_POST['anio_inicio']);
-                    $libro->setFechaFin($_POST['fecha_fin']);
-                    $model = new LibrosRegistroModel();
-                    $model->modificar($libro);
-                }
+                $libro = new LibrosRegistro();
+                $libro->setIdLibro($_POST['id_libro']);
+                $libro->setTipo($_POST['tipo']);
+                $libro->setNumeroLibro($_POST['numero_libro']);
+                $libro->setAnioInicio($_POST['anio_inicio']);
+                $libro->setFechaFin($_POST['fecha_fin']);
+                $libro->setDistrito($_POST['distrito']);
+                $libro->setProvincia($_POST['provincia']);
+                $libro->setDescripcion($_POST['descripcion']);
+
+                $model = new LibrosRegistroModel();
+                $model->modificar($libro);
+
+                header("Location: index.php?accion=libros_registro");
+                exit();
             } catch (Exception $e) {
-                Logger::error($e);
+                echo "Error al modificar libro: " . $e->getMessage();
+            }
+        }
+
+        public function eliminar() {
+            try {
+                if (isset($_GET['id'])) {
+                    $id = $_GET['id'];
+                    $model = new LibrosRegistroModel();
+                    $model->eliminar($id);
+                }
+                header("Location: index.php?accion=libros_registro");
+                exit();
+            } catch (Exception $e) {
+                echo "Error al eliminar libro: " . $e->getMessage();
             }
         }
 
@@ -54,6 +73,8 @@
                     $libro->setDescripcion($_POST['descripcion']);
                     $model = new LibrosRegistroModel();
                     $model->guardar($libro);
+                    header("Location: index.php?accion=libros_registro");
+                    
                 } else {
                     header("Location: index.php?accion=libros_registro");
                     exit();

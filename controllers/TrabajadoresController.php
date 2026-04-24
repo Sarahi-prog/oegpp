@@ -15,17 +15,55 @@ class TrabajadoresController {
         $pagina_actual = 'trabajadores'; 
         require './views/trabajadores.php'; 
     }
-
-    private function modificar(){
+    public function guardarTrabajador() {
         try {
-            if(isset($_POST['id_trabajador']) && isset($_POST['dni']) && isset($_POST['nombres']) && isset($_POST['apellidos'])){
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $trabajador = $this->mapearDatosFormulario();
-                $trabajador->setIdTrabajador($_POST['id_trabajador']);
                 $model = new TrabajadoresModel();
-                $model->modificar($trabajador);
+                $model->guardar($trabajador);
             }
+            header("Location: index.php?accion=trabajadores");
+            exit();
         } catch (Exception $e) {
             Logger::error($e);
+        }
+    }
+
+    public function eliminar() {
+        try {
+            if (isset($_GET['id'])) {
+                $id = $_GET['id'];
+                $model = new TrabajadoresModel();
+                $model->eliminar($id);
+            }
+            header("Location: index.php?accion=trabajadores");
+            exit();
+        } catch (Exception $e) {
+            Logger::error($e);
+            echo "Error al eliminar: " . $e->getMessage();
+        }
+    }
+
+
+    public function modificarTrabajador() {
+        try {
+            $trabajador = new Trabajadores();
+            $trabajador->setIdTrabajador($_POST['id_trabajador']);
+            $trabajador->setDni($_POST['dni']);
+            $trabajador->setNombres($_POST['nombres']);
+            $trabajador->setApellidos($_POST['apellidos']);
+            $trabajador->setCorreo($_POST['correo']);
+            $trabajador->setCelular($_POST['celular']);
+            $trabajador->setArea($_POST['area']);
+            $trabajador->setEstado($_POST['estado']);
+
+            $model = new TrabajadoresModel();
+            $model->actualizar($trabajador);
+
+            header("Location: index.php?accion=trabajadores");
+            exit();
+        } catch (Exception $e) {
+            echo "Error al modificar: " . $e->getMessage();
         }
     }
 

@@ -105,33 +105,27 @@
         
         public function modificar(LibrosRegistro $libro){
             $sql = "UPDATE libros_registro SET 
-            tipo=:t, 
-            numero_libro=:nl,
-            anio_inicio=:ai, 
-            fecha_fin=:ff,
-            distrito=:dt,
-            provincia=:pv,
-            descripcion=:dc
-                WHERE id_libro=:id";
-            $ps=$this->db->prepare($sql);
-            $id= $libro->getIdLibro();
-            $t= $libro->getTipo();
-            $nl= $libro->getNumeroLibro();
-            $ai= $libro->getAnioInicio();
-            $ff= $libro->getFechaFin();
-            $dt= $libro->getDistrito();
-            $pv= $libro->getProvincia();
-            $dc= $libro->getDescripcion();
-            $ps->bindParam(":id", $id);
-            $ps->bindParam(":t", $t);
-            $ps->bindParam(":nl", $nl);
-            $ps->bindParam(":ai", $ai);
-            $ps->bindParam(":ff", $ff);
-            $ps->bindParam(":dt", $dt);
-            $ps->bindParam(":pv", $pv);
-            $ps->bindParam(":dc", $dc);
+                        tipo = :t, 
+                        numero_libro = :nl,
+                        anio_inicio = :ai, 
+                        fecha_fin = :ff,
+                        distrito = :dt,
+                        provincia = :pv,
+                        descripcion = :dc
+                    WHERE id_libro = :id";
+            $ps = $this->db->prepare($sql);
+
+            $ps->bindParam(":id", $libro->getIdLibro(), PDO::PARAM_INT);
+            $ps->bindParam(":t", $libro->getTipo());
+            $ps->bindParam(":nl", $libro->getNumeroLibro());
+            $ps->bindParam(":ai", $libro->getAnioInicio());
+            $ps->bindParam(":ff", $libro->getFechaFin());
+            $ps->bindParam(":dt", $libro->getDistrito());
+            $ps->bindParam(":pv", $libro->getProvincia());
+            $ps->bindParam(":dc", $libro->getDescripcion());
 
             $ps->execute();
         }
-    }
+
+}
 ?>

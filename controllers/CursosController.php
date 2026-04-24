@@ -4,7 +4,6 @@
     require_once 'helpers/loggers.php';
 
     class CursosController{
-
         public function cargar(){
             try {
                 $model = new CursosModel();
@@ -14,7 +13,6 @@
                 Logger::error($e);
             }
         }
-
         public function cargarsinR(){
             try {
                 $model = new CursosModel();
@@ -24,7 +22,6 @@
                 Logger::error($e);
             }
         }
-
         public function modificar(){
             try {
                 if(isset($_POST['id_curso']) && isset($_POST['codigo_curso']) && isset($_POST['nombre_curso']) && isset($_POST['horas_totales'])){
@@ -40,7 +37,6 @@
                 Logger::error($e);
             }
         }
-
         public function guardar(){
             try {
                 if(isset($_POST['codigo_curso']) && isset($_POST['nombre_curso']) && isset($_POST['horas_totales'])){

@@ -112,11 +112,34 @@ switch ($accion) {
     case 'cursos':
         $controllerCursos->cargar();
         break;
+    case 'guardar_curso':
+        $controllerCursos->guardar();
+        break;
     case 'libros_registro':
         $controllerLibros->cargar();
         break;
-    case 'clientes':
+    case 'modificar_libro':
+        $controller->modificar();
+        break;
+    case 'eliminar_libro':
+        $controller->eliminar();
+        break;
+
+    case 'guardar_libro':
+        $controllerLibros->guardar();
+        break;
+    case 'trabajadores':
         $controllerTrabajadores->listarTrabajadores();
+        break;
+    case 'guardar_cliente':
+        $controllerTrabajadores->guardarTrabajador();
+        break;
+    case 'modificar_cliente':
+        $controllerTrabajadores->modificarTrabajador();
+        break;
+
+    case 'eliminar_cliente':
+        $controllerTrabajadores->eliminar();
         break;
     case 'nueva_asignacion':
         $controllerTrabajadores->mostrarFormularioAsignacion();
@@ -130,7 +153,7 @@ switch ($accion) {
     case 'registros_capacitacion':
         $controllerRegistrosCapacitacion->cargar();
         break;
-    case 'guardar_registro_capacitacion':
+    case 'guardar_capacitacion':
         $controllerRegistrosCapacitacion->guardar();
         break;
     // --- DEFAULT: ERROR 404 ---

@@ -99,33 +99,28 @@
                 return $registroscapacitacion;
             }
             
-            public function guardar(RegistrosCapacitacion $registroscapacitacion){
-                $sql = "INSERT INTO registros_capacitacion (trabajador_id, curso_id,
-                libro_id, registro, horas_realizadas,fecha_inicio, fecha_fin, fecha_emision, folio)
-                    VALUES (:tid, :cid, :lid, :r, :hr, :fi, :ff, :fe, :f)";
-                $ps=$this->db->prepare($sql);
-                $tid= $registroscapacitacion->getTrabajadorId();
-                $cid= $registroscapacitacion->getCursoId();
-                $lid= $registroscapacitacion->getLibroId();
-                $r= $registroscapacitacion->getRegistro();
-                $hr= $registroscapacitacion->getHorasRealizadas();
-                $fi= $registroscapacitacion->getFechaInicio();
-                $ff= $registroscapacitacion->getFechaFin();
-                $fe= $registroscapacitacion->getFechaEmision();
-                $f= $registroscapacitacion->getFolio();
-                $ps->bindParam(":tid", $tid);
-                $ps->bindParam(":cid", $cid);
-                $ps->bindParam(":lid", $lid);
-                $ps->bindParam(":r", $r);
-                $ps->bindParam(":hr", $hr);
-                $ps->bindParam(":fi", $fi);
-                $ps->bindParam(":ff", $ff);
-                $ps->bindParam(":fe", $fe);
-                $ps->bindParam(":f", $f);
+            public function guardar(RegistroCapacitacion $registrocapacitacion) {
+                $sql = "INSERT INTO registros_capacitacion (
+                            clientes_id, curso_id, libro_id, registro, horas_realizadas,
+                            fecha_inicio, fecha_fin, fecha_emision, folio, estado
+                        ) VALUES (:tid, :cid, :lid, :r, :hr, :fi, :ff, :fe, :f, :estado)";
+                $ps = $this->db->prepare($sql);
+                $ps->bindValue(":tid", $registrocapacitacion->getTrabajadorId());
+                $ps->bindValue(":cid", $registrocapacitacion->getCursoId());
+                $ps->bindValue(":lid", $registrocapacitacion->getLibroId());
+                $ps->bindValue(":r", $registrocapacitacion->getRegistro());
+                $ps->bindValue(":hr", $registrocapacitacion->getHorasRealizadas());
+                $ps->bindValue(":fi", $registrocapacitacion->getFechaInicio());
+                $ps->bindValue(":ff", $registrocapacitacion->getFechaFin());
+                $ps->bindValue(":fe", $registrocapacitacion->getFechaEmision());
+                $ps->bindValue(":f", $registrocapacitacion->getFolio());
+                $ps->bindValue(":estado", $registrocapacitacion->getEstado() ?? 'Activo');
+
                 $ps->execute();
             }
 
-            public function modificar(RegistrosCapacitacion $registroscapacitacion){
+            
+            public function modificar(RegistroCapacitacion $registrocapacitacion){
                 $sql = "UPDATE registros_capacitacion SET 
                     trabajador_id=:tid, 
                     curso_id=:cid, 

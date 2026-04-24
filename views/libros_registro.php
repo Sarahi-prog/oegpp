@@ -162,10 +162,23 @@
                                         </span>
                                     </td>
                                     <td style="text-align: center; white-space: nowrap;">
-                                        <button class="btn-icon btn-edit" title="Editar">
+                                        <button class="btn-icon btn-edit" 
+                                                title="Editar"
+                                                data-id="<?= $libro->getIdLibro() ?>"
+                                                data-tipo="<?= htmlspecialchars($libro->getTipo()) ?>"
+                                                data-numero="<?= htmlspecialchars($libro->getNumeroLibro()) ?>"
+                                                data-anio_inicio="<?= htmlspecialchars($libro->getAnioInicio()) ?>"
+                                                data-fecha_fin="<?= htmlspecialchars($libro->getFechaFin()) ?>"
+                                                data-distrito="<?= htmlspecialchars($libro->getDistrito()) ?>"
+                                                data-provincia="<?= htmlspecialchars($libro->getProvincia()) ?>"
+                                                data-descripcion="<?= htmlspecialchars($libro->getDescripcion()) ?>"
+                                                data-estado="<?= htmlspecialchars($libro->getEstado()) ?>">
                                             <i class="fas fa-edit" style="color: #4a90e2;"></i>
                                         </button>
-                                        <button class="btn-icon btn-delete" title="Eliminar">
+
+                                        <button class="btn-icon btn-delete" 
+                                                title="Eliminar"
+                                                data-id="<?= $libro->getIdLibro() ?>">
                                             <i class="fas fa-trash" style="color: #e24a4a;"></i>
                                         </button>
                                     </td>

@@ -30,7 +30,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
                     <i class="fas fa-users"></i> Clientes
                 </a>
 
-                <a href="#" class="menu-item <?= ($pagina_actual == 'cursos') ? 'active' : '' ?>">
+                <a href="index.php?accion=cursos" class="menu-item <?= ($pagina_actual == 'cursos') ? 'active' : '' ?>">
                     <i class="fas fa-chart-bar"></i> Cursos
                 </a>
 

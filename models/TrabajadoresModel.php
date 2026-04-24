@@ -64,6 +64,14 @@
                 }
                 return $trabajadores;
             }
+
+            public function eliminar($id) {
+                $sql = "DELETE FROM clientes WHERE id_cliente = :id";
+                $ps = $this->db->prepare($sql);
+                $ps->bindParam(":id", $id, PDO::PARAM_INT);
+                $ps->execute();
+            }
+
             public function actualizar(Trabajadores $trabajador){
                 $sql = "UPDATE clientes SET 
                 dni=:dni, 

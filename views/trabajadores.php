@@ -126,11 +126,31 @@
                                     <td><?= htmlspecialchars($celular) ?></td>
                                     <td><?= htmlspecialchars($area) ?></td>
                                     <td><?= htmlspecialchars($estado) ?></td>
-                                    <td><?= htmlspecialchars($estado)?></td>
                                     <td style="text-align: center; white-space: nowrap;">
-                                        <button class="btn-icon btn-edit" title="Editar"><i class="fas fa-edit" style="color: #4a90e2;"></i></button>
-                                        <button class="btn-icon btn-delete" title="Eliminar"><i class="fas fa-trash" style="color: #e24a4a;"></i></button>
+                                        <button 
+                                            class="btn-icon btn-edit" 
+                                            title="Editar"
+                                            data-id="<?= $id_trabajador ?>"
+                                            data-dni="<?= htmlspecialchars($dni) ?>"
+                                            data-nombres="<?= htmlspecialchars($nombres) ?>"
+                                            data-apellidos="<?= htmlspecialchars($apellidos) ?>"
+                                            data-correo="<?= htmlspecialchars($correo) ?>"
+                                            data-celular="<?= htmlspecialchars($celular) ?>"
+                                            data-area="<?= htmlspecialchars($area) ?>"
+                                            data-estado="<?= htmlspecialchars($estado) ?>"
+                                        >
+                                            <i class="fas fa-edit" style="color: #4a90e2;"></i>
+                                        </button>
+
+                                        <button 
+                                            class="btn-icon btn-delete" 
+                                            title="Eliminar"
+                                            data-id="<?= $id_trabajador ?>"
+                                        >
+                                            <i class="fas fa-trash" style="color: #e24a4a;"></i>
+                                        </button>
                                     </td>
+
                                 </tr>
                                 <?php 
                                     endforeach; 
