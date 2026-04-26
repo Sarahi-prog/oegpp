@@ -18,6 +18,7 @@ class CursosModel {
             $cur->setNombreCurso($f[2]);
             $cur->setTipo($f[3]);
             $cur->setHorasTotales($f[4]);
+            $cur->setEstado($f[5]);
             $cursos[] = $cur;
         }
         return $cursos;
@@ -46,14 +47,15 @@ class CursosModel {
 
     public function guardarCurso(Cursos $curso) {
         try {
-            $sql = "INSERT INTO cursos (codigo_curso, nombre_curso, tipo, horas_totales) 
-                    VALUES (:cc, :nc, :t, :ht)";
+            $sql = "INSERT INTO cursos (codigo_curso, nombre_curso, tipo, horas_totales, estado) 
+                    VALUES (:cc, :nc, :t, :ht, :e)";
             $ps = $this->db->prepare($sql);
             return $ps->execute([
                 ":cc" => $curso->getCodigoCurso(),
                 ":nc" => $curso->getNombreCurso(),
                 ":t"  => $curso->getTipo(),
-                ":ht" => $curso->getHorasTotales()
+                ":ht" => $curso->getHorasTotales(),
+                ":e"  => $curso->getEstado()
             ]);
         } catch (PDOException $e) {
             error_log("Error al guardar: " . $e->getMessage());
@@ -70,7 +72,8 @@ class CursosModel {
                         codigo_curso=:cc, 
                         nombre_curso=:nc, 
                         tipo=:t, 
-                        horas_totales=:ht
+                        horas_totales=:ht,
+                        estado=:e
                     WHERE id_curso=:id";
             $ps = $this->db->prepare($sql);
             
@@ -79,7 +82,8 @@ class CursosModel {
                 ":cc" => $curso->getCodigoCurso(),
                 ":nc" => $curso->getNombreCurso(),
                 ":t"  => $curso->getTipo(),
-                ":ht" => $curso->getHorasTotales()
+                ":ht" => $curso->getHorasTotales(),
+                ":e"  => $curso->getEstado()
             ]);
         } catch (PDOException $e) {
             error_log("Error al modificar: " . $e->getMessage());
@@ -98,6 +102,21 @@ class CursosModel {
         } catch (PDOException $e) {
             // Esto fallará si el curso ya está asignado a un alumno (integridad referencial)
             error_log("Error al eliminar: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function actualizarEstado($id_curso, $estado) {
+        try {
+            $sql = "UPDATE cursos SET estado = :e WHERE id_curso = :id";
+            $ps = $this->db->prepare($sql);
+            
+            return $ps->execute([
+                ":e"  => $estado,
+                ":id" => $id_curso
+            ]);
+        } catch (PDOException $e) {
+            error_log("Error al actualizar estado: " . $e->getMessage());
             return false;
         }
     }

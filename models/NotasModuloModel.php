@@ -14,7 +14,7 @@
                            c.nombres || ' ' || c.apellidos AS nombre_cliente,
                            m.nombre_modulo
                     FROM notas_modulo nm
-                    LEFT JOIN clientes c ON nm.cliente = c.id_cliente
+                    LEFT JOIN clientes c ON nm.cliente_id = c.id_cliente
                     LEFT JOIN modulos m ON nm.modulo_id = m.id_modulo
                     ORDER BY nm.id_nota DESC";
                     
@@ -28,12 +28,12 @@
             if ($texto === '') {
                 return $this->cargar();
             }
-            $allowedFields = ['cliente', 'modulo_id', 'nota', 'fecha_registro'];
+            $allowedFields = ['cliente_id', 'modulo_id', 'nota', 'fecha_registro'];
             if ($campo !== null && in_array($campo, $allowedFields, true)) {
                 $sql = "SELECT * FROM notas_modulo WHERE $campo::text LIKE :q";
             } else {
                 $sql = "SELECT * FROM notas_modulo
-                    WHERE cliente::text LIKE :q
+                    WHERE cliente_id::text LIKE :q
                        OR modulo_id::text LIKE :q
                        OR nota::text LIKE :q
                        OR fecha_registro::text LIKE :q";
@@ -46,21 +46,21 @@
         
         public function modificar(NotasModulo $notas){
             $sql = "UPDATE notas_modulo SET 
-                cliente=:cid, 
+                cliente_id=:cid, 
                 modulo_id=:mid, 
                 nota=:nt
                 WHERE id_nota=:id";
             $ps=$this->db->prepare($sql);
             
-            $id = $notas->getIdNota();
+            $id  = $notas->getIdNota();
             $cid = $notas->getCliente();
             $mid = $notas->getModuloId();
-            $nt = $notas->getNota();
+            $nt  = $notas->getNota();
             
-            $ps->bindParam(":id", $id);
+            $ps->bindParam(":id",  $id);
             $ps->bindParam(":cid", $cid);
             $ps->bindParam(":mid", $mid);
-            $ps->bindParam(":nt", $nt);
+            $ps->bindParam(":nt",  $nt);
             $ps->execute();
         }
         
@@ -72,7 +72,7 @@
 
             if ($fr !== null && $fr !== '') {
                 $sql = "INSERT INTO notas_modulo (
-                    cliente,
+                    cliente_id,
                     modulo_id,
                     nota,
                     fecha_registro
@@ -84,7 +84,7 @@
                 )";
             } else {
                 $sql = "INSERT INTO notas_modulo (
-                    cliente,
+                    cliente_id,
                     modulo_id,
                     nota
                 ) VALUES (
@@ -97,7 +97,7 @@
             $ps = $this->db->prepare($sql);
             $ps->bindParam(":cid", $cid);
             $ps->bindParam(":mid", $mid);
-            $ps->bindParam(":nt", $nt);
+            $ps->bindParam(":nt",  $nt);
 
             if ($fr !== null && $fr !== '') {
                 $ps->bindParam(":fr", $fr);

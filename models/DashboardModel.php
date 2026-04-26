@@ -17,17 +17,21 @@ class DashboardModel {
             return 0;
         }
     }
- 
-    public function obtenerTotalCursosActivos() {
-        try {
-            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM cursos WHERE activo = 1");
-            $stmt->execute();
-            $res = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $res['total'] ?? 0;
-        } catch (Exception $e) {
-            return 0;
-        }
+
+   public function obtenerTotalCursosActivos() {
+    try {
+        // Aseguramos que solo cuente los que tienen 1 exacto
+        $sql = "SELECT COUNT(*) as total FROM cursos WHERE estado = 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return (int)($res['total'] ?? 0);
+    } catch (Exception $e) {
+        error_log("Error Dashboard: " . $e->getMessage());
+        return 0;
     }
+}
  
     public function obtenerTotalCertificados() {
         try {

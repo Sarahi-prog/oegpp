@@ -1,27 +1,58 @@
 <?php
+
 class Cursos {
-    private $id_curso;
-    private $codigo_curso;
-    private $nombre_curso;
-    private $tipo;
-    private $horas_totales;
+    // 1. Declaración de propiedades (Añadimos $estado y tipos de datos)
+    private ?int $id_curso = null;
+    private ?string $codigo_curso = null;
+    private ?string $nombre_curso = null;
+    private ?string $tipo = null;
+    private ?int $horas_totales = null;
+    private int $estado = 1; // Por defecto 1 (Activo)
 
     public function __construct() {}
 
-    // Getters y Setters
-    public function getIdCurso() { return $this->id_curso; }
-    public function setIdCurso($id) { $this->id_curso = $id; }
+    // --- GETTERS Y SETTERS ---
 
-    public function getCodigoCurso() { return $this->codigo_curso; }
-    public function setCodigoCurso($codigo) { $this->codigo_curso = $codigo; }
+    public function getIdCurso(): ?int { 
+        return $this->id_curso; 
+    }
+    public function setIdCurso(?int $id): void { 
+        $this->id_curso = $id; 
+    }
 
-    public function getNombreCurso() { return $this->nombre_curso; }
-    public function setNombreCurso($nombre) { $this->nombre_curso = $nombre; }
+    public function getCodigoCurso(): ?string { 
+        return $this->codigo_curso; 
+    }
+    public function setCodigoCurso(?string $codigo): void { 
+        $this->codigo_curso = $codigo; 
+    }
 
-    public function getTipo() { return $this->tipo; }
-    public function setTipo($tipo) { $this->tipo = $tipo; }
+    public function getNombreCurso(): ?string { 
+        return $this->nombre_curso; 
+    }
+    public function setNombreCurso(?string $nombre): void { 
+        $this->nombre_curso = $nombre; 
+    }
 
-    public function getHorasTotales() { return $this->horas_totales; }
-    public function setHorasTotales($horas) { $this->horas_totales = $horas; }
+    public function getTipo(): ?string { 
+        return $this->tipo; 
+    }
+    public function setTipo(?string $tipo): void { 
+        $this->tipo = $tipo; 
+    }
+
+    public function getHorasTotales(): ?int { 
+        return $this->horas_totales; 
+    }
+    public function setHorasTotales(?int $horas): void { 
+        $this->horas_totales = $horas; 
+    }
+    
+    public function getEstado(): int {
+        return $this->estado;
+    }
+    public function setEstado(int $estado): void {
+        $this->estado = $estado;
+    }
 }
 ?>

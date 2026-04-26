@@ -23,7 +23,7 @@
                     <i class="fas fa-graduation-cap"></i> Diplomados
                 </a>
                 <a href="index.php?accion=notas" class="menu-item <?= (isset($pagina_actual) && in_array($pagina_actual, ['notas','notas_modulo'], true)) ? 'active' : '' ?>">
-                    <i class="fas fa-cubes"></i> Notas
+                    <i class="fas fa-file-alt"></i> Notas
                 </a>
 
                 <button class="hamburger" onclick="toggleMenu()">

@@ -84,6 +84,10 @@ switch($accion) {
         $cursosController->eliminarCurso();
         break;
 
+    case 'actualizar_estado_curso':
+        $cursosController->actualizar_estado();
+        break;
+
     // --- MODULOS ---
     case 'modulos':
         $modulosController->cargar(); 

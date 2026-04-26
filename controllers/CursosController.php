@@ -35,6 +35,7 @@ class CursosController {
             $curso->setNombreCurso($_POST['nombre_curso']);
             $curso->setTipo($_POST['tipo']);
             $curso->setHorasTotales($_POST['horas_totales']);
+            $curso->setEstado($_POST['estado']);
 
             if ($this->model->modificarCurso($curso)) {
                 header("Location: index.php?accion=cursos");
@@ -49,7 +50,7 @@ class CursosController {
             $curso->setNombreCurso($_POST['nombre_curso']);
             $curso->setTipo($_POST['tipo']);
             $curso->setHorasTotales($_POST['horas_totales']);
-
+            $curso->setEstado($_POST['estado']);
             if ($this->model->guardarCurso($curso)) {
                 header("Location: index.php?accion=cursos");
             }
@@ -70,6 +71,20 @@ class CursosController {
             }
         } else {
             echo "Error: No se recibió un ID válido para eliminar.";
+        }
+    }
+
+
+    public function actualizar_estado() {
+        if (isset($_POST['id_curso']) && isset($_POST['estado'])) {
+            $id = intval($_POST['id_curso']);
+            $estado = intval($_POST['estado']); // Recibe 1 o 0
+
+            $exito = $this->model->actualizarEstado($id, $estado);
+
+            header('Content-Type: application/json');
+            echo json_encode(['exito' => $exito]);
+            exit;
         }
     }
 
