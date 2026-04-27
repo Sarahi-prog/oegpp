@@ -164,6 +164,5 @@
     </div> 
     
     <script src="public/UniversalScript.js?v=<?= time(); ?>"></script>
-    <script src="public/clientesScript.js?v=<?= time(); ?>"></script>
 </body>
 </html>

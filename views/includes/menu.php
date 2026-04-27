@@ -7,7 +7,7 @@
                 </div>
                 <div class="brand-text">
                     <h1>OEGPP</h1>
-                    <p>CURSOS Y CAPACITACIONES</p>
+                    <p></p>
                 </div>
             </a>
 

@@ -40,7 +40,7 @@
                             
                             <div class="field-group">
                                 <label>Nombre de Curso</label>
-                                <input type="text" name="nombre_curso" id="nombre_curso_form" required placeholder="Nombre completo del programa">
+                                <input type="text" name="nombre_curso" id="nombre_curso_form" required placeholder="Nombre de curso">
                             </div>
 
                             <div style="display: flex; gap: 10px;">

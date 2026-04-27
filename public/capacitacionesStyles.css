@@ -1,371 +1,464 @@
 /* ============================================================
-   ESTILOS PARA CAPACITACIONES (Estilo unificado OEGPP-Web)
+   ESTILOS PARA CONSULTA DE CAPACITACIONES
+   Archivo: capacitacionesStyles.css
+   Basado en: cursosStyles.css (OEGPP)
+   Tabla: registros_capacitacion
    ============================================================ */
 
-body {
-    font-family: 'Inter', sans-serif;
+/* --- 1. CONFIGURACIÓN Y VARIABLES --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap');
+
+:root {
+    --bg-main:            #f8fafc;
+    --tech-green:         #00c853;
+    --tech-green-hover:   #00a946;
+    --tech-green-soft:    #e8f5e9;
+    --tech-blue:          #3b82f6;
+    --tech-blue-soft:     #eff6ff;
+    --tech-red:           #ef4444;
+    --tech-amber:         #f59e0b;
+    --tech-amber-soft:    #fffbeb;
+    --text-main:          #0f172a;
+    --text-muted:         #64748b;
+    --border-color:       #e2e8f0;
+    --card-shadow:        0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05);
+    --transition:         all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-        
-
-   
-/* Aislamiento del contenido principal para NO afectar el menú de navegación */
-.main-content { 
-    font-family: 'Inter', sans-serif; /* Aplicado aquí en vez del body */
+/* --- 2. CUERPO Y LAYOUT --- */
+.main-content {
+    font-family: 'Inter', sans-serif;
     padding-top: 40px;
     padding-bottom: 60px;
+    animation: fadeIn 0.5s ease-out;
 }
 
-/* ============================================================
-   [CABECERA Y TÍTULO]
-   ============================================================ */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 
+/* --- 3. CABECERA --- */
 .header-acciones {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    flex-wrap: wrap; 
-    gap: 15px; 
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .titulo-con-boton {
     display: flex;
     align-items: center;
-    gap: 15px; 
-}
-
-.btn-hamburguesa {
-    background: white;
-    border: 1px solid #e2e8f0;
-    font-size: 1.2rem;
-    color: #0f172a;
-    cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.btn-hamburguesa:hover {
-    background-color: #f8fafc;
-    color: #44bd1f; /* Verde principal */
-    border-color: #44bd1f;
+    gap: 15px;
 }
 
 .directorio-title-container h2 {
+    font-family: 'Rajdhani', sans-serif;
     margin: 0;
-    color: #0f172a;
     font-size: 1.8rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
+    font-weight: 700;
+    color: var(--text-main);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
-/* ============================================================
-   [LAYOUT PRINCIPAL Y PANELES]
-   ============================================================ */
+.directorio-title-container h2 i {
+    color: var(--tech-green);
+}
 
+.directorio-title-container p {
+    margin: 5px 0 0 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* --- 4. DASHBOARD WRAPPER --- */
 .dashboard-wrapper {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
+    display: block;
     width: 100%;
-    overflow-x: hidden;
 }
 
-/* --- PANEL LATERAL (FORMULARIO) --- */
-#seccionRegistro {
-    width: 350px; 
-    flex-shrink: 0; 
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Clase JS para ocultar el panel */
-#seccionRegistro.panel-oculto,
-#seccionRegistro.oculto {
-    width: 0;
-    margin-left: -20px;
-    padding: 0;
-    opacity: 0;
-    visibility: hidden;
-    overflow: hidden;
-}
-
-.side-panel {
-    background: white;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    padding: 25px;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-    width: 350px; 
-    box-sizing: border-box; 
-}
-
-.side-panel h3 {
-    margin-top: 0;
-    font-size: 1.1rem;
-    color: #0f172a;
+/* --- 5. TARJETA / HERO DE BÚSQUEDA --- */
+.search-hero {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    padding: 20px 25px;
     margin-bottom: 20px;
 }
 
-.form-vertical-stack {
+.search-hero-wrapper {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    align-items: center;
+    max-width: 560px;
 }
 
-.field-group label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #64748b;
-    margin-bottom: 5px;
-}
-
-/* Ajustes para inputs y selects */
-.form-select,
-.field-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.95rem; /* Tamaño de letra normal */
-    color: #1e293b;
-    background-color: #fff;
-}
-
-/* Efecto Focus verde OEGPP */
-.form-select:focus,
-.field-group input:focus {
-    outline: none; 
-    border-color: #44bd1f; 
-    box-shadow: 0 0 0 4px rgba(68, 189, 31, 0.15); 
-}
-
-/* ============================================================
-   [TABLA DE DATOS Y BÚSQUEDA]
-   ============================================================ */
-
-.table-section {
-    flex-grow: 1; 
-    width: 100%;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-width: 0; 
-}
-
-.search-bar {
-    display: flex;
-    justify-content: space-between; 
-    gap: 15px;
-    flex-wrap: wrap; 
-}
-
-.search-wrapper {
+/* Input con ícono interno */
+.search-hero-wrapper {
     position: relative;
-    flex: 1; 
-    max-width: 500px; 
-    min-width: 250px; 
 }
 
-.search-icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px 10px 10px 40px; 
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #44bd1f;
-    box-shadow: 0 0 0 4px rgba(68, 189, 31, 0.15);
-}
-
-.table-card {
-    background: white;
+.search-hero-input {
+    flex: 1;
+    padding: 12px 14px 12px 14px;
     border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-    overflow-x: auto; 
-}
-
-.data-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    min-width: 800px; /* Un poco más ancha porque hay más columnas que en trabajadores */
-}
-
-.data-table th { 
-    background: #f8fafc; 
-    padding: 15px; 
-    text-align: left; 
-    color: #64748b; 
-    font-weight: 700; 
-    font-size: 0.85rem;
-    text-transform: uppercase; 
-    white-space: nowrap; 
-}
-
-.data-table td { 
-    padding: 15px; 
-    border-top: 1px solid #f1f5f9; 
-    color: #1e293b;
-    vertical-align: middle;
+    border: 1px solid var(--border-color);
+    font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
+    color: var(--text-main);
+    background: #ffffff;
+    transition: var(--transition);
+    box-sizing: border-box;
 }
 
-/* Hover específico para capacitaciones */
-.fila-capacitacion {
-    transition: background-color 0.2s ease;
+.search-hero-input:focus {
+    outline: none;
+    border-color: var(--tech-green);
+    box-shadow: 0 0 0 4px rgba(0, 200, 83, 0.08);
+    background: var(--tech-green-soft);
 }
 
-.fila-capacitacion:hover {
-    background-color: #f1f5f9; 
-}
-
-.id-column {
-    font-weight: 800;
+.search-hero-input::placeholder {
     color: #94a3b8;
-    width: 40px;
-    text-align: center;
 }
 
-/* ============================================================
-   [BOTONES]
-   ============================================================ */
-
+/* Botón buscar — idéntico al btn-primary-green de cursos */
 .btn-primary-green {
-    background-color: #44bd1f;
-    color: white;
+    background: linear-gradient(135deg, var(--tech-green), #00e676);
+    color: #ffffff;
     border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+    transition: var(--transition);
     display: inline-flex;
     align-items: center;
-    gap: 8px; 
-    transition: background 0.2s;
-    font-family: 'Inter', sans-serif;
+    gap: 8px;
+    white-space: nowrap;
 }
 
 .btn-primary-green:hover {
-    background-color: #38a318; 
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 200, 83, 0.4);
+    background: linear-gradient(135deg, var(--tech-green-hover), var(--tech-green));
 }
 
-.btn-outline {
-    background: white;
-    border: 1px solid #e2e8f0;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    color: #64748b;
-    white-space: nowrap; 
+.btn-primary-green:active {
+    transform: scale(0.98);
+}
+
+/* --- 6. SECCIÓN Y TARJETA DE TABLA --- */
+.table-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.table-card {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #f1f5f9;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+/* --- 7. BANNER DE RESULTADO --- */
+/* Se muestra cuando se encuentran registros para el DNI buscado */
+.alert-resultados {
+    background: var(--tech-green-soft);
+    border-bottom: 1px solid #a7f3d0;
+    padding: 12px 20px;
+    font-size: 0.875rem;
+    color: #065f46;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-family: 'Inter', sans-serif;
-    transition: background-color 0.2s, color 0.2s;
 }
 
-.btn-outline:hover {
+.alert-resultados i {
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+/* --- 8. TABLA DE DATOS --- */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+}
+
+.data-table th {
     background-color: #f8fafc;
-    color: #0f172a; 
+    padding: 14px 16px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
 }
 
-.btn-icon {
-    background: none;
-    border: none;
+.data-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f8fafc;
+    color: var(--text-main);
+    font-size: 0.875rem;
+    vertical-align: middle;
+}
+
+.data-table tbody tr {
+    transition: background 0.15s;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* --- 9. ELEMENTOS DE CELDA --- */
+
+/* Nombre del trabajador (clientes.nombres + apellidos) */
+.nombre-trabajador {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* N° de registro — campo: registros_capacitacion.registro */
+.badge-registro {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 0.5px;
+    background-color: var(--tech-green-soft);
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+/* Folio — campo: registros_capacitacion.folio */
+.codigo-box {
+    background-color: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+    border: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+/* Horas realizadas — campo: registros_capacitacion.horas_realizadas */
+.horas-cell i {
+    color: #94a3b8;
+    margin-right: 4px;
+}
+
+/* Estado del registro — campo: registros_capacitacion.estado */
+.badge-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 0.4px;
+}
+
+.badge-estado.aprobado {
+    background-color: var(--tech-green-soft);
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.badge-estado.pendiente {
+    background-color: var(--tech-amber-soft);
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.badge-estado.anulado {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* Entregado — campo: registros_capacitacion.entregado */
+.badge-entregado {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 20px;
+    background-color: var(--tech-blue-soft);
+    color: var(--tech-blue);
+    border: 1px solid #bfdbfe;
+}
+
+.badge-no-entregado {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 20px;
+    background-color: #f1f5f9;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+}
+
+/* Texto muted general y nowrap para fechas */
+.td-muted   { color: var(--text-muted); }
+.td-nowrap  { white-space: nowrap; }
+
+/* --- 10. BOTÓN QR / linkr --- */
+/*
+   Campo: registros_capacitacion.linkr
+   Contiene la URL del certificado para escanear el QR.
+   Se muestra como botón clickeable; si está vacío, se muestra un guion.
+*/
+.btn-qr {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 13px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--tech-blue);
+    background: var(--tech-blue-soft);
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    text-decoration: none;
     cursor: pointer;
-    font-size: 1rem;
-    padding: 5px;
-    color: #64748b;
-    transition: transform 0.2s, color 0.2s;
+    transition: var(--transition);
+    white-space: nowrap;
 }
 
-.btn-icon:hover { 
-    transform: scale(1.2); 
-    color: #0f172a;
+.btn-qr i {
+    font-size: 0.9rem;
 }
 
-/* ============================================================
-   [DISEÑO RESPONSIVO]
-   ============================================================ */
+.btn-qr:hover {
+    background: #dbeafe;
+    border-color: var(--tech-blue);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
 
+/* Cuando linkr está vacío o nulo */
+.sin-link {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+}
+
+/* --- 11. ESTADO VACÍO --- */
+.data-table td .empty-state-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3.5rem 1rem;
+    opacity: 0.75;
+    gap: 10px;
+}
+
+.empty-state-inner i {
+    font-size: 3.5rem;
+    color: #cbd5e1;
+}
+
+.empty-state-inner h4 {
+    margin: 0;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.empty-state-inner p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* --- 12. RESPONSIVO --- */
 @media (max-width: 1024px) {
-    .dashboard-wrapper {
-        flex-direction: column; 
-    }
-
-    #seccionRegistro {
-        width: 100%; 
-    }
-
-    .side-panel {
-        width: 100%; 
-        margin-bottom: 10px; 
-    }
-
-    #seccionRegistro.panel-oculto,
-    #seccionRegistro.oculto {
-        width: 100%;
-        margin-left: 0;
-        margin-top: -20px;
-        height: 0; 
+    .search-hero-wrapper {
+        max-width: 100%;
     }
 }
 
 @media (max-width: 768px) {
-    .main-content {
-        padding-top: 20px;
-        padding-bottom: 30px; 
+    .search-hero-wrapper {
+        flex-direction: column;
+        align-items: stretch;
     }
 
-    .header-acciones {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
+    .search-hero-input {
+        width: 100%;
+    }
+
+    .btn-primary-green {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding-top: 20px;
+        padding-bottom: 30px;
     }
 
     .directorio-title-container h2 {
-        font-size: 1.5rem; 
+        font-size: 1.4rem;
     }
 
-    .search-bar {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .search-wrapper {
-        max-width: 100%; 
-    }
-
-    .btn-outline, .btn-primary-green {
-        width: 100%;
-        justify-content: center;
+    .search-hero {
+        padding: 15px;
     }
 }
