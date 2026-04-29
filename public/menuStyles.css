@@ -15,7 +15,7 @@ html { overflow-y: scroll; }
    NAVBAR
    ============================================================ */
 .navbar {
-    background: var(--color-bg, #ffffff);  /* usa variable o fallback */
+    background: var(--color-bg, rgb(56, 220, 89));  /* usa variable o fallback */
     border-bottom: 1px solid #e2e8f0;
     position: sticky;
     top: 0;

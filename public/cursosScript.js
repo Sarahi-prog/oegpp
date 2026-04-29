@@ -1,100 +1,137 @@
-/**
- * Configura el formulario para modo EDICIÓN (Azul)
- * @param {string} entity - 'cliente' o 'curso'
- * @param {Object} data - Los datos del objeto a editar
- */
-function modoEditarUniversal(entity, data) {
-    const isCurso = (entity === 'curso');
-    
-    // IDs Dinámicos según la entidad
-    const formId = isCurso ? 'formCursoAjax' : 'formCliente';
-    const btnSubmitId = isCurso ? 'btnSubmitCurso' : 'btn-submit-form';
-    const btnCancelId = isCurso ? 'btnCancelarEdicion' : 'btn-cancelar';
-    const titleText = isCurso ? 'Editar Programa' : 'Editar Cliente';
-    const buttonText = isCurso ? "Actualizar Programa" : "Actualizar Datos";
+// --- 1. CONFIGURACIÓN DEL MÓDULO ---
+const configCurso = {
+    entity: 'curso',
+    formId: 'formCurso',           // ✅ coincide con el HTML
+    btnId: 'btn-submit-form',      // ✅ coincide con el HTML
+    btnCancelId: 'btn-cancelar',   // ✅ coincide con el HTML
+    labels: { singular: 'Curso' }
+};
 
-    const form = document.getElementById(formId);
-    const title = document.getElementById('form-title'); // Compartido o específico
-    const btnSubmit = document.getElementById(btnSubmitId);
-    const btnCancelar = document.getElementById(btnCancelId);
-    const seccion = document.getElementById('seccionRegistro');
+document.addEventListener('DOMContentLoaded', () => {
+    iniciarBuscador('buscadorCursos', 'tablaCursos'); // ✅ busca por tbody, ver nota abajo
 
-    // 1. Abrir panel si está oculto
-    if (seccion && seccion.classList.contains('panel-oculto')) {
-        toggleRegistro(); 
+    const formCurso = document.getElementById(configCurso.formId);
+    if (formCurso) {
+        formCurso.addEventListener('submit', function(e) {
+            if (!this.checkValidity()) return;
+
+            const idInput = document.querySelector('input[name="id_curso"]');
+            const esEdicion = idInput && idInput.value !== "";
+
+            if (esEdicion && datosOriginales) {
+                let huboCambios = false;
+                const formData = new FormData(this);
+
+                for (let key in datosOriginales) {
+                    if (formData.has(key) && String(formData.get(key)) !== String(datosOriginales[key])) {
+                        huboCambios = true;
+                        break;
+                    }
+                }
+
+                if (!huboCambios) {
+                    e.preventDefault();
+                    NotificacionOEGPP.fire({
+                        icon: 'info',
+                        title: 'Sin cambios',
+                        text: 'No has modificado ningún campo del curso.',
+                        background: '#4a4a4a'
+                    });
+                    return;
+                }
+            }
+
+            e.preventDefault();
+            NotificacionOEGPP.fire({
+                icon: 'success',
+                title: esEdicion ? '¡Cambios Guardados!' : '¡Registro Exitoso!',
+                text: esEdicion ? 'Curso actualizado correctamente.' : 'Curso agregado correctamente.'
+            }).then(() => {
+                this.submit();
+            });
+        });
     }
+});
 
-    // 2. Cambio de Action y Título
-    form.action = isCurso ? "index.php?accion=modificar_curso" : "index.php?accion=modificar_cliente";
-    if (title) title.innerHTML = `<i class="fas fa-edit"></i> ${titleText}`;
-
-    // 3. Llenado de campos automático
-    if (isCurso) {
-        document.getElementById('id_curso_form').value = data.id_curso;
-        document.getElementById('codigo_curso_form').value = data.codigo_curso;
-        document.getElementById('nombre_curso_form').value = data.nombre_curso;
-        document.getElementById('tipo_form').value = data.tipo;
-        document.getElementById('horas_totales_form').value = data.horas_totales;
-    } else {
-        document.getElementById('id_cliente_form').value = data.id_cliente;
-        form.querySelector('input[name="dni"]').value = data.dni;
-        form.querySelector('input[name="nombres"]').value = data.nombres;
-        form.querySelector('input[name="apellidos"]').value = data.apellidos;
-        form.querySelector('input[name="correo"]').value = data.correo;
-        form.querySelector('input[name="celular"]').value = data.celular;
-        form.querySelector('input[name="area"]').value = data.area;
-        form.querySelector('select[name="estado"]').value = data.estado;
-    }
-
-    // 4. Estilo de Botones (AZUL)
-    const span = btnSubmit.querySelector('span');
-    if (span) span.innerText = buttonText;
-    
-    btnSubmit.style.backgroundColor = "#007bff";
-    btnSubmit.style.borderColor = "#0069d9";
-    btnSubmit.style.color = "#ffffff";
-
-    if (btnCancelar) btnCancelar.style.display = 'block';
-    
-    seccion.scrollIntoView({ behavior: 'smooth' });
+// --- 2. FUNCIONES DE INTERFAZ ---
+function editarCurso(data) {
+    modoFormularioUniversal(configCurso, data);
+    const panel = document.getElementById('seccionRegistro');
+    if (panel?.classList.contains('panel-oculto')) toggleRegistro();
 }
 
-/**
- * Restablece cualquier formulario al modo GUARDAR (Verde)
- * @param {string} entity - 'cliente' o 'curso'
- */
-function modoGuardarUniversal(entity) {
-    const isCurso = (entity === 'curso');
-    const formId = isCurso ? 'formCursoAjax' : 'formCliente';
-    const btnSubmitId = isCurso ? 'btnSubmitCurso' : 'btn-submit-form';
-    const btnCancelId = isCurso ? 'btnCancelarEdicion' : 'btn-cancelar';
-    
-    const form = document.getElementById(formId);
-    form.reset();
-
-    // 1. Reset Action e ID
-    form.action = isCurso ? "index.php?accion=guardar_curso" : "index.php?accion=guardarCliente";
-    const idField = isCurso ? 'id_curso_form' : 'id_cliente_form';
-    document.getElementById(idField).value = "";
-
-    // 2. Título original
-    const title = document.getElementById('form-title');
-    const titleText = isCurso ? 'Datos del Programa' : 'Datos del Registro';
-    if (title) title.innerHTML = `<i class="fas fa-plus-circle"></i> ${titleText}`;
-
-    // 3. Estilo de Botones (VERDE)
-    const btnSubmit = document.getElementById(btnSubmitId);
-    const span = btnSubmit.querySelector('span');
-    if (span) span.innerText = isCurso ? "Guardar Programa" : "Guardar Cliente";
-
-    btnSubmit.style.backgroundColor = "#28a745";
-    btnSubmit.style.borderColor = "#218838";
-
-    // 4. Ocultar Cancelar
-    const btnCancelar = document.getElementById(btnCancelId);
-    if (btnCancelar) btnCancelar.style.display = 'none';
+function cancelarEdicion() {       // ✅ el HTML llama cancelarEdicion(), no resetearFormularioCurso()
+    modoFormularioUniversal(configCurso, false);
 }
 
+function eliminarCurso(id) {       // ✅ el HTML llama eliminarCurso(), no confirmarEliminarCurso()
+    Swal.fire({
+        title: '¿Eliminar curso?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        iconColor: '#ef4444',
+        showCancelButton: true,
+        confirmButtonColor: '#e24a4a',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+    }).then(result => {
+        if (result.isConfirmed) {
+            window.location.href = `index.php?accion=eliminar_curso&id=${id}`;
+        }
+    });
+}
+
+// --- 3. SWITCH DE ESTADO ---
+function confirmarEstado(checkbox, idCurso) {
+    const estadoNuevo = checkbox.checked ? 1 : 0;
+
+    fetch('index.php?accion=actualizar_estado_curso', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `id_curso=${idCurso}&estado=${estadoNuevo}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.exito) {
+            checkbox.checked = !checkbox.checked;
+            NotificacionOEGPP.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar el estado.' });
+        }
+    })
+    .catch(() => {
+        checkbox.checked = !checkbox.checked;
+        NotificacionOEGPP.fire({ icon: 'error', title: 'Error de conexión', text: 'Intenta de nuevo.' });
+    });
+}
+
+// --- 4. EXPORTAR ---
+function exportarCursos() {
+    try {
+        if (typeof XLSX === 'undefined') {
+            alert("La librería de exportación aún no ha cargado. Revisa tu conexión.");
+            return;
+        }
+
+        const tabla = document.getElementById('tablaCursos');
+        if (!tabla) return;
+
+        const clon = tabla.cloneNode(true);
+        clon.querySelectorAll('tr').forEach(fila => {
+            if (fila.cells.length > 0) {
+                fila.deleteCell(-1); // Acciones
+                fila.deleteCell(-1); // Estado
+            }
+        });
+
+        const hoja = XLSX.utils.table_to_sheet(clon);
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Cursos");
+        XLSX.writeFile(libro, "Reporte_Cursos_OEGPP.xlsx");
+
+    } catch (error) {
+        console.error("Error al exportar:", error);
+    }
+}
 
 
 // Función para actualizar el estado del curso al mover el switch

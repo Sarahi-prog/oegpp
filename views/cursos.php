@@ -30,7 +30,7 @@
             <div id="seccionRegistro" data-modulo="cursos">
                 <div class="side-panel">
                     <h3 style="margin-top: 0; margin-bottom: 20px;"><i class="fas fa-edit"></i> Datos de curso</h3>
-                    <form id="formCursoAjax" action="index.php?accion=guardar_curso" method="POST">
+                    <form id="formCurso" action="index.php?accion=guardar_curso" method="POST">
                     <input type="hidden" name="id_curso" id="id_curso_form" value="">    
                         <div class="form-vertical-stack">
                             <div class="field-group">
@@ -60,11 +60,11 @@
                             </div>
 
                             <div class="form-actions" style="display: flex; gap: 10px; margin-top: 15px;">
-                                <button type="submit" id="btnSubmitCurso" class="btn btn-primary-green" style="flex: 1;">
+                                <button type="submit" id="btn-submit-form" class="btn btn-primary-green" style="flex: 1;">
                                     <i class="fas fa-save"></i> <span>Guardar curso</span>
                                 </button>
 
-                                <button type="button" id="btnCancelarEdicion" onclick="cancelarEdicion()" 
+                                <button type="button" id="btn-cancelar" onclick="cancelarEdicion()" 
                                         class="btn btn-secondary" style="display: none; background-color: #64748b; color: white; border: none; padding: 10px; border-radius: 12px; cursor: pointer;">
                                     <i class="fas fa-times"></i>
                                 </button>
@@ -98,10 +98,12 @@
                                     <th>TIPO</th>
                                     <th>HORAS</th>
                                     <th>ESTADO</th>
-                                    <th style="text-align: center;">ACCIONES</th>
+                                    <th style="text-align: center;" class="acciones">ACCIONES
+                                        
+                                    </th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="cuerpoTabla">
                                 <?php 
                                 $i = 1; 
                                 if (!empty($cursos)):
@@ -109,9 +111,6 @@
                                         $tipoRaw = $curso->getTipo() ?? '';
                                         $badgeClass = ($tipoRaw === 'diplomados') ? 'badge-diplomado' : 'badge-certificado';
                                         $tipoFormateado = !empty($tipoRaw) ? ucfirst(substr($tipoRaw, 0, -1)) : 'Sin tipo';
-                                        
-                                        // Lógica de estado (asumiendo que tienes getEstado() en tu objeto)
-                                        // Si no lo tienes, cámbialo por el nombre correcto del método
                                         $estadoActivo = ($curso->getEstado() == 1); 
 
                                         $datosJson = json_encode([
@@ -138,9 +137,17 @@
                                     </td>
 
                                     <td style="text-align: center; white-space: nowrap;">
+                                        <a href="index.php?accion=modulos&id=<?= $curso->getIdCurso() ?>" 
+                                        class="btn-icon" 
+                                        title="Gestionar Módulos" 
+                                        style="text-decoration: none; margin-right: 8px;">
+                                            <i class="fas fa-layer-group" style="color: #10b981;"></i>
+                                        </a>
+
                                         <button class="btn-icon btn-edit" title="Editar" onclick='editarCurso(<?= $datosJson ?>)'>
                                             <i class="fas fa-edit" style="color: #4a90e2;"></i>
                                         </button>
+
                                         <button class="btn-icon btn-delete" title="Eliminar" onclick="eliminarCurso(<?= $curso->getIdCurso() ?>)">
                                             <i class="fas fa-trash" style="color: #e24a4a;"></i>
                                         </button>
@@ -166,6 +173,8 @@
             </div> 
         </div> 
     </div> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="public/universalScript.js?v=<?= time(); ?>"></script>
     <script src="public/cursosScript.js?v=<?= time(); ?>"></script>    
 </body>

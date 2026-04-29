@@ -1,251 +1,205 @@
-    /* ============================================================
-    ESTILOS MODERNOS PARA TRABAJADORES (VERSIÓN TECH)
-    Archivo: trabajadoresStyles.css
-    ============================================================ */
+/* --- 1. FUENTES Y VARIABLES --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap');
 
-    /* --- 1. CONFIGURACIÓN, FUENTES Y VARIABLES --- */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap');
+:root {
+    --bg-main: #f8fafc;
+    --tech-green: #00c853;
+    --tech-green-hover: #00a946;
+    --tech-green-soft: #e8f5e9;
+    --tech-blue: #3b82f6;
+    --tech-blue-soft: #eff6ff;
+    --tech-red: #ef4444;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --card-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 
-    :root {
-        --bg-main: #f8fafc;         /* Blanco gélido */
-        --tech-green: #00c853;      /* Verde vibrante */
-        --tech-green-hover: #00a946;
-        --tech-green-soft: #e8f5e9;
-        --tech-blue: #3b82f6;       /* Azul para edición */
-        --tech-red: #ef4444;        /* Rojo para eliminar */
-        --text-main: #0f172a;
-        --text-muted: #64748b;
-        --border-color: #e2e8f0;
-        --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
+/* --- 2. CUERPO Y LAYOUT --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+    background-size: 25px 25px;
+    color: var(--text-main);
+    margin: 0;
+}
 
-    /* --- 2. CUERPO Y LAYOUT --- */
-    body {
-        font-family: 'Inter', sans-serif;
-        background-color: var(--bg-main);
-        background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
-        background-size: 25px 25px; /* Textura de puntos sutil */
-        color: var(--text-main);
-        margin: 0;
-    }
+.main-content {
+    padding-top: 40px;
+    padding-bottom: 60px;
+    animation: fadeIn 0.5s ease-out;
+}
 
-    .main-content {
-        padding-top: 40px;
-        padding-bottom: 60px;
-        animation: fadeIn 0.5s ease-out;
-    }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+/* --- 3. CABECERA --- */
+.header-acciones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
 
-    /* --- 3. CABECERA Y ACCIONES --- */
-    .header-acciones {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
+.titulo-con-boton {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-    .titulo-con-boton {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
+.titulo-con-boton h2 {
+    font-family: 'Rajdhani', sans-serif;
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
-    .titulo-con-boton h2 {
-        font-family: 'Rajdhani', sans-serif;
-        margin: 0;
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--text-main);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
+.titulo-con-boton h2 i { color: var(--tech-green); }
 
-    .titulo-con-boton h2 i {
-        color: var(--tech-green);
-    }
+.btn-hamburguesa {
+    background: white;
+    border: 1px solid var(--border-color);
+    font-size: 1.2rem;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
 
-    /* Botón Hamburguesa Moderno */
-    .btn-hamburguesa {
-        background: white;
-        border: 1px solid var(--border-color);
-        font-size: 1.2rem;
-        color: var(--text-main);
-        cursor: pointer;
-        padding: 8px 12px;
-        border-radius: 8px;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
+.btn-hamburguesa:hover {
+    color: var(--tech-green);
+    border-color: var(--tech-green);
+    background-color: var(--tech-green-soft);
+}
 
-    .btn-hamburguesa:hover {
-        color: var(--tech-green);
-        border-color: var(--tech-green);
-        background-color: var(--tech-green-soft);
-    }
+/* --- 4. LAYOUT PRINCIPAL --- */
+.dashboard-wrapper {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    width: 100%;
+    transition: all 0.4s ease;
+}
 
-    /* --- 4. DASHBOARD WRAPPER (PANEL + TABLA) --- */
-    .dashboard-wrapper {
-        display: flex;
-        align-items: flex-start;
-        gap: 20px;
-        width: 100%;
-        transition: all 0.4s ease; /* Para que el movimiento sea fluido */
-        align-items: stretch; 
-    }
+#seccionRegistro {
+    width: 320px;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: var(--transition);
+}
 
-    /* Lado Izquierdo: Formulario */
-    #seccionRegistro {
-        width: 320px;
-        flex-shrink: 0;
-        overflow: hidden;
-        transition: var(--transition);
-    }
+#seccionRegistro.panel-oculto {
+    width: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
 
-    /* Estado oculto mediante JS */
-    #seccionRegistro.panel-oculto {
-        width: 0;
-        padding: 0;
-        margin: 0;
-        overflow: hidden;
-    }
+/* --- 5. PANEL LATERAL (FORMULARIO) --- */
+.side-panel {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 200, 83, 0.1);
+    box-shadow: var(--card-shadow);
+    box-sizing: border-box;
+}
 
-    .side-panel {
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 15px;
-        border: 1px solid rgba(0, 200, 83, 0.1);
-        box-shadow: var(--card-shadow);
-        box-sizing: border-box;
-    }
+.side-panel h3 {
+    font-family: 'Rajdhani', sans-serif;
+    margin: 0 0 20px 0;
+    color: var(--text-main);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+}
 
-    .side-panel h3 {
-        font-family: 'Rajdhani', sans-serif;
-        margin-top: 0;
-        margin-bottom: 20px;
-        color: var(--text-main);
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        font-size: 1.1rem;
-    }
+.form-vertical-stack {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
 
-    /* Campos del Formulario */
-    .form-vertical-stack {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Divide en 2 columnas */
-        gap: 10px;
-    }
+.field-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
-    .field-group label {
-        display: block;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: var(--text-muted);
-        margin-bottom: 6px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
+.field-group input,
+.field-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #f1f5f9;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    transition: var(--transition);
+    box-sizing: border-box;
+}
 
-    .field-group input, .field-group select {
-        width: 100%;
-        padding: 12px;
-        border: 2px solid #f1f5f9;
-        border-radius: 10px;
-        font-family: 'Inter', sans-serif;
-        transition: var(--transition);
-        box-sizing: border-box;
-    }
+.field-group input:focus,
+.field-group select:focus {
+    border-color: var(--tech-green);
+    outline: none;
+    background: var(--tech-green-soft);
+    box-shadow: 0 0 0 4px rgba(0, 200, 83, 0.1);
+}
 
-    .field-group input:focus, .field-group select:focus {
-        border-color: var(--tech-green);
-        outline: none;
-        background: var(--tech-green-soft);
-        box-shadow: 0 0 0 4px rgba(0, 200, 83, 0.1);
-    }
+/* --- 6. BOTONES --- */
+.btn-primary-green {
+    background: linear-gradient(135deg, var(--tech-green), #00e676);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+    transition: var(--transition);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
 
-    /* Botón Guardar Tech */
-    .btn-primary-green {
-        background: linear-gradient(135deg, var(--tech-green), #00e676);
-        color: white;
-        border: none;
-        padding: 15px;
-        border-radius: 12px;
-        font-weight: 700;
-        font-family: 'Rajdhani', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
-        transition: var(--transition);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-    }
+.btn-primary-green:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 200, 83, 0.4);
+}
 
-    .btn-primary-green:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 200, 83, 0.4);
-    }
+.btn-modo-guardar {
+    background: #28a745 !important;
+    border-color: #218838 !important;
+    color: white !important;
+}
 
-    /* --- 5. LADO DERECHO: TABLA Y BÚSQUEDA --- */
-    .table-section {
-        flex-grow: 1;
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
+.btn-modo-edicion {
+    background: #007bff !important;
+    border-color: #0069d9 !important;
+    color: white !important;
+}
 
-    .search-bar {
-        display: flex;
-        justify-content: space-between;
-        gap: 15px;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-
-    .search-wrapper {
-        position: relative;
-        flex: 1;
-        max-width: 500px;
-    }
-
-    .search-icon {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-muted);
-    }
-
-    .search-input {
-        width: 100%;
-        padding: 12px 12px 12px 45px;
-        border-radius: 12px;
-        border: 1px solid var(--border-color);
-        background: #ffffff;
-        font-family: 'Inter', sans-serif;
-        transition: var(--transition);
-    }
-
-    .search-input:focus {
-        outline: none;
-        border-color: var(--tech-green);
-        box-shadow: var(--card-shadow);
-    }
-
-
-    /* --- BOTÓN EXPORTAR TECH --- */
 .btn-exportar {
     background: white;
     border: 1px solid var(--border-color);
@@ -261,11 +215,10 @@
     align-items: center;
     gap: 10px;
     transition: var(--transition);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .btn-exportar i {
-    color: var(--tech-blue); /* Azul para diferenciarlo de "Guardar" */
+    color: var(--tech-blue);
     font-size: 1.1rem;
 }
 
@@ -277,190 +230,188 @@
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
-.btn-exportar:active {
-    transform: translateY(0);
+.btn-exportar:active { transform: translateY(0); }
+
+.btn-ir-gestion {
+    grid-column: 1 / -1;
+    width: 100%;
+    display: flex;
+    padding: 12px 20px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    background-color: #6c757d;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s;
 }
 
+.btn-ir-gestion:hover { background-color: #5a6268; }
 
+/* --- 7. TABLA --- */
+.table-section {
+    flex-grow: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-    /* Tarjeta de la Tabla */
-    .table-card {
-        background: #ffffff;
-        border-radius: 20px;
-        overflow-x: auto;
-        box-shadow: var(--card-shadow);
-        border: 1px solid #f1f5f9;
-    }
+.search-bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
 
-    .data-table {
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 500px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 12px 12px 45px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: #ffffff;
+    font-family: 'Inter', sans-serif;
+    transition: var(--transition);
+    box-sizing: border-box;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--tech-green);
+    box-shadow: var(--card-shadow);
+}
+
+.table-card {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow-x: auto;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #f1f5f9;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.data-table thead tr {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.data-table th {
+    padding: 10px;
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid #f8fafc;
+    transition: background 0.2s;
+}
+
+.data-table tbody tr:hover { background-color: #f1f5f9; }
+
+.data-table td {
+    padding: 16px;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    vertical-align: middle;
+}
+
+.email-column {
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.email-column:hover {
+    overflow: visible;
+    white-space: normal;
+    word-break: break-all;
+    position: relative;
+    background: #fff;
+    z-index: 10;
+}
+
+/* --- 8. BOTONES DE ACCIÓN EN TABLA --- */
+.btn-icon {
+    background: transparent;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.btn-edit:hover {
+    background: #e0f2fe;
+    color: var(--tech-blue);
+    transform: scale(1.1);
+}
+
+.btn-delete:hover {
+    background: #fee2e2;
+    color: var(--tech-red);
+    transform: scale(1.1);
+}
+
+/* --- 9. RESPONSIVO --- */
+@media (max-width: 1024px) {
+    .dashboard-wrapper { flex-direction: column; }
+
+    #seccionRegistro { width: 100%; }
+
+    #seccionRegistro.panel-oculto {
         width: 100%;
-        border-collapse: collapse;
-        min-width: 800px;
-    }
-
-    .data-table thead tr {
-        background-color: #f8fafc;
-        border-bottom: 2px solid #f1f5f9;
-    }
-
-    .data-table th {
-        padding: 10px;
-        text-align: left;
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .data-table tbody tr {
-        border-bottom: 1px solid #f8fafc;
-        transition: background 0.2s;
-    }
-
-    .data-table tbody tr:hover {
-        background-color: #f1f5f9;
-    }
-
-    .data-table td {
-        padding: 16px;
-        font-size: 0.95rem;
-        color: var(--text-main);
-        vertical-align: middle;
-    }
-
-    /* Iconos de Acción en Tabla */
-    .btn-icon {
-        background: transparent;
-        border: none;
-        padding: 8px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: var(--transition);
-        color: var(--text-muted);
-        font-size: 1.1rem;
-    }
-
-    .btn-edit:hover { 
-        background: #e0f2fe; 
-        color: var(--tech-blue);
-        transform: scale(1.1);
-    }
-
-    .btn-delete:hover { 
-        background: #fee2e2; 
-        color: var(--tech-red);
-        transform: scale(1.1);
-    }
-
-    /*### 2. Estilos para el botón deslizante (CSS)/*
-
-Añade este código al final de tu archivo `public/cursosStyles.css`. Esto transformará el `<input type="checkbox">` estándar en un bonito botón deslizante moderno.
-
-        ```css
-        /* Contenedor principal del Switch */
-        .switch {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 24px;
-        margin: 0;
-        }
-
-        /* Ocultar el checkbox por defecto */
-        .switch input {
-        opacity: 0;
-        width: 0;
+        margin-left: 0;
+        margin-top: -20px;
         height: 0;
-        }
+    }
+}
 
-        /* El fondo del deslizador */
-        .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #cbd5e1; /* Gris cuando está inactivo */
-        -webkit-transition: .4s;
-        transition: .4s;
-        }
-
-        /* El círculo interno */
-        .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-        }
-
-        /* Color verde cuando está activado */
-        input:checked + .slider {
-        background-color: #10b981; 
-        }
-
-        /* Movimiento del círculo al activar */
-        input:checked + .slider:before {
-        -webkit-transform: translateX(20px);
-        -ms-transform: translateX(20px);
-        transform: translateX(20px);
-        }
-
-        /* Bordes redondeados */
-        .slider.round {
-        border-radius: 24px;
-        }
-
-        .slider.round:before {
-        border-radius: 50%;
-        }
-
-
-
-    /* --- 6. DISEÑO RESPONSIVO --- */
-
-    /* Tablets */
-    @media (max-width: 1024px) {
-        .dashboard-wrapper {
-            flex-direction: column;
-        }
-
-        #seccionRegistro {
-            width: 100%;
-        }
-
-        #seccionRegistro.panel-oculto {
-            width: 100%;
-            margin-left: 0;
-            margin-top: -20px;
-            height: 0;
-        }
+@media (max-width: 768px) {
+    .header-acciones {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    /* Móviles */
-    @media (max-width: 768px) {
-        .header-acciones {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .search-bar {
-            flex-direction: column;
-            width: 100%;
-        }
-
-        .search-wrapper {
-            max-width: 100%;
-        }
-
-        .btn-outline, .btn-primary-green {
-            width: 100%;
-            justify-content: center;
-        }
+    .search-bar {
+        flex-direction: column;
+        width: 100%;
     }
+
+    .search-wrapper { max-width: 100%; }
+
+    .btn-primary-green {
+        width: 100%;
+        justify-content: center;
+    }
+}

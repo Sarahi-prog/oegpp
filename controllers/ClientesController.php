@@ -80,21 +80,18 @@ class ClientesController {
         }
     }
 
-    /**
-     * Procesa la eliminación de un cliente
-     */
     public function eliminarCliente() {
-        if(isset($_GET['id'])) {
-            $id = $_GET['id'];
-            if($this->model->eliminarCliente($id)) {
-                header("Location: index.php?accion=clientes&msg=eliminado");
-                exit();
-            } else {
-                // Si falla por integridad (tiene capacitaciones), podrías avisar aquí
-                $this->manejarError("Error al eliminar cliente: Es posible que el cliente tenga registros vinculados.");
-            }
+    if (isset($_GET['id'])) {
+        if ($this->model->eliminarCliente($_GET['id'])) {
+            // Redirigimos con el mensaje de éxito
+            header("Location: index.php?accion=clientes&msg=eliminado");
+            exit();
+        } else {
+            header("Location: index.php?accion=clientes&msg=error");
+            exit();
         }
     }
+}
 
     /**
      * Función interna para no repetir código de captura de datos $_POST
@@ -107,7 +104,10 @@ class ClientesController {
         $cliente->setCorreo(!empty($_POST['correo']) ? $_POST['correo'] : null);
         $cliente->setCelular(!empty($_POST['celular']) ? $_POST['celular'] : null);
         $cliente->setArea(!empty($_POST['area']) ? $_POST['area'] : null);
-        $cliente->setEstado($_POST['estado'] ?? '0Activo');
+        $cliente->setEstado($_POST['estado'] ?? 'Activo');
         return $cliente;
     }
 }
+?>
+
+

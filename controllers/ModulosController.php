@@ -1,6 +1,7 @@
 <?php
 require_once 'models/ModulosModel.php';
 require_once 'models/Modulos.php';
+require_once 'models/CursosModel.php';
 require_once 'helpers/loggers.php';
 
 class ModulosController {
@@ -8,44 +9,18 @@ class ModulosController {
     public function cargar() {
         try {
             $model = new ModulosModel();
-            $modulos = $model->cargar();
-            require './views/modulos.php';
-        } catch (Exception $e) {
-            Logger::error($e);
-        }
-    }
+            $id_curso = $_GET['id'] ?? null;
 
-    public function buscar() {
-        try {
-            $texto = isset($_POST['busqueda']) ? $_POST['busqueda'] : '';
-            $campo = isset($_POST['campo']) ? $_POST['campo'] : null;
-            $model = new ModulosModel();
-            $modulos = $model->buscar($texto, $campo);
-            require './views/modulos.php';
-        } catch (Exception $e) {
-            Logger::error($e);
-        }
-    }
-
-    public function modificar() {
-        try {
-            // Validamos los campos reales que tiene tu clase Modulos
-            if(isset($_POST['id_modulo']) && isset($_POST['curso_id']) && isset($_POST['nombre_modulo'])){
-                $modulo = new Modulos();
-                
-                // Usamos los nombres exactos de tus setters
-                $modulo->setIdModulo($_POST['id_modulo']);
-                $modulo->setCursoId($_POST['curso_id']);
-                $modulo->setNombreModulo($_POST['nombre_modulo']);
-                $modulo->setHoras($_POST['horas']);
-                $modulo->setFechaInicio($_POST['fecha_inicio']);
-                $modulo->setFechaFin($_POST['fecha_fin']);
-
-                $model = new ModulosModel();
-                $model->modificar($modulo);
-                
-                header("Location: index.php?accion=modulos");
+            if ($id_curso) {
+                $modulos = $model->buscarPorCurso($id_curso);
+            } else {
+                $modulos = $model->cargar();
             }
+
+            $cursosModel = new CursosModel();
+            $cursos_disponibles = $cursosModel->cargarCurso();
+
+            require './views/modulos.php';
         } catch (Exception $e) {
             Logger::error($e);
         }
@@ -58,18 +33,69 @@ class ModulosController {
                 $modulo->setCursoId($_POST['curso_id']);
                 $modulo->setNombreModulo($_POST['nombre_modulo']);
                 $modulo->setHoras($_POST['horas']);
-                $modulo->setFechaInicio($_POST['fecha_inicio']);
-                $modulo->setFechaFin($_POST['fecha_fin']);
+                $modulo->setFechaInicio(!empty($_POST['fecha_inicio']) ? $_POST['fecha_inicio'] : null);
+                $modulo->setFechaFin(!empty($_POST['fecha_fin']) ? $_POST['fecha_fin'] : null);
 
                 $model = new ModulosModel();
                 $model->guardar($modulo);
-                
+
                 header("Location: index.php?accion=modulos");
-            } else {
-                require './views/modulo.php';
+                exit();
             }
         } catch (Exception $e) {
             Logger::error($e);
         }
+    }
+
+    public function modificar() {
+        try {
+            if(isset($_POST['id_modulo']) && isset($_POST['curso_id']) && isset($_POST['nombre_modulo'])){
+                $modulo = new Modulos();
+                $modulo->setIdModulo($_POST['id_modulo']);
+                $modulo->setCursoId($_POST['curso_id']);
+                $modulo->setNombreModulo($_POST['nombre_modulo']);
+                $modulo->setHoras($_POST['horas']);
+                $modulo->setFechaInicio(!empty($_POST['fecha_inicio']) ? $_POST['fecha_inicio'] : null);
+                $modulo->setFechaFin(!empty($_POST['fecha_fin']) ? $_POST['fecha_fin'] : null);
+
+                $model = new ModulosModel();
+                $model->modificar($modulo);
+
+                header("Location: index.php?accion=modulos");
+                exit();
+            }
+        } catch (Exception $e) {
+            Logger::error($e);
+        }
+    }
+
+    public function cambiarEstado() {
+        try {
+            $id = $_GET['id'] ?? null;
+            $estado = $_GET['estado'] ?? null;
+
+            if($id !== null && $estado !== null) {
+                $model = new ModulosModel();
+                $model->cambiarEstado((int)$id, (int)$estado);
+            }
+        } catch (Exception $e) {
+            Logger::error($e);
+        }
+        header("Location: index.php?accion=modulos");
+        exit();
+    }
+
+    public function eliminar() {
+        try {
+            $id = $_GET['id'] ?? null;
+            if($id) {
+                $model = new ModulosModel();
+                $model->eliminar((int)$id);
+            }
+        } catch (Exception $e) {
+            Logger::error($e);
+        }
+        header("Location: index.php?accion=modulos");
+        exit();
     }
 }

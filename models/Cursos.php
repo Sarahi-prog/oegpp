@@ -51,8 +51,8 @@ class Cursos {
     public function getEstado(): int {
         return $this->estado;
     }
-    public function setEstado(int $estado): void {
-        $this->estado = $estado;
+    public function setEstado(?int $estado): void { 
+        $this->estado = $estado ?? 1;
     }
-}
+} // <--- Asegúrate de cerrar la clase aquí
 ?>

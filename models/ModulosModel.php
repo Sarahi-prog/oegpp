@@ -1,117 +1,82 @@
 <?php
-    require_once './config/DB.php';
-    require_once 'Modulos.php';
+require_once './config/DB.php';
+require_once 'Modulos.php';
 
-    class ModulosModel{
-        private $db;
-        public function __construct(){
-            $this->db=DB::conectar();
-        }
+class ModulosModel {
+    private $db;
 
-
-        public function cargar(){
-            $sql = "SELECT * FROM obtener_modulos()";
-            $ps=$this->db->prepare($sql);
-            $ps->execute();
-            $filas=$ps->fetchall();
-            $modulos=array();
-            foreach($filas as $f){
-                $mod = new Modulos();
-                $mod->setIdModulo($f[0]);
-                $mod->setCursoId($f[1]);
-                $mod->setNombreModulo($f[2]);
-                $mod->setHoras($f[3]);
-                $mod->setFechaInicio($f[4]);
-                $mod->setFechaFin($f[5]);
-                array_push($modulos, $mod);
-            }
-            return $modulos;
-        }
-
-        public function buscar($texto, $campo = null){
-            $texto = trim($texto);
-            if ($texto === '') {
-                return $this->cargar();
-            }
-            $allowedFields = ['curso_id', 'nombre_modulo', 'horas', 'fecha_inicio', 'fecha_fin'];
-            if ($campo !== null && in_array($campo, $allowedFields, true)) {
-                $sql = "SELECT * FROM modulos WHERE $campo LIKE :q";
-            } else {
-                $sql = "SELECT * FROM modulos
-                    WHERE curso_id::text LIKE :q
-                       OR nombre_modulo LIKE :q
-                       OR horas::text LIKE :q
-                       OR fecha_inicio::text LIKE :q
-                       OR fecha_fin::text LIKE :q";
-            }
-            $ps = $this->db->prepare($sql);
-            $ps->bindValue(':q', '%' . $texto . '%', PDO::PARAM_STR);
-            $ps->execute();
-            $filas=$ps->fetchall();
-            $modulos=array();
-            foreach($filas as $f){
-                $mod = new Modulos();
-                $mod->setIdModulo($f[0]);
-                $mod->setCursoId($f[1]);
-                $mod->setNombreModulo($f[2]);
-                $mod->setHoras($f[3]);
-                $mod->setFechaInicio($f[4]);
-                $mod->setFechaFin($f[5]);
-                array_push($modulos, $mod);
-            }
-            return $modulos;
-        }
-
-        public function guardar(Modulos $modulo){
-            $sql = "INSERT INTO modulos ( 
-            curso_id, 
-            nombre_modulo, 
-            horas, 
-            fecha_inicio,
-            fecha_fin) 
-                VALUES (
-                :cid,
-                :nm,
-                :h,
-                :fi,
-                :ff)";
-            $ps=$this->db->prepare($sql);
-            $cid= $modulo->getCursoId();
-            $nm= $modulo->getNombreModulo();
-            $h= $modulo->getHoras();
-            $fi= $modulo->getFechaInicio();
-            $ff= $modulo->getFechaFin();
-            $ps->bindParam(":cid", $cid);
-            $ps->bindParam(":nm", $nm);
-            $ps->bindParam(":h", $h);
-            $ps->bindParam(":fi", $fi);
-            $ps->bindParam(":ff", $ff);
-            $ps->execute();
-        }
-
-
-        public function modificar(Modulos $modulo) {
-            $sql = "UPDATE modulos SET 
-                curso_id = :cid,
-                nombre_modulo = :nm,
-                horas = :h,
-                fecha_inicio = :fi,
-                fecha_fin = :ff
-                WHERE id_modulo = :id";
-            $ps = $this->db->prepare($sql);
-            $id = $modulo->getIdModulo();
-            $cid = $modulo->getCursoId();
-            $nm = $modulo->getNombreModulo();
-            $h = $modulo->getHoras();
-            $fi = $modulo->getFechaInicio();
-            $ff = $modulo->getFechaFin();
-            $ps->bindParam(":id", $id);
-            $ps->bindParam(":cid", $cid);
-            $ps->bindParam(":nm", $nm);
-            $ps->bindParam(":h", $h);
-            $ps->bindParam(":fi", $fi);
-            $ps->bindParam(":ff", $ff);
-            $ps->execute();
-        }
+    public function __construct() {
+        $this->db = DB::conectar();
     }
-?>
+
+    public function buscarPorCurso($id_curso) {
+        $sql = "SELECT id_modulo, curso_id, nombre_modulo, horas, fecha_inicio, fecha_fin, estado FROM modulos WHERE curso_id = :id";
+        $ps = $this->db->prepare($sql);
+        $ps->bindValue(':id', $id_curso, PDO::PARAM_INT);
+        $ps->execute();
+        return $this->mapearModulos($ps->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    public function cargar() {
+        $sql = "SELECT id_modulo, curso_id, nombre_modulo, horas, fecha_inicio, fecha_fin, estado FROM modulos";
+        $ps = $this->db->prepare($sql);
+        $ps->execute();
+        return $this->mapearModulos($ps->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    private function mapearModulos($filas) {
+        $modulos = [];
+        foreach($filas as $f) {
+            $mod = new Modulos();
+            $mod->setIdModulo($f['id_modulo']);
+            $mod->setCursoId($f['curso_id']);
+            $mod->setNombreModulo($f['nombre_modulo']);
+            $mod->setHoras($f['horas']);
+            $mod->setFechaInicio($f['fecha_inicio']);
+            $mod->setFechaFin($f['fecha_fin']);
+            $mod->setEstado($f['estado']);
+            $modulos[] = $mod;
+        }
+        return $modulos;
+    }
+
+    public function guardar(Modulos $modulo) {
+        $sql = "INSERT INTO modulos (curso_id, nombre_modulo, horas, fecha_inicio, fecha_fin, estado) 
+                VALUES (:cid, :nm, :h, :fi, :ff, 1)";
+        $ps = $this->db->prepare($sql);
+        $ps->bindValue(":cid", $modulo->getCursoId());
+        $ps->bindValue(":nm", $modulo->getNombreModulo());
+        $ps->bindValue(":h", $modulo->getHoras());
+        $ps->bindValue(":fi", $modulo->getFechaInicio());
+        $ps->bindValue(":ff", $modulo->getFechaFin());
+        $ps->execute();
+    }
+
+    public function modificar(Modulos $modulo) {
+        $sql = "UPDATE modulos SET curso_id = :cid, nombre_modulo = :nm, horas = :h, 
+                fecha_inicio = :fi, fecha_fin = :ff WHERE id_modulo = :id";
+        $ps = $this->db->prepare($sql);
+        $ps->bindValue(":cid", $modulo->getCursoId());
+        $ps->bindValue(":nm", $modulo->getNombreModulo());
+        $ps->bindValue(":h", $modulo->getHoras());
+        $ps->bindValue(":fi", $modulo->getFechaInicio());
+        $ps->bindValue(":ff", $modulo->getFechaFin());
+        $ps->bindValue(":id", $modulo->getIdModulo(), PDO::PARAM_INT);
+        return $ps->execute();
+    }
+
+    public function cambiarEstado($id_modulo, $estado) {
+        $sql = "UPDATE modulos SET estado = :estado WHERE id_modulo = :id";
+        $ps = $this->db->prepare($sql);
+        $ps->bindValue(":estado", $estado, PDO::PARAM_INT);
+        $ps->bindValue(":id", $id_modulo, PDO::PARAM_INT);
+        return $ps->execute();
+    }
+
+    public function eliminar($id_modulo) {
+        $sql = "DELETE FROM modulos WHERE id_modulo = :id";
+        $ps = $this->db->prepare($sql);
+        $ps->bindValue(":id", $id_modulo, PDO::PARAM_INT);
+        return $ps->execute();
+    }
+}

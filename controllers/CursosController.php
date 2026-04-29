@@ -30,15 +30,20 @@ class CursosController {
     public function modificarCurso() {
         if (isset($_POST['id_curso'])) {
             $curso = new Cursos();
-            $curso->setIdCurso($_POST['id_curso']);
-            $curso->setCodigoCurso($_POST['codigo_curso']);
-            $curso->setNombreCurso($_POST['nombre_curso']);
-            $curso->setTipo($_POST['tipo']);
-            $curso->setHorasTotales($_POST['horas_totales']);
-            $curso->setEstado($_POST['estado']);
+            $curso->setIdCurso((int)$_POST['id_curso']);
+            $curso->setCodigoCurso($_POST['codigo_curso'] ?? '');
+            $curso->setNombreCurso($_POST['nombre_curso'] ?? '');
+            $curso->setTipo($_POST['tipo'] ?? '');
+            $curso->setHorasTotales((int)($_POST['horas_totales'] ?? 0));
+            
+            // CORRECCIÓN AQUÍ: Si no viene el estado, enviamos 1 por defecto
+            $curso->setEstado((int)($_POST['estado'] ?? 1)); 
 
             if ($this->model->modificarCurso($curso)) {
-                header("Location: index.php?accion=cursos");
+                header("Location: index.php?accion=cursos&msg=actualizado");
+                exit();
+            } else {
+                $this->manejarError("Error al actualizar el programa.");
             }
         }
     }
@@ -49,13 +54,17 @@ class CursosController {
             $curso->setCodigoCurso($_POST['codigo_curso']);
             $curso->setNombreCurso($_POST['nombre_curso']);
             $curso->setTipo($_POST['tipo']);
-            $curso->setHorasTotales($_POST['horas_totales']);
-            $curso->setEstado($_POST['estado']);
+            $curso->setHorasTotales((int)($_POST['horas_totales'] ?? 0));
+            $curso->setEstado((int)($_POST['estado'] ?? 1));
+            
             if ($this->model->guardarCurso($curso)) {
-                header("Location: index.php?accion=cursos");
+                header("Location: index.php?accion=cursos&msg=guardado");
+                exit();
+            } else {
+                $this->manejarError("Error al guardar el curso.");
             }
         } else {
-            require './views/cursos.php';
+            $this->manejarError("Faltan datos requeridos para guardar el curso.");
         }
     }
 
@@ -87,6 +96,11 @@ class CursosController {
             exit;
         }
     }
+
+    private function manejarError($mensaje) {
+    header("Location: index.php?accion=cursos&msg=error&info=" . urlencode($mensaje));
+    exit();
+}
 
 }
 ?>

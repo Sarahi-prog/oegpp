@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Personal - OEGPP</title>
+    <title>Gestión de clientes</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -31,7 +31,7 @@
             <div id="seccionRegistro">
                 <div class="side-panel">
                     <h3 id="form-title"><i class="fas fa-plus-circle"></i> Datos del Registro</h3>
-                    <form id="formCliente" action="index.php?accion=guardarCliente" method="POST">
+                    <form id="formCliente" action="index.php?accion=guardar_cliente" method="POST">
                         <div class="form-vertical-stack">
                             <input type="hidden" name="id_cliente" id="id_cliente_form" value="">
                             
@@ -68,8 +68,8 @@
                             </div>
 
                             <div class="form-actions" style="display: flex; gap: 10px; margin-top: 15px;">
-                                <button type="submit" id="btn-submit-form" class="btn btn-primary-green" style="flex: 1;">
-                                    <i class="fas fa-save"></i>
+                                <button type="submit" id="btn-submit-form" class="btn-primary-green">
+                                    <i class="fas fa-save"></i> 
                                     <span>Guardar Cliente</span>
                                 </button>
 
@@ -77,7 +77,14 @@
                                         class="btn btn-secondary" style="display: none; background-color: #64748b; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer;">
                                     <i class="fas fa-times"></i>
                                 </button>
+                 
                             </div>
+
+                            <a href="index.php?accion=buscar_dni" 
+                                    class="btn-ir-gestion" 
+                                    style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 12px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 8px; font-size: 0.85rem; font-weight: 500; transition: background 0.3s;">
+                                        <i class="fas fa-graduation-cap"></i> Ir a Gestión Capacitaciones
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -104,14 +111,14 @@
                                     <th>DNI</th>
                                     <th>NOMBRES</th>
                                     <th>APELLIDOS</th>
-                                    <th>CORREO</th>
+                                    <th class="email-column">CORREO</th>
                                     <th>CELULAR</th>
                                     <th>AREA</th>
                                     <th>ESTADO</th> 
                                     <th style="text-align: center;">ACCIONES</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="cuerpoTabla">
                                 <?php 
                                     $i = 1; 
                                     if (!empty($clientes)):
@@ -122,7 +129,7 @@
                                     <td><strong><?= htmlspecialchars($c->dni) ?></strong></td>
                                     <td><?= htmlspecialchars($c->nombres) ?></td>
                                     <td><?= htmlspecialchars($c->apellidos) ?></td>
-                                    <td><?= htmlspecialchars($c->correo) ?></td>
+                                    <td class="email-column"><?= htmlspecialchars($c->correo) ?></td>
                                     <td><?= htmlspecialchars($c->celular) ?></td>
                                     <td><?= htmlspecialchars($c->area) ?></td>
                                     <td><?= htmlspecialchars($c->estado) ?></td>
@@ -162,7 +169,11 @@
             </div> 
         </div> 
     </div> 
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="public/UniversalScript.js?v=<?= time(); ?>"></script>
+    <script src="public/clientesScript.js?v=<?= time(); ?>"></script>
+
 </body>
 </html>

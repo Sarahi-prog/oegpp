@@ -9,89 +9,107 @@ class ErrorLogsModel {
         $this->db = DB::conectar();
     }
 
+    // =========================
+    // CARGAR
+    // =========================
     public function cargar() {
         $sql = "SELECT * FROM error_logs ORDER BY id DESC";
         $ps = $this->db->prepare($sql);
         $ps->execute();
-        $filas = $ps->fetchAll();
-        $errorLogs = array();
+
+        $filas = $ps->fetchAll(PDO::FETCH_ASSOC);
+        $errorLogs = [];
 
         foreach ($filas as $f) {
             $log = new ErrorLogs();
-            $log->setId($f[0]);
-            $log->setUsuarioId($f[1]);
-            $log->setMensaje($f[2]);
-            $log->setTipo($f[3]);
-            $log->setArchivo($f[4]);
-            $log->setLinea($f[5]);
-            $log->setFecha($f[6]);
-            $log->setStackTrace($f[7] ?? null);
+            $log->setId($f['id']);
+            $log->setUsuarioId($f['admin_id']); // 🔥 CORREGIDO
+            $log->setMensaje($f['mensaje']);
+            $log->setTipo($f['tipo']);
+            $log->setArchivo($f['archivo']);
+            $log->setLinea($f['linea']);
+            $log->setFecha($f['fecha']);
+            $log->setStackTrace($f['stack_trace']);
+
             $errorLogs[] = $log;
         }
 
         return $errorLogs;
     }
 
+    // =========================
+    // BUSCAR
+    // =========================
     public function buscar($texto, $campo = null) {
         $texto = trim($texto);
+
         if ($texto === '') {
             return $this->cargar();
         }
 
-        $allowedFields = ['usuario_id', 'mensaje', 'tipo', 'archivo', 'linea', 'fecha'];
+        $allowedFields = ['admin_id', 'mensaje', 'tipo', 'archivo', 'linea', 'fecha'];
+
         if ($campo !== null && in_array($campo, $allowedFields, true)) {
-            $sql = "SELECT * FROM error_logs WHERE $campo LIKE :q";
+            $sql = "SELECT * FROM error_logs WHERE $campo::text ILIKE :q";
         } else {
             $sql = "SELECT * FROM error_logs
-                WHERE usuario_id::text LIKE :q
-                   OR mensaje LIKE :q
-                   OR tipo LIKE :q
-                   OR archivo LIKE :q
-                   OR linea::text LIKE :q
-                   OR fecha::text LIKE :q";
+                    WHERE admin_id::text ILIKE :q
+                       OR mensaje ILIKE :q
+                       OR tipo ILIKE :q
+                       OR archivo ILIKE :q
+                       OR linea::text ILIKE :q
+                       OR fecha::text ILIKE :q";
         }
 
         $ps = $this->db->prepare($sql);
         $ps->bindValue(':q', '%' . $texto . '%', PDO::PARAM_STR);
         $ps->execute();
 
-        $filas = $ps->fetchAll();
-        $errorLogs = array();
+        $filas = $ps->fetchAll(PDO::FETCH_ASSOC);
+        $errorLogs = [];
 
         foreach ($filas as $f) {
             $log = new ErrorLogs();
-            $log->setId($f[0]);
-            $log->setUsuarioId($f[1]);
-            $log->setMensaje($f[2]);
-            $log->setTipo($f[3]);
-            $log->setArchivo($f[4]);
-            $log->setLinea($f[5]);
-            $log->setFecha($f[6]);
+            $log->setId($f['id']);
+            $log->setUsuarioId($f['admin_id']); // 🔥 CORREGIDO
+            $log->setMensaje($f['mensaje']);
+            $log->setTipo($f['tipo']);
+            $log->setArchivo($f['archivo']);
+            $log->setLinea($f['linea']);
+            $log->setFecha($f['fecha']);
+            $log->setStackTrace($f['stack_trace']);
+
             $errorLogs[] = $log;
         }
 
         return $errorLogs;
     }
 
+    // =========================
+    // GUARDAR
+    // =========================
     public function guardar(ErrorLogs $log) {
+
         $sql = "INSERT INTO error_logs 
-            (usuario_id, mensaje, tipo, archivo, linea, stack_trace) 
-            VALUES (:uid, :men, :tip, :arc, :lin, :sat)";
+                (admin_id, mensaje, tipo, archivo, linea, stack_trace) 
+                VALUES (:aid, :men, :tip, :arc, :lin, :stk)";
 
         $ps = $this->db->prepare($sql);
-        $uid = $log->getUsuarioId();
+
+        $aid = $log->getUsuarioId();
         $men = $log->getMensaje();
         $tip = $log->getTipo();
         $arc = $log->getArchivo();
         $lin = $log->getLinea();
-        $sat = $log->getStackTrace();
+        $stk = $log->getStackTrace();
 
-        $ps->bindParam(':uid', $uid);
-        $ps->bindParam(':men', $men);
-        $ps->bindParam(':tip', $tip);
-        $ps->bindParam(':arc', $arc);
-        $ps->bindParam(':lin', $lin);
-        $ps->bindParam(':sat', $sat);
+        $ps->bindParam(":aid", $aid);
+        $ps->bindParam(":men", $men);
+        $ps->bindParam(":tip", $tip);
+        $ps->bindParam(":arc", $arc);
+        $ps->bindParam(":lin", $lin);
+        $ps->bindParam(":stk", $stk);
+
         $ps->execute();
     }
 }

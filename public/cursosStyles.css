@@ -7,19 +7,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap');
 
 :root {
-    --bg-main: #f8fafc;
-    --tech-green: #00c853;
-    --tech-green-hover: #00a946;
-    --tech-green-soft: #e8f5e9;
-    --tech-blue: #3b82f6; 
-    --tech-blue-soft: #eff6ff;
-    --tech-red: #ef4444;
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --border-color: #e2e8f0;
-    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
+        --bg-main: #f8fafc;         /* Blanco gélido */
+        --tech-green: #00c853;      /* Verde vibrante */
+        --tech-green-hover: #00a946;
+        --tech-green-soft: #e8f5e9;
+        --tech-blue: #3b82f6;       /* Azul para edición */
+        --tech-red: #ef4444;        /* Rojo para eliminar */
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+        --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+/* --- 2. CUERPO Y LAYOUT --- */
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-main);
+        background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+        background-size: 25px 25px; /* Textura de puntos sutil */
+        color: var(--text-main);
+        margin: 0;
+    }
 
 /* --- 2. CUERPO Y LAYOUT --- */
 .main-content {

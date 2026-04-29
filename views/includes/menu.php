@@ -3,11 +3,11 @@
         <div class="navbar-content">
             <a href="index.php?accion=inicio" class="navbar-brand">
                 <div class="logo-img-container">
-                    <img src="views/img/logo_2.png" alt="Logo OEGPP">
+                    <img src="views/img/image.png" alt="Logo OEGPP">
                 </div>
                 <div class="brand-text">
                     <h1>OEGPP</h1>
-                    <p></p>
+                    <p>GESTION PUBLICA Y PRIVADA</p>
                 </div>
             </a>
 

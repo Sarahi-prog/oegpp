@@ -27,56 +27,52 @@ class ClientesModel {
                     VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id_cliente";
             
             $stmt = $this->conexion->prepare($sql);
+            
+            // Extraemos los datos DESDE el objeto $cliente
             $stmt->execute([
-                $cliente->getDni($_POST['dni']),
-                $cliente->getNombres($_POST['nombres']),
-                $cliente->getApellidos($_POST['apellidos']),
-                $cliente->getCorreo($_POST['correo']),
-                $cliente->getCelular($_POST['celular']),
-                $cliente->getArea($_POST['area']),
-                $cliente->getEstado($_POST['estado']) // 'Activo' o 'Inactivo'
+                $cliente->getDni(),
+                $cliente->getNombres(),
+                $cliente->getApellidos(),
+                $cliente->getCorreo(),
+                $cliente->getCelular(),
+                $cliente->getArea(),
+                $cliente->getEstado()
             ]);
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
             return $resultado ? $resultado['id_cliente'] : null; 
             
         } catch (PDOException $e) {
-            // Registrar el error y guardar el mensaje para depuración
             $this->ultimoError = $e->getMessage();
-            error_log("Error BD (Clientes): " . $e->getMessage());
+            error_log("Error BD (Clientes): " . $this->ultimoError);
             return null;
         }
     }
 
     public function modificarCliente($cliente) {
         try {
-            $sql = "UPDATE clientes SET 
-                        dni = ?, 
-                        nombres = ?, 
-                        apellidos = ?, 
-                        correo = ?, 
-                        celular = ?, 
-                        area = ?, 
-                        estado = ? 
+            $sql = "UPDATE clientes SET dni = ?, nombres = ?, apellidos = ?, 
+                        correo = ?, celular = ?, area = ?, estado = ? 
                     WHERE id_cliente = ?";
             
             $stmt = $this->conexion->prepare($sql);
             return $stmt->execute([
-                $cliente->getDni($_POST['dni']),
-                $cliente->getNombres($_POST['nombres']),
-                $cliente->getApellidos($_POST['apellidos']),
-                $cliente->getCorreo($_POST['correo']),
-                $cliente->getCelular($_POST['celular']),
-                $cliente->getArea($_POST['area']),
-                $cliente->getEstado($_POST['estado']),
-                $cliente->getIdCliente($_POST['id_cliente']) // El ID es necesario para el WHERE
+                $cliente->getDni(),
+                $cliente->getNombres(),
+                $cliente->getApellidos(),
+                $cliente->getCorreo(),
+                $cliente->getCelular(),
+                $cliente->getArea(),
+                $cliente->getEstado(),
+                $cliente->getIdCliente() // Usamos el getter del objeto
             ]);
         } catch (PDOException $e) {
             $this->ultimoError = $e->getMessage();
-            error_log("Error al modificar cliente: " . $e->getMessage());
             return false;
         }
     }
+
+    
 
     public function eliminarCliente($id_cliente) {
         try {
@@ -92,6 +88,8 @@ class ClientesModel {
             return false;
         }
     }
+
+
 
 
 
