@@ -1,77 +1,107 @@
 <?php
-    require_once 'models/LibrosRegistroModel.php';
-    require_once 'models/LibrosRegistro.php';
-    require_once 'helpers/loggers.php';
+require_once './models/LibrosRegistro.php';
+require_once './models/LibrosRegistroModel.php';
 
-    class LibrosRegistroController{
+class LibrosRegistroController {
 
-        public function cargar(){
-            try {
-                $model = new LibrosRegistroModel();
-                $libros = $model->cargar(); // <--- SI ESTO FALLA...
-                require './views/libros_registro.php'; // <--- ESTO SE SALTA
-            } catch (Exception $e) {
-                Logger::error($e); // <--- Y EL ERROR SE ESCONDE AQUÍ
-            }
-}
-        public function modificar(){
-            try {
-                // Solo exigimos los campos que son NOT NULL en la base de datos
-                if(isset($_POST['id_libro']) && isset($_POST['tipo']) && isset($_POST['numero_libro']) && isset($_POST['anio_inicio'])){
-                    
-                    $libro = new LibrosRegistro();
-                    $libro->setIdLibro($_POST['id_libro']);
-                    $libro->setTipo($_POST['tipo']);
-                    $libro->setNumeroLibro($_POST['numero_libro']);
-                    $libro->setAnioInicio($_POST['anio_inicio']);
-                    
-                    // Campos opcionales: Usamos una validación para aceptar nulos o vacíos
-                    $libro->setFechaFin(!empty($_POST['fecha_fin']) ? $_POST['fecha_fin'] : null);
-                    $libro->setProvincia($_POST['provincia'] ?? null);
-                    $libro->setDistrito($_POST['distrito'] ?? null);
-                    $libro->setDescripcion($_POST['descripcion'] ?? null);
-                    
-                    $model = new LibrosRegistroModel();
-                    $model->modificar($libro);
+    private $model;
 
-                    // Redirección limpia para evitar reenvío de formularios
-                    header('Location: index.php?accion=libros');
-                    exit;
-                }
-            } catch (Exception $e) {
-                Logger::error($e);
-            }
-        }
+    public function __construct() {
+        $this->model = new LibrosRegistroModel();
+    }
 
-        public function guardar(){
-            try {
-                // Solo exigimos los campos NOT NULL
-                if(isset($_POST['tipo']) && isset($_POST['numero_libro']) && isset($_POST['anio_inicio'])){
-                    
-                    $libro = new LibrosRegistro();
-                    $libro->setTipo($_POST['tipo']);
-                    $libro->setNumeroLibro($_POST['numero_libro']);
-                    $libro->setAnioInicio($_POST['anio_inicio']);
-                    
-                    // Campos opcionales (incluyendo los del ALTER TABLE)
-                    $libro->setFechaFin(!empty($_POST['fecha_fin']) ? $_POST['fecha_fin'] : null);
-                    $libro->setProvincia($_POST['provincia'] ?? null);
-                    $libro->setDistrito($_POST['distrito'] ?? null);
-                    $libro->setDescripcion($_POST['descripcion'] ?? null);
+    // 🔹 LISTAR (equivalente a listarClientes)
+    public function cargar() {
+        $libros = $this->model->cargar();
+        $pagina_actual = 'libros';
+        require './views/libros_registro.php';
+    }
 
-                    $model = new LibrosRegistroModel();
-                    $model->guardar($libro);
+    // 🔹 GUARDAR Y EDITAR (MISMA LÓGICA QUE CLIENTES)
+    public function guardar() {
+        if (isset($_POST['tipo'], $_POST['numero_libro'], $_POST['anio_inicio'])) {
 
-                    // Redirección limpia hacia el directorio de libros
-                    header('Location: index.php?accion=libros');
-                    exit;
+            $libro = $this->mapearDatosFormulario();
+            $id_libro = $_POST['id_libro'] ?? '';
+
+            if (!empty($id_libro)) {
+                // --- MODO EDICIÓN ---
+                $libro->setIdLibro($id_libro);
+
+                if ($this->model->modificarLibro($libro)) {
+                    header("Location: index.php?accion=libros_registro&msg=actualizado");
+                    exit();
                 } else {
-                    // Si falla el POST o se accede directamente, recargamos la vista principal
-                    $this->cargar();
+                    $this->manejarError("Error al actualizar libro");
                 }
-            } catch (Exception $e) {
-                Logger::error($e);
+
+            } else {
+                // --- MODO NUEVO ---
+                $idGenerado = $this->model->guardarLibro($libro);
+
+                if ($idGenerado !== null) {
+                    header("Location: index.php?accion=libros_registro&msg=guardado");
+                    exit();
+                } else {
+                    $this->manejarError("Error al guardar libro");
+                }
             }
         }
     }
+
+    // 🔹 MODIFICAR (opcional, igual que clientes)
+    public function modificar() {
+        if(isset($_POST['id_libro']) && !empty($_POST['id_libro'])) {
+
+            $libro = $this->mapearDatosFormulario();
+            $libro->setIdLibro($_POST['id_libro']);
+
+            if($this->model->modificarLibro($libro)) {
+                header("Location: index.php?accion=libros_registro&msg=actualizado");
+                exit();
+            } else {
+                $this->manejarError("Error al actualizar libro");
+            }
+
+        } else {
+            $this->manejarError("ID no válido");
+        }
+    }
+
+    // 🔹 ELIMINAR
+    public function eliminar() {
+        if(isset($_GET['id'])) {
+            $id = $_GET['id'];
+
+            if($this->model->eliminarLibro($id)) {
+                header("Location: index.php?accion=libros_registro&msg=eliminado");
+                exit();
+            } else {
+                $this->manejarError("Error al eliminar libro");
+            }
+        }
+    }
+
+    // 🔹 MANEJO DE ERRORES (igual que clientes)
+    private function manejarError($mensaje) {
+        header("Location: index.php?accion=libros_registro&msg=error&info=" . urlencode($mensaje));
+        exit();
+    }
+
+    // 🔹 MAPEAR DATOS (CLAVE, igual que clientes)
+    private function mapearDatosFormulario() {
+        $libro = new LibrosRegistro();
+
+        $libro->setTipo($_POST['tipo']);
+        $libro->setNumeroLibro($_POST['numero_libro']);
+        $libro->setAnioInicio($_POST['anio_inicio']);
+
+        $libro->setFechaFin(!empty($_POST['fecha_fin']) ? $_POST['fecha_fin'] : null);
+        $libro->setDistrito(!empty($_POST['distrito']) ? $_POST['distrito'] : null);
+        $libro->setProvincia(!empty($_POST['provincia']) ? $_POST['provincia'] : null);
+        $libro->setDescripcion(!empty($_POST['descripcion']) ? $_POST['descripcion'] : null);
+
+        return $libro;
+    }
+}
 ?>

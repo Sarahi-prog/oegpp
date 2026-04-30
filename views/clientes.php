@@ -81,7 +81,7 @@
                  
                             </div>
 
-                            <a href="index.php?accion=buscar_dni" 
+                            <a href="index.php?accion=registro_capacitacion" 
                                     class="btn-ir-gestion" 
                                     style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 12px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 8px; font-size: 0.85rem; font-weight: 500; transition: background 0.3s;">
                                         <i class="fas fa-graduation-cap"></i> Ir a Gestión Capacitaciones

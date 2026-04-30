@@ -10,7 +10,7 @@ class LibrosRegistroModel {
         $this->ultimoError = null;
     }
 
-    // 🔹 LISTAR LIBROS
+    // 🔹 LISTAR
     public function cargar() {
         try {
             $sql = "SELECT id_libro, tipo, numero_libro, anio_inicio, fecha_fin, distrito, provincia, descripcion 
@@ -18,7 +18,6 @@ class LibrosRegistroModel {
                     ORDER BY id_libro DESC";
 
             $stmt = $this->conexion->query($sql);
-
             return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
 
         } catch (PDOException $e) {
@@ -27,34 +26,38 @@ class LibrosRegistroModel {
         }
     }
 
-    // 🔹 GUARDAR LIBRO
-    public function guardar($data) {
+    // 🔹 GUARDAR (igual que clientes)
+    public function guardarLibro($libro) {
         try {
             $sql = "INSERT INTO libros_registro 
                     (tipo, numero_libro, anio_inicio, fecha_fin, distrito, provincia, descripcion) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    VALUES (?, ?, ?, ?, ?, ?, ?) 
+                    RETURNING id_libro";
 
             $stmt = $this->conexion->prepare($sql);
 
-            return $stmt->execute([
-                $data['tipo'],
-                $data['numero_libro'],
-                $data['anio_inicio'],
-                $data['fecha_fin'] ?: null,
-                $data['distrito'] ?? null,
-                $data['provincia'] ?? null,
-                $data['descripcion'] ?? null
+            $stmt->execute([
+                $libro->getTipo(),
+                $libro->getNumeroLibro(),
+                $libro->getAnioInicio(),
+                $libro->getFechaFin() ?: null,
+                $libro->getDistrito(),
+                $libro->getProvincia(),
+                $libro->getDescripcion()
             ]);
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $resultado ? $resultado['id_libro'] : null;
 
         } catch (PDOException $e) {
             $this->ultimoError = $e->getMessage();
             error_log("Error al guardar libro: " . $e->getMessage());
-            return false;
+            return null;
         }
     }
 
-    // 🔹 MODIFICAR LIBRO
-    public function modificar($data) {
+    // 🔹 MODIFICAR (igual que clientes)
+    public function modificarLibro($libro) {
         try {
             $sql = "UPDATE libros_registro SET 
                         tipo = ?, 
@@ -69,14 +72,14 @@ class LibrosRegistroModel {
             $stmt = $this->conexion->prepare($sql);
 
             return $stmt->execute([
-                $data['tipo'],
-                $data['numero_libro'],
-                $data['anio_inicio'],
-                $data['fecha_fin'] ?: null,
-                $data['distrito'] ?? null,
-                $data['provincia'] ?? null,
-                $data['descripcion'] ?? null,
-                $data['id_libro']
+                $libro->getTipo(),
+                $libro->getNumeroLibro(),
+                $libro->getAnioInicio(),
+                $libro->getFechaFin() ?: null,
+                $libro->getDistrito(),
+                $libro->getProvincia(),
+                $libro->getDescripcion(),
+                $libro->getIdLibro()
             ]);
 
         } catch (PDOException $e) {
@@ -86,12 +89,12 @@ class LibrosRegistroModel {
         }
     }
 
-    // 🔹 ELIMINAR (opcional pero recomendable)
-    public function eliminar($id) {
+    // 🔹 ELIMINAR
+    public function eliminarLibro($id_libro) {
         try {
             $sql = "DELETE FROM libros_registro WHERE id_libro = ?";
             $stmt = $this->conexion->prepare($sql);
-            return $stmt->execute([$id]);
+            return $stmt->execute([$id_libro]);
 
         } catch (PDOException $e) {
             $this->ultimoError = $e->getMessage();

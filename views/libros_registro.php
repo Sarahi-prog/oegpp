@@ -41,7 +41,7 @@
                     <h3 id="form-title" style="margin-top: 0; margin-bottom: 20px;">
                         <i class="fas fa-edit"></i> Datos del Libro
                     </h3>
-                    <form id="formLibroAjax" action="index.php?accion=guardar_libro" method="POST">
+                    <form id="formLibro" action="index.php?accion=guardar_libro" method="POST">
                         <div class="form-vertical-stack">
 
                             <!-- Campo oculto para edición -->
@@ -145,28 +145,28 @@
                                 $i = 1; 
                                 if (!empty($libros)):
                                     foreach ($libros as $libro): 
-                                        $badgeClass   = ($libro->getTipo() == 'diplomados') ? 'badge-diplomado' : 'badge-certificado';
-                                        $estaCerrado  = !empty($libro->getFechaFin());
+                                        $badgeClass   = ($libro->tipo == 'diplomados') ? 'badge-diplomado' : 'badge-certificado';
+                                        $estaCerrado  = !empty($libro->fecha_fin);
                                         $estadoClass  = $estaCerrado ? 'estado-cerrado' : 'estado-activo';
                                         $estadoTexto  = $estaCerrado ? 'Cerrado' : 'Activo';
                                         $estadoIcono  = $estaCerrado ? 'fa-lock' : 'fa-check-circle';
-                                        $nombreLibro  = "Libro " . str_pad($libro->getNumeroLibro(), 2, "0", STR_PAD_LEFT);
+                                        $nombreLibro  = "Libro " . str_pad($libro->numero_libro, 2, "0", STR_PAD_LEFT);
                                 ?>
                                 <tr class="fila-libro">
                                     <td class="id-column"><?= $i++ ?></td>
                                     <td><strong><?= htmlspecialchars($nombreLibro) ?></strong></td>
                                     <td>
                                         <span class="badge <?= $badgeClass ?>">
-                                            <?= ucfirst(htmlspecialchars($libro->getTipo())) ?>
+                                            <?= ucfirst(htmlspecialchars($libro->tipo)) ?>
                                         </span>
                                     </td>
                                     <td>
                                         <i class="far fa-calendar" style="color: #94a3b8; margin-right: 5px;"></i>
-                                        <?= htmlspecialchars($libro->getAnioInicio()) ?>
+                                        <?= htmlspecialchars($libro->anio_inicio) ?>
                                     </td>
                                     <td style="font-size: 0.9em; color: #475569;">
-                                        <?= htmlspecialchars($libro->getProvincia()) ?><br>
-                                        <span style="opacity: 0.7;"><?= htmlspecialchars($libro->getDistrito()) ?></span>
+                                        <?= htmlspecialchars($libro->provincia ?? '') ?><br>
+                                        <span style="opacity: 0.7;"><?= htmlspecialchars($libro->distrito ?? '') ?></span>
                                     </td>
                                     <td>
                                         <span class="estado-indicador <?= $estadoClass ?>">
@@ -178,20 +178,20 @@
                                         <button class="btn-icon btn-edit" 
                                                 title="Editar"
                                                 onclick='editarLibro(<?= json_encode([
-                                                    "id_libro"     => $libro->getIdLibro(),
-                                                    "tipo"         => $libro->getTipo(),
-                                                    "numero_libro" => $libro->getNumeroLibro(),
-                                                    "anio_inicio"  => $libro->getAnioInicio(),
-                                                    "fecha_fin"    => $libro->getFechaFin(),
-                                                    "provincia"    => $libro->getProvincia(),
-                                                    "distrito"     => $libro->getDistrito(),
-                                                    "descripcion"  => $libro->getDescripcion(),
+                                                    "id_libro"     => $libro->id_libro,
+                                                    "tipo"         => $libro->tipo,
+                                                    "numero_libro" => $libro->numero_libro,
+                                                    "anio_inicio"  => $libro->anio_inicio,
+                                                    "fecha_fin"    => $libro->fecha_fin,
+                                                    "provincia"    => $libro->provincia,
+                                                    "distrito"     => $libro->distrito,
+                                                    "descripcion"  => $libro->descripcion,
                                                 ]) ?>)'>
                                             <i class="fas fa-edit" style="color: #4a90e2;"></i>
                                         </button>
                                         <button class="btn-icon btn-delete" 
                                                 title="Eliminar"
-                                                onclick="confirmarEliminar(<?= $libro->getIdLibro() ?>)">
+                                                onclick="confirmarEliminar(<?= $libro->id_libro ?>)">
                                             <i class="fas fa-trash" style="color: #e24a4a;"></i>
                                         </button>
                                     </td>
@@ -219,7 +219,8 @@
             </div><!-- /table-section -->
         </div><!-- /dashboard-wrapper -->
     </div><!-- /container -->
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="public/universalScript.js?v=<?= time(); ?>"></script>
     <script src="public/librosScript.js?v=<?= time(); ?>"></script>
 </body>

@@ -168,12 +168,15 @@ case 'inicio':
         $controllerLibros->cargar(); 
         break;
 
-    case 'guardar_libro_registro':
+    case 'guardar_libro':
         $controllerLibros->guardar();
         break;
 
-    case 'modificar_libro_registro':
+    case 'modificar_libro':
         $controllerLibros->modificar();
+        break;
+    case 'eliminar_libro':
+        $controllerLibros->eliminar();
         break;
     
     case 'buscar_cliente_dni':
