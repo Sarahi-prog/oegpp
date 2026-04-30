@@ -21,28 +21,6 @@ class ClientesModel {
             }
     }
 
-    public function cargarc(){
-        
-        $sql = "SELECT id_cliente, dni, nombres, apellidos, correo, celular, area, estado FROM clientes";
-        $ps=$this->db->prepare($sql);
-        $ps->execute();
-        $filas=$ps->fetchall();
-        $clientes=array();
-        foreach($filas as $f){
-            $fam = new Clientes();
-            $fam->setIdCliente($f[0]);
-            $fam->setDni($f[1]);
-            $fam->setNombres($f[2]);
-            $fam->setApellidos($f[3]);
-            $fam->setCorreo($f[4]);
-            $fam->setCelular($f[5]);
-            $fam->setArea($f[6]);
-            $fam->setEstado($f[7]);
-            array_push($clientes, $fam);
-        }
-        return $clientes;
-    }
-
     public function guardarCliente($cliente) {
         try {
             $sql = "INSERT INTO clientes (dni, nombres, apellidos, correo, celular, area, estado) 

@@ -18,9 +18,9 @@ class RegistroCapacitacionController {
         $registros = $this->model->cargar_registro();
         $pagina_actual = 'registros_capacitacion';        
         $modelCurso = new CursosModel();
-        $cursos = $modelCurso->cargarCurso();
+        $cursos = $modelCurso->cargar();
         $modelCliente = new ClientesModel();
-        $clientes = $modelCliente->cargarc();
+        $clientes = $modelCliente->cargar();
         $modelLibro = new LibrosRegistroModel();
         $libros = $modelLibro->cargar();
         require './views/registros_capacitacion.php';
@@ -48,7 +48,7 @@ class RegistroCapacitacionController {
                 $idGenerado = $this->model->guardar_registro($registro);
 
                 if ($idGenerado !== null) {
-                    header("Location: index.php?accion=registros&msg=guardado");
+                    header("Location: index.php?accion=registros_capacitacion&msg=guardado");
                     exit();
                 } else {
                     $this->manejarError("Error al guardar registro");
@@ -58,7 +58,7 @@ class RegistroCapacitacionController {
     }
 
     private function manejarError($mensaje) {
-        header("Location: index.php?accion=registros&msg=error&info=" . urlencode($mensaje));
+        header("Location: index.php?accion=registros_capacitacion&msg=error&info=" . urlencode($mensaje));
         exit();
     }
 
@@ -67,7 +67,7 @@ class RegistroCapacitacionController {
             $id = $_GET['id'];
 
             if ($this->model->eliminar_registro($id)) {
-                header("Location: index.php?accion=registros&msg=eliminado");
+                header("Location: index.php?accion=registros_capacitacion&msg=eliminado");
                 exit();
             } else {
                 $this->manejarError("Error al eliminar registro");
@@ -99,8 +99,8 @@ class RegistroCapacitacionController {
             $registro = $this->mapearDatosFormulario();
             $registro->setIdRegistro($_POST['id_registro']); // Asignamos el ID oculto del form
 
-            if($this->model->modificarRegistro($registro)) {
-                header("Location: index.php?accion=clientes&msg=actualizado");
+            if($this->model->modificar_registro($registro)) {
+                header("Location: index.php?accion=registros_capacitacion&msg=actualizado");
                 exit();
             } else {
                 $this->manejarError("Error al actualizar registro");

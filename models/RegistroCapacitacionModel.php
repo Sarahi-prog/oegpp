@@ -10,6 +10,7 @@ class RegistroCapacitacionModel {
         $this->ultimoError = null;
     }
 
+    // 🔹 LISTAR REGISTROS
     public function cargar_registro() {
         try {
             $sql = "SELECT 
@@ -36,7 +37,6 @@ class RegistroCapacitacionModel {
             ORDER BY rc.id_registro DESC";
 
             $stmt = $this->conexion->query($sql);
-
             return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
 
         } catch (PDOException $e) {
@@ -45,6 +45,78 @@ class RegistroCapacitacionModel {
         }
     }
 
+    // 🔹 GUARDAR REGISTRO
+    public function guardar_registro($registro) {
+        try {
+            $sql = "INSERT INTO registros_capacitacion 
+                    (clientes_id, curso_id, libro_id, registro, horas_realizadas, 
+                    fecha_inicio, fecha_fin, fecha_emision, folio, estado)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            $stmt = $this->conexion->prepare($sql);
+
+            $stmt->execute([
+                $registro->getClienteId(),
+                $registro->getCursoId(),
+                $registro->getLibroId(),
+                $registro->getRegistro(),
+                $registro->getHorasRealizadas(),
+                $registro->getFechaInicio(),
+                $registro->getFechaFin(),
+                $registro->getFechaEmision(),
+                $registro->getFolio(),
+                $registro->getEstado()
+            ]);
+
+            return $this->conexion->lastInsertId();
+
+        } catch (PDOException $e) {
+            $this->ultimoError = $e->getMessage();
+            error_log("Error al guardar registro: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    // 🔹 MODIFICAR REGISTRO
+    public function modificar_registro($registro) {
+        try {
+            $sql = "UPDATE registros_capacitacion SET 
+                        clientes_id = ?, 
+                        curso_id = ?, 
+                        libro_id = ?, 
+                        registro = ?, 
+                        horas_realizadas = ?, 
+                        fecha_inicio = ?, 
+                        fecha_fin = ?, 
+                        fecha_emision = ?, 
+                        folio = ?, 
+                        estado = ?
+                    WHERE id_registro = ?";
+
+            $stmt = $this->conexion->prepare($sql);
+
+            return $stmt->execute([
+                $registro->getClienteId(),
+                $registro->getCursoId(),
+                $registro->getLibroId(),
+                $registro->getRegistro(),
+                $registro->getHorasRealizadas(),
+                $registro->getFechaInicio(),
+                $registro->getFechaFin(),
+                $registro->getFechaEmision(),
+                $registro->getFolio(),
+                $registro->getEstado(),
+                $registro->getIdRegistro()
+            ]);
+
+        } catch (PDOException $e) {
+            $this->ultimoError = $e->getMessage();
+            error_log("Error al modificar registro: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // 🔹 ELIMINAR
     public function eliminar_registro($id_registro) {
         try {
             $sql = "DELETE FROM registros_capacitacion WHERE id_registro = ?";
@@ -58,6 +130,7 @@ class RegistroCapacitacionModel {
         }
     }
 
+    // 🔹 BUSCAR POR DNI
     public function buscarPorDni($dni) {
         try {
             $sql = "SELECT rc.*, 
@@ -76,7 +149,7 @@ class RegistroCapacitacionModel {
             $stmt->bindParam(':dni', $dni);
             $stmt->execute();
 
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
 
         } catch (PDOException $e) {
             $this->ultimoError = $e->getMessage();

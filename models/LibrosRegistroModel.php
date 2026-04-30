@@ -1,89 +1,103 @@
 <?php
 require_once './config/DB.php';
-require_once 'LibrosRegistro.php';
 
 class LibrosRegistroModel {
-    private $db;
+    private $conexion;
+    public $ultimoError;
 
     public function __construct() {
-        $this->db = DB::conectar();
+        $this->conexion = DB::conectar();
+        $this->ultimoError = null;
     }
 
+    // 🔹 LISTAR LIBROS
     public function cargar() {
-        // CORREGIDO: Consulta directa a la tabla para evitar el error de "función no existe"
-        $sql = "SELECT * FROM libros_registro ORDER BY id_libro DESC";
-        $ps = $this->db->prepare($sql);
-        $ps->execute();
-        $filas = $ps->fetchAll();
-        
-        $libros = array();
-        foreach ($filas as $f) {
-            $lib = new LibrosRegistro();
-            $lib->setIdLibro($f['id_libro']);
-            $lib->setTipo($f['tipo']);
-            $lib->setNumeroLibro($f['numero_libro']);
-            $lib->setAnioInicio($f['anio_inicio']);
-            $lib->setFechaFin($f['fecha_fin']);
-            $lib->setDistrito($f['distrito'] ?? null); // Usamos el nombre de la columna por seguridad
-            $lib->setProvincia($f['provincia'] ?? null);
-            $lib->setDescripcion($f['descripcion'] ?? null);
-            array_push($libros, $lib);
+        try {
+            $sql = "SELECT id_libro, tipo, numero_libro, anio_inicio, fecha_fin, distrito, provincia, descripcion 
+                    FROM libros_registro 
+                    ORDER BY id_libro DESC";
+
+            $stmt = $this->conexion->query($sql);
+
+            return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
+
+        } catch (PDOException $e) {
+            $this->ultimoError = $e->getMessage();
+            return [];
         }
-        return $libros;
     }
 
-    public function guardar(LibrosRegistro $libro) {
-        $sql = "INSERT INTO libros_registro (tipo, numero_libro, anio_inicio, fecha_fin, distrito, provincia, descripcion) 
-                VALUES (:t, :nl, :ai, :ff, :dt, :pv, :dc)";
-        
-        $ps = $this->db->prepare($sql);
-        
-        // Asignamos a variables para bindParam
-        $t  = $libro->getTipo();
-        $nl = $libro->getNumeroLibro();
-        $ai = $libro->getAnioInicio();
-        $ff = $libro->getFechaFin();
-        $dt = $libro->getDistrito();
-        $pv = $libro->getProvincia();
-        $dc = $libro->getDescripcion();
+    // 🔹 GUARDAR LIBRO
+    public function guardar($data) {
+        try {
+            $sql = "INSERT INTO libros_registro 
+                    (tipo, numero_libro, anio_inicio, fecha_fin, distrito, provincia, descripcion) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        $ps->bindParam(":t", $t);
-        $ps->bindParam(":nl", $nl);
-        $ps->bindParam(":ai", $ai);
-        $ps->bindParam(":ff", $ff);
-        $ps->bindParam(":dt", $dt);
-        $ps->bindParam(":pv", $pv);
-        $ps->bindParam(":dc", $dc);
-        
-        return $ps->execute();
+            $stmt = $this->conexion->prepare($sql);
+
+            return $stmt->execute([
+                $data['tipo'],
+                $data['numero_libro'],
+                $data['anio_inicio'],
+                $data['fecha_fin'] ?: null,
+                $data['distrito'] ?? null,
+                $data['provincia'] ?? null,
+                $data['descripcion'] ?? null
+            ]);
+
+        } catch (PDOException $e) {
+            $this->ultimoError = $e->getMessage();
+            error_log("Error al guardar libro: " . $e->getMessage());
+            return false;
+        }
     }
 
-    public function modificar(LibrosRegistro $libro) {
-        $sql = "UPDATE libros_registro SET 
-                tipo=:t, numero_libro=:nl, anio_inicio=:ai, fecha_fin=:ff, 
-                distrito=:dt, provincia=:pv, descripcion=:dc 
-                WHERE id_libro=:id";
-        
-        $ps = $this->db->prepare($sql);
-        
-        $id = $libro->getIdLibro();
-        $t  = $libro->getTipo();
-        $nl = $libro->getNumeroLibro();
-        $ai = $libro->getAnioInicio();
-        $ff = $libro->getFechaFin();
-        $dt = $libro->getDistrito();
-        $pv = $libro->getProvincia();
-        $dc = $libro->getDescripcion();
+    // 🔹 MODIFICAR LIBRO
+    public function modificar($data) {
+        try {
+            $sql = "UPDATE libros_registro SET 
+                        tipo = ?, 
+                        numero_libro = ?, 
+                        anio_inicio = ?, 
+                        fecha_fin = ?, 
+                        distrito = ?, 
+                        provincia = ?, 
+                        descripcion = ?
+                    WHERE id_libro = ?";
 
-        $ps->bindParam(":id", $id);
-        $ps->bindParam(":t", $t);
-        $ps->bindParam(":nl", $nl);
-        $ps->bindParam(":ai", $ai);
-        $ps->bindParam(":ff", $ff);
-        $ps->bindParam(":dt", $dt);
-        $ps->bindParam(":pv", $pv);
-        $ps->bindParam(":dc", $dc);
+            $stmt = $this->conexion->prepare($sql);
 
-        return $ps->execute();
+            return $stmt->execute([
+                $data['tipo'],
+                $data['numero_libro'],
+                $data['anio_inicio'],
+                $data['fecha_fin'] ?: null,
+                $data['distrito'] ?? null,
+                $data['provincia'] ?? null,
+                $data['descripcion'] ?? null,
+                $data['id_libro']
+            ]);
+
+        } catch (PDOException $e) {
+            $this->ultimoError = $e->getMessage();
+            error_log("Error al modificar libro: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // 🔹 ELIMINAR (opcional pero recomendable)
+    public function eliminar($id) {
+        try {
+            $sql = "DELETE FROM libros_registro WHERE id_libro = ?";
+            $stmt = $this->conexion->prepare($sql);
+            return $stmt->execute([$id]);
+
+        } catch (PDOException $e) {
+            $this->ultimoError = $e->getMessage();
+            error_log("Error al eliminar libro: " . $e->getMessage());
+            return false;
+        }
     }
 }
+?>

@@ -7,7 +7,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="public/clientesStyles.css?v=<?= time(); ?>">
+    <link rel="stylesheet" href="public/capacitacionesStyles.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="public/menuStyles.css?v=<?php echo time(); ?>">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -42,23 +42,23 @@
                             </div>
                             <div class="field-group">
                                 <label>Cliente</label>
-                                <select name="trabajador_id" class="form-select" required>
+                                    <select name="cliente_id" class="form-select" required>
                                     <option value="">Seleccione un cliente...</option>
                                     <?php foreach ($clientes as $c): ?>
-                                        <option value="<?= $c->setIdCliente() ?>">
-                                            <?= (htmlspecialchars($c->getNombres())." ".htmlspecialchars($c->getApellidos())) ?>
+                                        <option value="<?= $c->id_cliente?>">
+                                            <?= (htmlspecialchars($c->nombres)." ".htmlspecialchars($c->apellidos)) ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div>
+                            <div class="field-group">
                                 <label>Curso</label>
                                 <select name="curso_id" class="form-select" required>
                                     <option value="">Seleccione un curso...</option>
 
                                     <?php foreach ($cursos as $c): ?>
-                                        <option value="<?= $c->getIdCurso() ?>">
-                                            <?= htmlspecialchars($c->getNombreCurso()) ?>
+                                        <option value="<?= $c->id_curso ?>">
+                                            <?= htmlspecialchars($c->nombre_curso) ?>
                                         </option>
                                     <?php endforeach; ?>
 
@@ -70,8 +70,8 @@
                                 <select name="libro_id" class="form-select" required>
                                     <option value="">Seleccione el libro...</option>
                                     <?php foreach ($libros as $l): ?>
-                                        <option value="<?= $l->getIdLibro() ?>">
-                                            <?= ("OEGPP-L".htmlspecialchars($l->getNumeroLibro())) ?>
+                                        <option value="<?= $l->id_libro ?>">
+                                            <?= ("OEGPP-L".htmlspecialchars($l->numero_libro)) ?>
                                         </option>
                                     <?php endforeach; ?> 
                                 </select>
@@ -194,7 +194,7 @@
 
                                         <button class="btn-icon btn-delete" 
                                                 title="Eliminar" 
-                                                onclick="confirmarEliminar(<?= $r->id_registro ?>)">
+                                                onclick="confirmarEliminarRegistro(<?= $r->id_registro ?>)">
                                             <i class="fas fa-trash" style="color: #e24a4a;"></i>
                                         </button>
 
