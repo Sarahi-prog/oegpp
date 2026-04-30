@@ -1,0 +1,282 @@
+/* =========================================
+   1. VARIABLES DE TEMA (Actualizadas)
+   ========================================= */
+:root {
+    --primary:#44bd1f;
+    --primary-hover: #3a7428;
+    --primary-light: #2de348;
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+    --border-light: #e2e8f0;
+    --bg-main: #f8fafc;
+    --bg-white: #ffffff;
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+    
+    --transition-fast: 0.2s ease;
+    --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================================
+   2. RESET Y BÁSICOS
+   ========================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+body { background-color: var(--bg-main); color: var(--text-dark); line-height: 1.6; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* =========================================
+   3. NAVBAR (Estilo Nuevo)
+   ========================================= */
+.navbar {
+    background-color: #31c344;
+    box-shadow: var(--shadow-sm);
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+.navbar-content { display: flex; justify-content: space-between; align-items: center; height: 70px; }
+.navbar-brand { display: flex; align-items: center; gap: 15px; text-decoration: none; color: white; }
+.logo img { max-height: 50px; width: auto; display: block; }
+.brand-text h1 { font-size: 1.2rem; margin: 0; font-weight: 800; }
+.brand-text p { font-size: 0.7rem; color: rgba(255,255,255,0.8); margin: 0; }
+
+.navbar-menu { display: flex; align-items: center; gap: 10px; }
+.menu-item {
+    text-decoration: none; color: white; font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 10px; transition: var(--transition-fast);
+}
+.menu-item:hover, .menu-item.active { background: rgba(255, 255, 255, 0.16); }
+
+/* =========================================
+   4. HERO BANNER (Rescatando medidas antiguas)
+   ========================================= */
+.hero-banner {
+    position: relative;
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 80px 0 60px 0; /* Medidas de la antigua */
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+.hero-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 100%);
+    z-index: 1;
+}
+.hero-content { position: relative; z-index: 2; }
+.hero-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
+.hero-subtitle { font-size: 1.15rem; color: #94a3b8; margin-bottom: 35px; max-width: 650px; }
+.hero-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
+
+/* =========================================
+   5. STAT CARDS (Unión: Diseño Antiguo + Código Nuevo)
+   ========================================= */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.stat-card {
+    background: var(--bg-white);
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    transition: var(--transition-smooth);
+    overflow: hidden; /* Importante para que el degradado no se salga */
+}
+
+.stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+
+/* Rescate de la "Cabecera de Color" de la antigua */
+.stat-header {
+    height: 80px;
+    position: relative;
+    padding: 0 25px;
+}
+
+/* Los degradados de la versión antigua */
+.green-gradient { background: linear-gradient(135deg, #10b981, #059669); }
+.blue-gradient { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.orange-gradient { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.purple-gradient { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+.stat-icon-wrapper {
+    position: absolute;
+    bottom: -20px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: var(--shadow-md);
+}
+
+/* Colores de iconos rescatados */
+.green-gradient .stat-icon-wrapper { color: #10b981; }
+.blue-gradient .stat-icon-wrapper { color: #3b82f6; }
+.orange-gradient .stat-icon-wrapper { color: #f59e0b; }
+.purple-gradient .stat-icon-wrapper { color: #8b5cf6; }
+
+.stat-body { padding: 35px 25px 25px 25px; }
+.stat-label { color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; }
+.stat-value { font-size: 2.2rem; font-weight: 800; color: var(--text-dark); margin-top: 5px; }
+
+/* =========================================
+   6. BOTONES GLOBALES (Estilo Mejorado)
+   ========================================= */
+.btn {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition-fast);
+    cursor: pointer;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+}
+.btn-primary-green { background: var(--primary); color: white; }
+.btn-primary-green:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+.btn-outline-white { background: transparent; border-color: rgba(255,255,255,0.5); color: white; }
+.btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: white; }
+
+
+
+
+/* =========================================
+   FIX: TEXTO VISIBLE EN CUADRO ADMINISTRADOR
+   ========================================= */
+.admin-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(74, 222, 128, 0.2) !important; /* Verde traslúcido */
+    border: 1px solid rgba(74, 222, 128, 0.4) !important;
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 6px 14px;
+}
+
+/* CARGO (Administrador General) - AHORA EN VERDE OSCURO */
+.admin-label {
+    font-size: 0.65rem !important;
+    color: #166534 !important; /* Verde oscuro para que se vea */
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    display: block;
+}
+
+/* NOMBRE DEL USUARIO - AHORA EN VERDE MUY OSCURO */
+.admin-usuario {
+    font-size: 0.85rem !important;
+    color: #064e3b !important; /* Verde casi negro para máxima visibilidad */
+    font-weight: 700;
+    margin: 0;
+    display: block;
+}
+
+/* CORREO (si existe) */
+.admin-correo {
+    font-size: 0.75rem !important;
+    color: #166534 !important;
+    opacity: 0.8;
+}
+
+/* El icono circular lo mantenemos llamativo */
+.admin-avatar {
+    width: 35px;
+    height: 35px;
+    background: #22c55e !important; /* Verde sólido */
+    color: white !important;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+/* =========================================
+   AJUSTE DEL BOTÓN SALIR (Navbar)
+   ========================================= */
+/* ESTILO ATRACTIVO VERDE CLARO PARA EL BOTÓN SALIR */
+.logout-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px !important; /* Un poco más de padding para mejor forma */
+    
+    /* CAMBIO DE COLOR: Verde claro y brillante */
+    background-color: #4ade80 !important; /* Verde claro vibrante (ej. Tailwind green-400) */
+    
+    /* CAMBIO DE TEXTO: Color oscuro para contraste en fondo claro */
+    color: #166534 !important;           /* Verde muy oscuro para legibilidad */
+    
+    border-radius: 50px !important;      /* Bordes completamente redondeados (estilo píldora) */
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    
+    /* Borde sutil del mismo tono oscuro del texto */
+    border: 1px solid rgba(22, 101, 52, 0.2) !important;
+    
+    transition: all 0.3s ease; /* Transición más suave */
+    cursor: pointer;
+    line-height: 1;
+    
+    /* Sombra suave para dar profundidad */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Efecto al pasar el mouse (Hover) */
+.logout-btn:hover {
+    /* Un verde ligeramente más oscuro al pasar el mouse */
+    background-color: #22c55e !important; /* Verde medio (ej. Tailwind green-500) */
+    
+    transform: translateY(-2px); /* Efecto de levante */
+    
+    /* Sombra más pronunciada en hover */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Estilo para el icono dentro del botón */
+.logout-btn i {
+    color: #166534 !important; /* Mismo color oscuro del texto */
+    font-size: 16px;
+}
+
+/* Estilo para el texto dentro del botón (asegurar visibilidad) */
+.logout-btn span {
+    display: inline !important;
+    color: #166534 !important; /* Mismo color oscuro del texto */
+}
+/* =========================================
+   7. TABLAS Y FORMULARIOS (Estilo Nuevo Limpio)
+   ========================================= */
+.table-container { background: var(--bg-white); border-radius: 16px; box-shadow: var(--shadow-md); border: 1px solid var(--border-light); overflow: hidden; margin-top: 20px; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { background: #f8fafc; padding: 16px 20px; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; border-bottom: 2px solid var(--border-light); }
+.data-table td { padding: 16px 20px; border-bottom: 1px solid var(--border-light); }
+
+/* Estilos para el Formulario de Asignación */
+.form-container { background: var(--bg-white); padding: 35px; border-radius: 16px; box-shadow: var(--shadow-lg); max-width: 900px; margin: 0 auto; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+.form-group input, .form-group select { width: 100%; padding: 12px; border: 1.5px solid var(--border-light); border-radius: 8px; margin-bottom: 15px; }
+
+/* =========================================
+   8. RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+    .hero-title { font-size: 2.2rem; }
+    .navbar-menu { display: none; } /* Ocultar menú en móvil si no hay JS */
+}

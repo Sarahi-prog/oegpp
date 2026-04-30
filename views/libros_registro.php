@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Libros - OEGPP</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="public/menuStyles.css?v=<?= time(); ?>">
+    <link rel="stylesheet" href="public/librosStyles.css?v=<?= time(); ?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head> 
+<body>
+    <?php include 'includes/menu.php'; ?>
+
+    <div class="container main-content">
+    
+        <!-- CABECERA ÚNICA (corregido: había dos headers duplicados) -->
+        <div class="header-acciones">
+            <div class="titulo-con-boton">
+                <button onclick="toggleRegistro()" class="btn-hamburguesa" title="Mostrar/Ocultar Formulario">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="directorio-title-container">
+                    <h2><i class="fas fa-book"></i> Libros de Registro</h2>
+                    <p style="margin: 5px 0 0 0; color: #64748b;">Administra los libros oficiales de certificados y diplomados.</p>
+                </div>
+            </div>
+            
+            <button onclick="abrirParaNuevo()" class="btn-primary-green">
+                <i class="fas fa-plus"></i> Nuevo Libro
+            </button>
+        </div>
+
+        <div class="dashboard-wrapper">
+            
+            <!-- PANEL LATERAL: FORMULARIO -->
+            <div id="seccionRegistro" data-modulo="libros">
+                <div class="side-panel">
+                    <h3 id="form-title" style="margin-top: 0; margin-bottom: 20px;">
+                        <i class="fas fa-edit"></i> Datos del Libro
+                    </h3>
+                    <form id="formLibroAjax" action="index.php?accion=guardar_libro" method="POST">
+                        <div class="form-vertical-stack">
+
+                            <!-- Campo oculto para edición -->
+                            <input type="hidden" name="id_libro" id="id_libro_form" value="">
+
+                            <div style="display: flex; gap: 10px;">
+                                <div class="field-group" style="flex: 1;">
+                                    <label>Tipo de Libro</label>
+                                    <select name="tipo" class="form-select" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="certificados">Certificados</option>
+                                        <option value="diplomados">Diplomados</option>
+                                    </select>
+                                </div>
+                                <div class="field-group" style="flex: 1;">
+                                    <label>Número</label>
+                                    <input type="number" name="numero_libro" id="numero_libro" required min="1" placeholder="Ej. 1">
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px;">
+                                <div class="field-group" style="flex: 1;">
+                                    <label>Año de Inicio</label>
+                                    <input type="number" name="anio_inicio" id="anio_inicio" required min="2000" max="2100" placeholder="Ej. 2024">
+                                </div>
+                                <div class="field-group" style="flex: 1;">
+                                    <label>Fecha de Cierre</label>
+                                    <input type="date" name="fecha_fin" id="fecha_fin" title="Dejar en blanco si está activo">
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px;">
+                                <div class="field-group" style="flex: 1;">
+                                    <label>Provincia</label>
+                                    <input type="text" name="provincia" id="provincia" placeholder="Ej. Arequipa">
+                                </div>
+                                <div class="field-group" style="flex: 1;">
+                                    <label>Distrito</label>
+                                    <input type="text" name="distrito" id="distrito" placeholder="Ej. Cercado">
+                                </div>
+                            </div>
+
+                            <div class="field-group">
+                                <label>Descripción / Observaciones</label>
+                                <textarea name="descripcion" id="descripcion" rows="3" 
+                                    placeholder="Detalles adicionales del libro..." 
+                                    style="width: 100%; padding: 10px; border: 2px solid #f1f5f9; border-radius: 10px; font-family: 'Inter', sans-serif; box-sizing: border-box; resize: vertical; transition: all 0.3s;">
+                                </textarea>
+                            </div>
+
+                            <div class="form-actions" style="display: flex; gap: 10px; margin-top: 10px;">
+                                <button type="submit" id="btn-submit-form" class="btn btn-primary-green" style="flex: 1; justify-content: center;">
+                                    <i class="fas fa-save"></i>
+                                    <span>Guardar Libro</span>
+                                </button>
+
+                                <!-- Botón cancelar (visible solo en modo edición) -->
+                                <button type="button" id="btn-cancelar" onclick="resetearFormulario()" 
+                                    class="btn" style="display: none; background-color: #64748b; color: white; border: none; padding: 10px 14px; border-radius: 10px; cursor: pointer;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- SECCIÓN DERECHA: BUSCADOR + TABLA -->
+            <div class="table-section">
+
+                <!-- Barra de búsqueda (igual que clientes) -->
+                <div class="search-bar">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="buscadorTabla" class="search-input" 
+                            placeholder="Buscar por tipo, número o ubicación...">
+                    </div>
+                    <button class="btn-exportar" onclick="exportarLibros()">
+                        <i class="fas fa-file-export"></i>
+                        <span>Exportar Datos</span>
+                    </button>
+                </div>
+
+                <div class="table-card">
+                    <div class="table-container">
+                        <table class="data-table" id="tablaLibros">
+                            <thead>
+                                <tr>
+                                    <th>#</th> 
+                                    <th>LIBRO</th>
+                                    <th>TIPO</th>
+                                    <th>AÑO INICIO</th>
+                                    <th>UBICACIÓN</th>
+                                    <th>ESTADO</th>
+                                    <th style="text-align: center;">ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php 
+                                $i = 1; 
+                                if (!empty($libros)):
+                                    foreach ($libros as $libro): 
+                                        $badgeClass   = ($libro->getTipo() == 'diplomados') ? 'badge-diplomado' : 'badge-certificado';
+                                        $estaCerrado  = !empty($libro->getFechaFin());
+                                        $estadoClass  = $estaCerrado ? 'estado-cerrado' : 'estado-activo';
+                                        $estadoTexto  = $estaCerrado ? 'Cerrado' : 'Activo';
+                                        $estadoIcono  = $estaCerrado ? 'fa-lock' : 'fa-check-circle';
+                                        $nombreLibro  = "Libro " . str_pad($libro->getNumeroLibro(), 2, "0", STR_PAD_LEFT);
+                                ?>
+                                <tr class="fila-libro">
+                                    <td class="id-column"><?= $i++ ?></td>
+                                    <td><strong><?= htmlspecialchars($nombreLibro) ?></strong></td>
+                                    <td>
+                                        <span class="badge <?= $badgeClass ?>">
+                                            <?= ucfirst(htmlspecialchars($libro->getTipo())) ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <i class="far fa-calendar" style="color: #94a3b8; margin-right: 5px;"></i>
+                                        <?= htmlspecialchars($libro->getAnioInicio()) ?>
+                                    </td>
+                                    <td style="font-size: 0.9em; color: #475569;">
+                                        <?= htmlspecialchars($libro->getProvincia()) ?><br>
+                                        <span style="opacity: 0.7;"><?= htmlspecialchars($libro->getDistrito()) ?></span>
+                                    </td>
+                                    <td>
+                                        <span class="estado-indicador <?= $estadoClass ?>">
+                                            <i class="fas <?= $estadoIcono ?>"></i> <?= $estadoTexto ?>
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center; white-space: nowrap;">
+                                        <!-- data-libro pasa el objeto como JSON para editarLibro() en JS -->
+                                        <button class="btn-icon btn-edit" 
+                                                title="Editar"
+                                                onclick='editarLibro(<?= json_encode([
+                                                    "id_libro"     => $libro->getIdLibro(),
+                                                    "tipo"         => $libro->getTipo(),
+                                                    "numero_libro" => $libro->getNumeroLibro(),
+                                                    "anio_inicio"  => $libro->getAnioInicio(),
+                                                    "fecha_fin"    => $libro->getFechaFin(),
+                                                    "provincia"    => $libro->getProvincia(),
+                                                    "distrito"     => $libro->getDistrito(),
+                                                    "descripcion"  => $libro->getDescripcion(),
+                                                ]) ?>)'>
+                                            <i class="fas fa-edit" style="color: #4a90e2;"></i>
+                                        </button>
+                                        <button class="btn-icon btn-delete" 
+                                                title="Eliminar"
+                                                onclick="confirmarEliminar(<?= $libro->getIdLibro() ?>)">
+                                            <i class="fas fa-trash" style="color: #e24a4a;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php 
+                                    endforeach;
+                                else: 
+                                ?>
+                                <!-- Estado vacío (igual que clientes) -->
+                                <tr>
+                                    <td colspan="7" style="text-align: center; padding: 4rem 2rem;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.7;">
+                                            <i class="fas fa-book-open" style="font-size: 4rem; color: #94a3b8; margin-bottom: 15px;"></i>
+                                            <h4 style="margin: 0; color: #0f172a; font-size: 1.2rem; font-weight: 600;">Sin libros registrados</h4>
+                                            <p style="margin: 5px 0 0 0; color: #64748b; font-size: 0.95rem;">Utiliza el panel lateral para agregar tu primer libro.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div><!-- /table-section -->
+        </div><!-- /dashboard-wrapper -->
+    </div><!-- /container -->
+    
+    <script src="public/universalScript.js?v=<?= time(); ?>"></script>
+    <script src="public/librosScript.js?v=<?= time(); ?>"></script>
+</body>
+</html>
