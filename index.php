@@ -25,38 +25,38 @@ require_once './controllers/RegistroCapacitacionController.php';
 require_once './controllers/LibrosRegistroController.php';
 
 // 4. Captura de acción
-$accion = isset($_GET['accion']) ? $_GET['accion'] : 'inicio';
-
+$accion = $_REQUEST['accion'] ?? 'inicio';
 // Instanciación (pasando conexión donde corresponde)
 $dashboardController            = new DashboardController($conexion);
-$clientescontroller             = new ClientesController(); 
+$clientesController             = new ClientesController(); 
 $cursosController               = new CursosController(); 
 $modulosController              = new ModulosController();
 $notasModuloController          = new NotasModuloController();
 $registroCapacitacionController = new RegistroCapacitacionController();
 $librosRegistroController       = new LibrosRegistroController();
+    
 
 switch($accion) {
 
     case 'inicio':
-        $dashboardController->index();
+        $dashboardController->index();  
         break;
 
     // --- CLIENTES ---
     case 'clientes':
-        $clientescontroller->listarClientes(); 
+        $clientesController->listarClientes(); 
         break;
 
     case 'guardar_cliente':
-        $clientescontroller->guardarCliente();
+        $clientesController->guardarCliente();
         break;
 
     case 'modificar_cliente':
-        $clientescontroller->modificarCliente();
+        $clientesController->modificarCliente();
         break;
         
     case 'eliminar_cliente':
-        $clientescontroller->eliminarCliente();
+        $clientesController->eliminarCliente();
         break;
 
     // --- CURSOS ---
@@ -84,17 +84,11 @@ switch($accion) {
         $cursosController->eliminarCurso();
         break;
 
-    case 'actualizar_estado_curso':
-        $cursosController->actualizar_estado();
-        break;
+    
 
     // --- MODULOS ---
     case 'modulos':
         $modulosController->cargar(); 
-        break;
-
-    case 'buscar_modulo':
-        $modulosController->buscar();
         break;
 
     case 'guardar_modulo':
@@ -104,6 +98,33 @@ switch($accion) {
     case 'modificar_modulo':
         $modulosController->modificar();
         break;
+                                                                                                                                                            
+    case 'cambiar_estado_modulo':
+        $modulosController->cambiarEstado();
+        break;
+    
+    case 'eliminar_modulo':
+        $modulosController->eliminar();
+        break;
+
+
+    // --- LIBROS ---
+    case 'libros_registro':
+        $librosRegistroController->cargar();
+        break;
+
+    case 'guardar_libro':
+        $librosRegistroController->guardar();
+        break;
+    
+    case 'modificar_libro':
+        $librosRegistroController->modificar();
+        break;
+
+    case 'eliminar_libro':
+        $librosRegistroController->eliminar();
+        break;
+        
 
     // --- NOTAS ---
     case 'notas':
@@ -117,7 +138,7 @@ switch($accion) {
     case 'modificar_nota':
         $notasModuloController->modificar(); 
         break;
-
+        
     // --- CAPACITACION ---
     case 'registros_capacitacion':
         $registroCapacitacionController->cargar();
@@ -135,18 +156,6 @@ switch($accion) {
         $registroCapacitacionController->buscar();  
         break;
 
-    // --- LIBROS ---
-    case 'libros_registro':
-        $librosRegistroController->cargar();
-        break;
-    
-    case 'guardar_libro':
-        $librosRegistroController->guardar();
-        break;
-
-    case 'modificar_libro':
-        $librosRegistroController->modificar();
-        break;
 
     // --- ERROR ---
     default:
