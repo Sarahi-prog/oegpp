@@ -431,6 +431,51 @@ input:checked + .slider:before {
 }
 
 
+/* ============================================================
+   ESTILOS PARA TABS DE FILTRO
+   ============================================================ */
+.filter-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 5px; /* Espaciado entre los botones y el buscador */
+}
+
+.filter-tab {
+    background: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.filter-tab:hover {
+    border-color: var(--tech-green);
+    color: var(--tech-green);
+    background-color: var(--tech-green-soft);
+}
+
+.filter-tab.active {
+    background-color: var(--tech-green);
+    border-color: var(--tech-green);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 200, 83, 0.2);
+}
+
+/* 
+   Esta clase usará !important para que, si el buscador 
+   intenta mostrar una fila por texto, el filtro siga predominando.
+*/
+.fila-curso.oculto-por-filtro {
+    display: none !important; 
+}
+
+
 
 
 /* --- 6. RESPONSIVO --- */

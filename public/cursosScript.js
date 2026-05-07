@@ -162,3 +162,38 @@ function confirmarEstado(checkbox, idCurso) {
         checkbox.checked = !checkbox.checked;
     });
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    iniciarBuscador('buscadorCursos', 'tablaCursos');
+
+    // --- NUEVO: LÓGICA DE FILTROS POR BOTONES ---
+    const botonesFiltro = document.querySelectorAll('.filter-tab');
+    
+    botonesFiltro.forEach(boton => {
+        boton.addEventListener('click', () => {
+            // 1. Quitar la clase 'active' de todos los botones y ponérsela al clickeado
+            botonesFiltro.forEach(b => b.classList.remove('active'));
+            boton.classList.add('active');
+
+            // 2. Obtener el filtro deseado (todos, certificados, diplomados)
+            const filtro = boton.getAttribute('data-filter');
+            const filas = document.querySelectorAll('.fila-curso');
+
+            // 3. Mostrar u ocultar filas según el data-tipo
+            filas.forEach(fila => {
+                const tipo = fila.getAttribute('data-tipo');
+                
+                if (filtro === 'todos' || tipo === filtro) {
+                    fila.classList.remove('oculto-por-filtro');
+                } else {
+                    fila.classList.add('oculto-por-filtro');
+                }
+            });
+        });
+    });
+    // --- FIN LÓGICA DE FILTROS ---
+
+    const formCurso = document.getElementById(configCurso.formId);
+    // ... tu código de submit validation que ya tienes ...
+});

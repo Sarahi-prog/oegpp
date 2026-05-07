@@ -77,6 +77,11 @@
 
             <div class="table-section">
                 <div class="search-bar">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="todos">Todos</button>
+                        <button class="filter-tab" data-filter="certificados">Certificados</button>
+                        <button class="filter-tab" data-filter="diplomados">Diplomados</button>
+                    </div>
                     <div class="search-wrapper">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" id="buscadorCursos" class="search-input" placeholder="Buscar por código o nombre...">
@@ -121,7 +126,7 @@
                                             'horas_totales' => $curso->getHorasTotales()
                                         ]);
                                 ?>
-                                <tr class="fila-curso">
+                                <tr class="fila-curso" data-tipo="<?= htmlspecialchars($tipoRaw) ?>">
                                     <td class="id-column"><?= $i++ ?></td>
                                     <td><span class="codigo-box"><?= htmlspecialchars($curso->getCodigoCurso()) ?></span></td>
                                     <td><strong><?= htmlspecialchars($curso->getNombreCurso()) ?></strong></td>
