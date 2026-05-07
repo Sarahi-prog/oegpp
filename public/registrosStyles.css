@@ -1,0 +1,205 @@
+/* ============================================================
+    ESTILOS MODERNOS PARA REGISTROS (VERSIÓN TECH)
+    Archivo: registrosStyles.css
+   ============================================================ */
+
+/* --- 1. CONFIGURACIÓN Y VARIABLES --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700&display=swap');
+
+:root {
+    --bg-main: #f8fafc;
+    --tech-green: #00c853;
+    --tech-green-hover: #00a946;
+    --tech-green-soft: #e8f5e9;
+    --tech-blue: #3b82f6; 
+    --tech-blue-soft: #eff6ff;
+    --tech-red: #ef4444;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* --- 2. CUERPO --- */
+.main-content {
+    font-family: 'Inter', sans-serif;
+    padding-top: 40px;
+    padding-bottom: 60px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 3. CABECERA --- */
+.header-acciones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.directorio-title-container h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.directorio-title-container h2 i {
+    color: var(--tech-green);
+}
+
+/* --- 4. PANEL + TABLA --- */
+.dashboard-wrapper {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+#seccionRegistro {
+    width: 320px;
+    flex-shrink: 0;
+}
+
+#seccionRegistro.panel-oculto {
+    width: 0;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.side-panel {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+}
+
+/* --- FORMULARIO --- */
+.form-vertical-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.field-group input,
+.form-select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #f1f5f9;
+    border-radius: 10px;
+}
+
+.field-group input:focus,
+.form-select:focus {
+    border-color: var(--tech-green);
+    background: var(--tech-green-soft);
+}
+
+/* BOTÓN GUARDAR */
+.btn-primary-green {
+    background: linear-gradient(135deg, var(--tech-green), #00e676);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* --- TABLA --- */
+.table-section {
+    flex-grow: 1;
+}
+
+.table-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    background-color: #f8fafc;
+    padding: 15px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.data-table td {
+    padding: 16px;
+}
+
+/* --- BOTONES --- */
+.btn-icon {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.btn-edit:hover {
+    color: var(--tech-blue);
+}
+
+.btn-delete:hover {
+    color: var(--tech-red);
+}
+
+/* --- BADGES --- */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.badge-activo {
+    background: var(--tech-green-soft);
+    color: var(--tech-green);
+}
+
+.badge-inactivo {
+    background: #fee2e2;
+    color: var(--tech-red);
+}
+
+/* --- SWITCH --- */
+.switch {
+    width: 44px;
+    height: 24px;
+    position: relative;
+}
+
+.slider {
+    background-color: #cbd5e1;
+    border-radius: 24px;
+}
+
+input:checked + .slider {
+    background-color: var(--tech-green);
+}
+
+/* --- RESPONSIVO --- */
+@media (max-width: 1024px) {
+    .dashboard-wrapper { flex-direction: column; }
+}

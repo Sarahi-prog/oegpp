@@ -1,0 +1,227 @@
+/* =========================================
+   1. VARIABLES DE TEMA (Originales)
+   ========================================= */
+:root {
+    --primary:#44bd1f;           /* Verde principal original */
+    --primary-hover: #3a7428;     /* Verde oscuro para hovers */
+    --primary-light: #2de348;     /* Verde muy claro */
+    --text-dark: #0f172a;         /* Texto principal */
+    --text-muted: #64748b;        /* Texto secundario */
+    --border-light: #e2e8f0;      /* Bordes sutiles */
+    --bg-main: #f8fafc;           /* Fondo de página */
+    --bg-white: #ffffff;          /* Fondo tarjetas/tablas */
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    
+    --transition-fast: 0.2s ease;
+}
+
+/* =========================================
+   2. RESET Y BÁSICOS
+   ========================================= */
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+body {
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    line-height: 1.5;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* =========================================
+   3. NAVBAR DELGADA Y ELEGANTE
+   ========================================= */
+.navbar {
+    background-color: #31c344; /* Verde Navbar original */
+    box-shadow: var(--shadow-sm);
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* --- ALTURA REDUCIDA DE 70PX A 50PX --- */
+    height: 60px; 
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Reducido espaciado */
+    text-decoration: none;
+    color: white;
+}
+
+
+.logo img {
+    display: block;
+    max-height: 22px; /* Este es el tamaño ideal para una barra ultra-delgada */
+    width: auto;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1)); /* Le da un toque de profundidad */
+}
+
+.brand-text h1 {
+    font-size: 0.9rem; /* Texto OEGPP más pequeño para que combine */
+    letter-spacing: 0px;
+}
+
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Reducido espaciado */
+}
+
+.menu-item {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    /* --- PADDING REDUCIDO --- */
+    padding: 6px 10px; 
+    border-radius: 8px;
+    transition: var(--transition-fast);
+    font-size: 0.85rem; /* Letra un poco más pequeña */
+}
+
+.menu-item:hover, .menu-item.active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* =========================================
+   3.5 INFO DE ADMIN TRANSF./COMPACTA
+   ========================================= */
+.admin-info {
+    display: flex;
+    align-items: center;
+    /* --- REDUCIDO ESPACIADO --- */
+    margin: 0 10px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    padding-left: 10px;
+}
+
+.admin-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* --- VERDE TRASLÚCIDO (GLASS) --- */
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 10px;
+    /* --- PADDING MÁS COMPACTO --- */
+    padding: 4px 10px; 
+    backdrop-filter: blur(5px); /* Suave efecto de desenfoque detrás */
+}
+
+.admin-avatar {
+    /* --- TAMAÑO REDUCIDO --- */
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.admin-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.2;
+}
+
+/* CARGO Y NOMBRE EN VERDE OSCURO PARA VISIBILIDAD */
+.admin-label {
+    font-size: 0.65rem !important;
+    color: #166534 !important; /* Verde oscuro */
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.admin-usuario {
+    font-size: 0.8rem !important;
+    color: #064e3b !important; /* Verde casi negro para el nombre */
+    font-weight: 700;
+}
+
+/* =========================================
+   BOTÓN SALIR LLAMATIVO Y COMPACTO
+   ========================================= */
+.logout-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    /* --- PADDING COMPACTADO --- */
+    padding: 6px 14px; 
+    border-radius: 20px;
+    background: #ef4444; /* Rojo para que resalte */
+    color: white !important;
+    font-weight: 700;
+    transition: background 0.2s ease;
+    font-size: 0.8rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+}
+
+.logout-btn i { font-size: 0.9rem; }
+
+/* El resto del CSS para tablas y formularios se mantiene, 
+   pero aplicando las variables originales */
+/* =========================================
+   7. TABLA DE DATOS ORIGINAL
+   ========================================= */
+.main-content { padding: 30px 20px; }
+.section-header { margin-bottom: 20px; }
+.section-title h2 { font-size: 1.5rem; color: var(--text-dark); margin-bottom: 4px; font-weight: 700; }
+.section-title p { color: var(--text-muted); font-size: 0.9rem; }
+
+.table-container { 
+    background: var(--bg-white); 
+    border-radius: 12px; 
+    box-shadow: var(--shadow-sm); 
+    border: 1px solid var(--border-light); 
+    overflow: hidden; 
+}
+.data-table { width: 100%; border-collapse: collapse; text-align: left; }
+.data-table th { 
+    background: #f8fafc; 
+    padding: 12px 15px; 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    color: var(--text-muted); 
+    text-transform: uppercase; 
+    border-bottom: 2px solid var(--border-light); 
+}
+.data-table td { 
+    padding: 12px 15px; 
+    border-bottom: 1px solid var(--border-light); 
+    color: var(--text-dark); 
+    font-size: 0.85rem; 
+}
+.data-table tbody tr:hover { background-color: #f1f5f9; }
+
+/* Botones pequeños para la tabla */
+.btn-icon { padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer; transition: 0.2s; font-size: 0.8rem; margin-left: 4px; }
+.btn-edit { background-color: #eff6ff; color: #3b82f6; }
+.btn-edit:hover { background-color: #3b82f6; color: white; }
+.btn-delete { background-color: #fef2f2; color: #ef4444; }
+.btn-delete:hover { background-color: #ef4444; color: white; }
+
+.text-right { text-align: right !important; }
