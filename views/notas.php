@@ -133,12 +133,26 @@
             <div class="table-section">
 
                 <div class="search-bar">
-                    <div class="search-wrapper">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="buscadorTabla" class="search-input"
-                               placeholder="Buscar por cliente o módulo...">
+                    <div class="search-bar" style="display:flex; gap:10px; align-items:center;">
+                        <!-- Barra de búsqueda -->
+
+                        <div class="search-wrapper" style="flex:1; display:flex; align-items:center;">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="buscadorTabla" class="search-input" placeholder="Buscar...">
+                        </div>
+                        
+
                     </div>
-                    <button class="btn-exportar" onclick="exportarNotas()">
+                    <div class="field-group">
+                        <label>Buscar por: </label>
+                        <select id="criterioBusqueda" class="form-select">
+                            <option value="cliente">Cliente</option>
+                            <option value="modulo">Módulo</option>
+                            <option value="fecharegistro">Fecha de Registro</option>
+                        </select>
+                    </div>
+                    <!-- Selector de criterio -->
+                    <button class="btn-exportar" onclick="exportarCursos()">
                         <i class="fas fa-file-export"></i>
                         <span>Exportar Datos</span>
                     </button>

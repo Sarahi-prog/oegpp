@@ -133,10 +133,24 @@
 
             <div class="table-section">
                 <div class="search-bar">
-                    <div class="search-wrapper">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="buscadorTabla" class="search-input" placeholder="Buscar por código, nombre o curso...">
+                    <div class="search-bar" style="display:flex; gap:10px; align-items:center;">
+                        <!-- Barra de búsqueda -->
+
+                        <div class="search-wrapper" style="flex:1; display:flex; align-items:center;">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="buscadorTabla" class="search-input" placeholder="Buscar...">
+                        </div>
                     </div>
+                    <div class="field-group">
+                        <label>Buscar por: </label>
+                        <select id="criterioBusqueda" class="form-select">
+                            <option value="dni">DNI</option>
+                            <option value="nombre_curso">Curso</option>
+                            <option value="tipo">Tipo</option>
+                            <option value="folio">Folio</option>
+                        </select>
+                    </div>
+                    <!-- Selector de criterio -->
                     <button class="btn-exportar" onclick="exportarCursos()">
                         <i class="fas fa-file-export"></i>
                         <span>Exportar Datos</span>

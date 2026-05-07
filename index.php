@@ -220,13 +220,13 @@ case 'eliminar_nota':
     case 'registros_capacitacion':         
         $controllerRegistrosCap->listarRegistros(); 
         break;
-    case 'guardar_registro_capacitacion': 
+    case 'guardar_registro': 
         $controllerRegistrosCap->guardarRegistro(); 
         break;
-    case 'modificar_registro_capacitacion':
-        $controllerRegistrosCap->modificar();
+    case 'modificar_registro':
+        $controllerRegistrosCap->modificarRegistro();
         break;
-    case 'eliminar_registro_capacitacion':
+    case 'eliminar_registro':
         $controllerRegistrosCap->eliminarRegistro();
         break;
     case 'obtenerAdmins':    $controllerSolicitudes->obtenerAdmins(); break;

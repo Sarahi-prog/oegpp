@@ -79,48 +79,56 @@ function confirmarEliminar(id) {
     });
 }
 
-/* ── Buscador en tiempo real (ACTUALIZADO) ────────────────── */
+/* ── Buscador en tiempo real con criterio ────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
     const input = document.getElementById('buscadorTabla');
     const tabla = document.getElementById('tablaPrincipal');
+    const criterioSelect = document.getElementById('criterioBusqueda');
 
-    if (input && tabla) {
-        input.addEventListener('input', function () {
-            const filtro = this.value.toLowerCase().trim();
-            const filas = tabla.querySelectorAll('tbody tr');
-            let hayResultados = false;
+    function aplicarFiltro() {
+        const filtro = input.value.toLowerCase().trim();
+        const criterio = criterioSelect.value; // cliente, modulo o fecharegistro
+        const filas = tabla.querySelectorAll('tbody tr');
+        let hayResultados = false;
 
-            filas.forEach(fila => {
-                // No procesar la fila de "sin resultados"
-                if (fila.classList.contains('fila-sin-resultados')) return;
+        filas.forEach(fila => {
+            if (fila.classList.contains('fila-sin-resultados')) return;
 
-                // Capturamos las columnas específicas: Cliente (1) y Módulo (2)
-                const cliente = fila.cells[1] ? fila.cells[1].textContent.toLowerCase() : "";
-                const modulo = fila.cells[2] ? fila.cells[2].textContent.toLowerCase() : "";
+            let valor = "";
+            if (criterio === "cliente") {
+                valor = fila.cells[1] ? fila.cells[1].textContent.toLowerCase() : "";
+            } else if (criterio === "modulo") {
+                valor = fila.cells[2] ? fila.cells[2].textContent.toLowerCase() : "";
+            } else if (criterio === "fecharegistro") {
+                valor = fila.cells[3] ? fila.cells[3].textContent.toLowerCase() : "";
+            }
 
-                if (cliente.includes(filtro) || modulo.includes(filtro)) {
-                    fila.style.display = "";
-                    hayResultados = true;
-                } else {
-                    fila.style.display = "none";
-                }
-            });
-
-            // Lógica para mostrar/ocultar el mensaje de "No hay resultados"
-            let filaVacia = tabla.querySelector('.fila-sin-resultados');
-            if (!hayResultados && filtro !== '') {
-                if (!filaVacia) {
-                    filaVacia = document.createElement('tr');
-                    filaVacia.className = 'fila-sin-resultados';
-                    const cols = tabla.querySelectorAll('thead th').length;
-                    filaVacia.innerHTML = `<td colspan="${cols}"><div class="empty-state"><i class="fas fa-search"></i><p>No se encontraron resultados para "${filtro}"</p></div></td>`;
-                    tabla.querySelector('tbody').appendChild(filaVacia);
-                }
-                filaVacia.style.display = '';
-            } else if (filaVacia) {
-                filaVacia.style.display = 'none';
+            if (valor.includes(filtro)) {
+                fila.style.display = "";
+                hayResultados = true;
+            } else {
+                fila.style.display = "none";
             }
         });
+
+        let filaVacia = tabla.querySelector('.fila-sin-resultados');
+        if (!hayResultados && filtro !== '') {
+            if (!filaVacia) {
+                filaVacia = document.createElement('tr');
+                filaVacia.className = 'fila-sin-resultados';
+                const cols = tabla.querySelectorAll('thead th').length;
+                filaVacia.innerHTML = `<td colspan="${cols}"><div class="empty-state"><i class="fas fa-search"></i><p>No se encontraron resultados para "${filtro}"</p></div></td>`;
+                tabla.querySelector('tbody').appendChild(filaVacia);
+            }
+            filaVacia.style.display = '';
+        } else if (filaVacia) {
+            filaVacia.style.display = 'none';
+        }
+    }
+
+    if (input && tabla && criterioSelect) {
+        input.addEventListener('input', aplicarFiltro);
+        criterioSelect.addEventListener('change', aplicarFiltro);
     }
 
     /* ── Manejo del Formulario ── */
@@ -147,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
 
 /* ── Exportar tabla a EXCEL (MEJORADO) ────────────────────── */
 function exportarNotas() {

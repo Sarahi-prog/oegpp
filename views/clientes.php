@@ -180,7 +180,20 @@
                                 <?php endif; ?>
                             </tbody>
                         </table>
+                        <!-- Controles de paginación -->
+
                     </div>
+
+                </div>
+                <div class="paginacion" style="margin-top: 1rem; text-align: center;">
+                    <?php if ($totalPaginas > 1): ?>
+                        <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+                            <a href="index.php?accion=clientes&pagina=<?= $i ?>" 
+                            class="btn-pagina <?= ($i == $pagina) ? 'activo' : '' ?>">
+                            <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+                    <?php endif; ?>
                 </div>
             </div> 
         </div> 

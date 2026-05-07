@@ -9,9 +9,14 @@ class CursosController {
         $this->model = new CursosModel();
     }
 
+    public function cargarCursos() {
+        $cursos = $this->model->cargarCurso();
+        require './views/cursos.php';
+    }
+
     // Carga todos los cursos
     public function cargar() {
-        $cursos = $this->model->cargarCurso();
+        $cursos = $this->model->cargar();
         require './views/cursos.php';
     }
 

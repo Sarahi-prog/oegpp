@@ -16,9 +16,20 @@ class ClientesController {
     }
 
     public function listarClientes() {
-        $clientes = $this->model->cargar(); 
+        // Página actual desde GET
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $registrosPorPagina = 20;
+
+        // Llamar al modelo para traer los clientes de esa página
+        $clientes = $this->model->obtenerClientesPaginados($pagina, $registrosPorPagina);
+
+        // Calcular total de páginas
+        $totalRegistros = $this->model->contarClientes();
+        $totalPaginas = ceil($totalRegistros / $registrosPorPagina);
+
+        // Pasar datos a la vista
         $pagina_actual = 'clientes';
-        require './views/clientes.php'; 
+        require './views/clientes.php';
     }
 
     public function guardarCliente() {

@@ -10,8 +10,7 @@ class CursosModel {
         $this->ultimoError = null;
     }
 
-    // ✔ LISTAR CURSOS (igual que clientes)
-    public function cargarCurso() {
+    public function cargar() {
         try {
             $sql = "SELECT id_curso, codigo_curso, nombre_curso, tipo, horas_totales, estado 
                     FROM cursos 
@@ -26,10 +25,28 @@ class CursosModel {
         }
     }
 
+    // ✔ LISTAR CURSOS (igual que clientes)
+    public function cargarCurso() {
+        try {
+            $sql = "SELECT id_curso, codigo_curso, nombre_curso, tipo, horas_totales, estado 
+                    FROM cursos WHERE tipo= 'cursos'
+                    ORDER BY id_curso DESC";
+
+            $stmt = $this->conexion->query($sql);
+
+            return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
+
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
     // ✔ SOLO DIPLOMADOS
     public function cargarDiplomados() {
         try {
-            $sql = "SELECT * FROM cursos WHERE tipo = 'diplomados' ORDER BY id_curso DESC";
+            $sql = "SELECT * FROM cursos 
+            WHERE tipo = 'diplomados' 
+            ORDER BY id_curso DESC";
             $stmt = $this->conexion->query($sql);
             return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
         } catch (PDOException $e) {
