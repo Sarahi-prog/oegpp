@@ -19,7 +19,57 @@ class CursosController {
         $cursos = $this->model->cargar();
         require './views/cursos.php';
     }
+    
+    public function listarCursos() {
+        // Página actual desde GET
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $registrosPorPagina = 20;
 
+        // Llamar al modelo para traer los cursos de esa página
+        $cursos = $this->model->obtenerCursosPaginados($pagina, $registrosPorPagina);
+
+        // Calcular total de páginas
+        $totalRegistros = $this->model->contarCursos();
+        $totalPaginas = ceil($totalRegistros / $registrosPorPagina);
+
+        // Pasar datos a la vista
+        $pagina_actual = 'cursos';
+        require './views/cursos.php';
+    }
+
+    public function guardarCursos() {
+        // 1. Verificamos que al menos los datos básicos existan
+        if (isset($_POST['dni'], $_POST['nombres'])) {
+            
+            $cursos = $this->mapearDatosFormulario();
+                $id_cursos = $_POST['id_cursos'] ?? '';
+
+            if (!empty($id_cursos)) {
+                // --- MODO EDICIÓN ---
+                $cursos->setIdCursos($id_cursos);
+                if ($this->model->modificarCursos($cursos)) {
+                    header("Location: index.php?accion=cursos&msg=actualizado");
+                    exit();
+                } else {
+                    $this->manejarError("Error al actualizar");
+                }
+            } else {
+                // --- MODO NUEVO ---
+                $idGenerado = $this->model->guardarCursos($cursos);
+                if ($idGenerado !== null) {
+                    header("Location: index.php?accion=cursos&msg=guardado");
+                    exit();
+                } else {
+                    // Si el error es por DNI duplicado
+                    if (strpos($this->model->ultimoError, '23505') !== false) {
+                        $this->manejarError("El DNI ya se encuentra registrado.");
+                    } else {
+                        $this->manejarError("Error al guardar nuevo curso");
+                    }
+                }
+            }
+        }
+    }
     // LLAMADO A DIPLOMADOS (cargarD)
     public function cargarD() {
         $cursos = $this->model->cargarDiplomados();

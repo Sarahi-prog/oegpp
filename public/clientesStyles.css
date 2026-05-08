@@ -446,33 +446,126 @@ body {
         padding: 8px;
     }
 
+    /* --- NUEVA PAGINACIÓN --- */
     .paginacion {
-        margin-top: 1rem;
-        text-align: center;
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        padding: 10px;
     }
 
     .paginacion .btn-pagina {
-        display: inline-block;
-        margin: 0 4px;
-        padding: 8px 14px;
-        border: 2px solid #4caf50; /* verde */
-        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
         text-decoration: none;
-        color: #4caf50;
-        background-color: #fff;
-        font-weight: 500;
-        transition: all 0.2s ease-in-out;
+        color: var(--text-muted);
+        background-color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
 
     .paginacion .btn-pagina:hover {
-        background-color: #4caf50;
-        color: #fff;
+        background-color: var(--tech-green-soft);
+        color: var(--tech-green);
+        border-color: var(--tech-green);
+        transform: translateY(-2px);
     }
 
     .paginacion .btn-pagina.activo {
-        background-color: #4caf50; /* verde primario */
-        color: #fff;
-        border-color: #4caf50;
+        background: linear-gradient(135deg, var(--tech-green), #00e676);
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 4px 10px rgba(0, 200, 83, 0.3);
     }
+    /* --- MEJORA DE BUSCADOR Y SELECTOR --- */
+.search-bar {
+    background: #ffffff;
+    padding: 15px 20px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+}
 
+.search-wrapper {
+    flex: 2; /* El buscador toma más espacio */
+}
+
+/* El selector de "Buscar por" */
+#criterioBusqueda {
+    flex: 1;
+    min-width: 150px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background-color: #f8fafc;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#criterioBusqueda:focus {
+    border-color: var(--tech-green);
+    background-color: white;
+    outline: none;
+}
+/* --- BADGES DE ESTADO --- */
+.badge-status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.badge-status.activo {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.badge-status.inactivo {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+.table-card {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.data-table thead th {
+    background-color: #ffffff;
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 18px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.data-table tbody td {
+    padding: 15px;
+}
+
+.id-column {
+    color: var(--tech-green);
+    font-weight: 700;
+    font-family: 'Rajdhani', sans-serif;
+}
 }

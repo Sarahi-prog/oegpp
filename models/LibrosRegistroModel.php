@@ -102,5 +102,26 @@ class LibrosRegistroModel {
             return false;
         }
     }
+
+    public function contarLibros() {
+        $query = "SELECT COUNT(*) as total FROM libros_registro";
+        $stmt = $this->conexion->query($query);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    public function obtenerLibrosPaginados($pagina = 1, $registrosPorPagina = 20) {
+        $offset = ($pagina - 1) * $registrosPorPagina;
+
+        $query = "SELECT id_libro, tipo, numero_libro, anio_inicio, fecha_fin, distrito, provincia, descripcion 
+                FROM libros_registro 
+                ORDER BY id_libro DESC 
+                LIMIT :limit OFFSET :offset";
+        $stmt = $this->conexion->prepare($query);
+        $stmt->bindValue(':limit', $registrosPorPagina, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
+    }
 }
 ?>

@@ -15,6 +15,23 @@ class ModulosController {
         }
     }
 
+    public function listarModulos() {
+        // Página actual desde GET
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $registrosPorPagina = 20;
+
+        // Llamar al modelo para traer los clientes de esa página
+        $modulos = $this->model->obtenerModulosPaginados($pagina, $registrosPorPagina);
+
+        // Calcular total de páginas
+        $totalRegistros = $this->model->contarModulos();
+        $totalPaginas = ceil($totalRegistros / $registrosPorPagina);
+
+        // Pasar datos a la vista
+        $pagina_actual = 'modulos';
+        require './views/modulos.php';
+    }
+
     public function buscar() {
         try {
             $texto = isset($_POST['busqueda']) ? $_POST['busqueda'] : '';

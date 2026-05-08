@@ -17,6 +17,58 @@ class LibrosRegistroController {
         require './views/libros_registro.php';
     }
 
+    
+    public function listarLibros() {
+        // Página actual desde GET
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $registrosPorPagina = 20;
+
+        // Llamar al modelo para traer los clientes de esa página
+        $libros = $this->model->obtenerLibrosPaginados($pagina, $registrosPorPagina);
+
+        // Calcular total de páginas
+        $totalRegistros = $this->model->contarLibros();
+        $totalPaginas = ceil($totalRegistros / $registrosPorPagina);
+    
+        // Pasar datos a la vista
+        $pagina_actual = 'libros';
+        require './views/libros_registro.php';
+    }
+
+    public function guardarLibros() {
+    // 1. Verificamos que al menos los datos básicos existan
+        if (isset($_POST['dni'], $_POST['nombres'])) {
+            
+            $libro = $this->mapearDatosFormulario();
+            $id_libro = $_POST['id_libro'] ?? '';
+
+            if (!empty($id_libro)) {
+                // --- MODO EDICIÓN ---
+                $libro->setIdLibro($id_libro);
+                if ($this->model->modificarLibro($libro)) {
+                    header("Location: index.php?accion=libros_registro&msg=actualizado");
+                    exit();
+                } else {
+                    $this->manejarError("Error al actualizar");
+                }
+            } else {
+                // --- MODO NUEVO ---
+                $idGenerado = $this->model->guardarLibro($libro);
+                if ($idGenerado !== null) {
+                    header("Location: index.php?accion=libros_registro&msg=guardado");
+                    exit();
+                } else {
+                    // Si el error es por DNI duplicado
+                    if (strpos($this->model->ultimoError, '23505') !== false) {
+                        $this->manejarError("El DNI ya se encuentra registrado.");
+                    } else {
+                        $this->manejarError("Error al guardar nuevo libro");
+                    }
+                }
+            }
+        }
+    }
+
     // 🔹 GUARDAR Y EDITAR (MISMA LÓGICA QUE CLIENTES)
     public function guardar() {
         if (isset($_POST['tipo'], $_POST['numero_libro'], $_POST['anio_inicio'])) {

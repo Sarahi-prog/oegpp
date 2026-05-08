@@ -10,6 +10,27 @@ class CursosModel {
         $this->ultimoError = null;
     }
 
+        public function contarCursos() {
+        $query = "SELECT COUNT(*) as total FROM cursos";
+        $stmt = $this->conexion->query($query);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    public function obtenerCursosPaginados($pagina = 1, $registrosPorPagina = 20) {
+        $offset = ($pagina - 1) * $registrosPorPagina;
+
+        $query = "SELECT id_curso, codigo_curso, nombre_curso, tipo, horas_totales, estado 
+                FROM cursos 
+                ORDER BY id_curso DESC 
+                LIMIT :limit OFFSET :offset";
+        $stmt = $this->conexion->prepare($query);
+        $stmt->bindValue(':limit', $registrosPorPagina, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
+    }
+
     public function cargar() {
         try {
             $sql = "SELECT id_curso, codigo_curso, nombre_curso, tipo, horas_totales, estado 

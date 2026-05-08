@@ -68,6 +68,23 @@ class NotasModuloController {
         }
     }
 
+    public function listarNotasModulos() {
+        // Página actual desde GET
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $registrosPorPagina = 20;
+
+        // Llamar al modelo para traer los clientes de esa página
+        $notas = $this->model->obtenerNotasPaginados($pagina, $registrosPorPagina);
+
+        // Calcular total de páginas
+        $totalRegistros = $this->model->contarNotas();
+        $totalPaginas = ceil($totalRegistros / $registrosPorPagina);
+
+        // Pasar datos a la vista
+        $pagina_actual = 'notas';
+        require './views/notas.php';
+    }
+
     public function eliminar() {
     if (isset($_GET['id'])) {
         $model = new NotasModuloModel();

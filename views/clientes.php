@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="public/clientesStyles.css?v=<?= time(); ?>">
     <link rel="stylesheet" href="public/menuStyles.css?v=<?php echo time(); ?>">
-
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head> 
 <body>
@@ -148,7 +148,7 @@
                                     <td class="email-column"><?= htmlspecialchars($c->correo) ?></td>
                                     <td><?= htmlspecialchars($c->celular) ?></td>
                                     <td><?= htmlspecialchars($c->area) ?></td>
-                                    <td><?= htmlspecialchars($c->estado) ?></td>
+                                    <td><span class="badge-status <?= strtolower($c->estado) ?>"><?= htmlspecialchars($c->estado) ?></span></td>
                                     
                                     <td style="text-align: center; white-space: nowrap;">
                                         <button class="btn-icon btn-edit" 
@@ -185,6 +185,7 @@
                     </div>
 
                 </div>
+                
                 <div class="paginacion" style="margin-top: 1rem; text-align: center;">
                     <?php if ($totalPaginas > 1): ?>
                         <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>

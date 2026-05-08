@@ -156,5 +156,26 @@ class RegistroCapacitacionModel {
             return [];
         }
     }
+
+    public function contarRegistro() {
+        $query = "SELECT COUNT(*) as total FROM registros_capacitacion";
+        $stmt = $this->conexion->query($query);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    public function obtenerRegistroPaginados($pagina = 1, $registrosPorPagina = 20) {
+        $offset = ($pagina - 1) * $registrosPorPagina;
+
+        $query = "SELECT id_registro, clientes_id, curso_id, libro_id, registro, horas_realizadas, fecha_inicio, fecha_fin, fecha_emision, folio, estado 
+                FROM registros_capacitacion 
+                ORDER BY id_registro DESC 
+                LIMIT :limit OFFSET :offset";
+        $stmt = $this->conexion->prepare($query);
+        $stmt->bindValue(':limit', $registrosPorPagina, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
+    }
 }
 ?>

@@ -110,11 +110,32 @@
             $ps->execute();
         }
 
-        public function eliminar($id) {
-    $sql = "DELETE FROM notas_modulo WHERE id_nota = :id";
-    $ps  = $this->db->prepare($sql);
-    $ps->bindParam(':id', $id);
-    $ps->execute();
-}
+     public function eliminar($id) {
+        $sql = "DELETE FROM notas_modulo WHERE id_nota = :id";
+        $ps  = $this->db->prepare($sql);
+        $ps->bindParam(':id', $id);
+        $ps->execute();
+    }
+
+    public function contarNotas() {
+        $query = "SELECT COUNT(*) as total FROM notas_modulo";
+        $stmt = $this->conexion->query($query);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    public function obtenerNotasPaginados($pagina = 1, $registrosPorPagina = 20) {
+        $offset = ($pagina - 1) * $registrosPorPagina;
+
+        $query = "SELECT id_nota, cliente_id, modulo_id, nota, fecha_registro 
+                FROM notas_modulo 
+                ORDER BY id_nota DESC 
+                LIMIT :limit OFFSET :offset";
+        $stmt = $this->conexion->prepare($query);
+        $stmt->bindValue(':limit', $registrosPorPagina, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
+    }
     }   
 ?>
