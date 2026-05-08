@@ -1,3 +1,8 @@
+// Agrega esto arriba del todo, junto a configRegistro
+let choicesCliente = null;
+let choicesCurso = null;
+let choicesLibro = null;
+
 // Configuración del módulo
 const configRegistro = {
     entity: 'registro',
@@ -8,6 +13,28 @@ const configRegistro = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- AGREGA ESTO DENTRO DEL DOMContentLoaded ---
+    // Configuración general para que esté en español y se vea limpio
+    const choicesConfig = {
+        searchEnabled: true,
+        searchPlaceholderValue: 'Escribe para buscar...',
+        itemSelectText: '', // Oculta el texto "Press to select"
+        noResultsText: 'No se encontraron resultados',
+        shouldSort: false // Respeta el orden de tu base de datos
+    };
+
+    // Aplicar a Cliente, Curso y Libro
+    if (document.getElementById('cliente_id_input')) {
+        choicesCliente = new Choices('#cliente_id_input', choicesConfig);
+    }
+    if (document.getElementById('curso_id_input')) {
+        choicesCurso = new Choices('#curso_id_input', choicesConfig);
+    }
+    if (document.getElementById('libro_id_input')) {
+        choicesLibro = new Choices('#libro_id_input', choicesConfig);
+    }
+
+
     iniciarBuscador('buscadorTabla', 'cuerpoTabla');
 
     const formRegistro = document.getElementById('formRegistro');
@@ -54,18 +81,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// 🔹 EDITAR
 function editarRegistro(data) { 
-    modoFormularioUniversal(configRegistro, data);
+    let datosMapeados = { ...data };
+    datosMapeados.cliente_id = data.cliente_id || data.id_cliente || "";
+    datosMapeados.curso_id = data.curso_id || data.id_curso || "";
+    datosMapeados.libro_id = data.libro_id || data.id_libro || "";
+
+    datosOriginalesRegistro = datosMapeados; 
+    
+    // Aquí es donde UniversalScript te cambia la URL sin permiso
+    modoFormularioUniversal(configRegistro, datosMapeados);
+
+    // 👉 EL FIX MÁGICO: Obligamos al formulario a volver a "guardar_registro"
+    document.getElementById('formRegistro').action = 'index.php?accion=guardar_registro';
+
+    // Actualizar visualmente los Selects con Buscador (Choices.js)
+    if (choicesCliente && datosMapeados.cliente_id) choicesCliente.setChoiceByValue(String(datosMapeados.cliente_id));
+    if (choicesCurso && datosMapeados.curso_id) choicesCurso.setChoiceByValue(String(datosMapeados.curso_id));
+    if (choicesLibro && datosMapeados.libro_id) choicesLibro.setChoiceByValue(String(datosMapeados.libro_id));
+
+    document.getElementById('form-title').innerHTML = '<i class="fas fa-edit"></i> Editar Registro';
+    document.getElementById('btn-submit-form').querySelector('span').textContent = 'Actualizar Registro';
+    document.getElementById('btn-cancelar').style.display = 'inline-block';
 
     const panel = document.getElementById('seccionRegistro');
-    if (panel?.classList.contains('panel-oculto')) {
-        toggleRegistro();
-    }
+    if (panel && panel.classList.contains('panel-oculto')) toggleRegistro(); 
 }
 
-function resetearFormularioRegistro() { 
+// 🔹 RESET FORM
+function resetearFormulario() { 
+    datosOriginalesRegistro = null;
     modoFormularioUniversal(configRegistro, false); 
+
+    // 👉 EL FIX MÁGICO: Lo aseguramos también al cancelar
+    document.getElementById('formRegistro').action = 'index.php?accion=guardar_registro';
+
+    // Limpiar visualmente los Selects con Buscador
+    if (choicesCliente) choicesCliente.setChoiceByValue('');
+    if (choicesCurso) choicesCurso.setChoiceByValue('');
+    if (choicesLibro) choicesLibro.setChoiceByValue('');
+
+    document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle"></i> Datos del Registro';
+    document.getElementById('btn-submit-form').querySelector('span').textContent = 'Guardar Registro';
+    document.getElementById('btn-cancelar').style.display = 'none';
 }
+
 
 function confirmarEliminarRegistro(id) {
     Swal.fire({

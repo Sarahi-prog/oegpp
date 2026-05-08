@@ -217,18 +217,19 @@ case 'eliminar_nota':
     
     
 
-    case 'registros_capacitacion':         
+case 'registros_capacitacion':         
         $controllerRegistrosCap->listarRegistros(); 
         break;
-    case 'guardar_registro_capacitacion': 
+
+    case 'guardar_registro': 
         $controllerRegistrosCap->guardarRegistro(); 
         break;
-    case 'modificar_registro_capacitacion':
-        $controllerRegistrosCap->modificar();
-        break;
-    case 'eliminar_registro_capacitacion':
+
+    case 'eliminar_registro':
         $controllerRegistrosCap->eliminarRegistro();
         break;
+
+
     case 'obtenerAdmins':    $controllerSolicitudes->obtenerAdmins(); break;
     case 'resetearPassword': $controllerSolicitudes->resetearPassword(); break;
 

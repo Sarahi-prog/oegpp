@@ -10,6 +10,21 @@ class CursosModel {
         $this->ultimoError = null;
     }
 
+    public function cargar() {
+        try {
+            $sql = "SELECT id_curso, codigo_curso, nombre_curso, tipo, horas_totales, estado 
+                    FROM cursos 
+                    ORDER BY id_curso DESC";
+
+            $stmt = $this->conexion->query($sql);
+            return $stmt->fetchAll(PDO::FETCH_OBJ) ?: [];
+
+        } catch (PDOException $e) {
+            $this->ultimoError = $e->getMessage();
+            return [];
+        }
+    }
+
     // ✔ LISTAR CURSOS (igual que clientes)
     public function cargarCurso() {
         try {
