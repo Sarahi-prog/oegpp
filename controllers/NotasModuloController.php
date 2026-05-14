@@ -69,12 +69,12 @@ class NotasModuloController {
     }
 
     public function eliminar() {
-    if (isset($_GET['id'])) {
-        $model = new NotasModuloModel();
-        $model->eliminar($_GET['id']);
+        if (isset($_GET['id'])) {
+            $model = new NotasModuloModel();
+            $model->eliminar($_GET['id']);
+        }
+        header('Location: index.php?accion=notas');
+        exit;
     }
-    header('Location: index.php?accion=notas');
-    exit;
-}
 }
 

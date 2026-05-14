@@ -46,22 +46,29 @@
 
                         <div class="form-vertical-stack">
 
-                            <!-- Selector de curso -->
+                            <!-- Selector de Programa Educativo -->
                             <div class="field-group">
-                                <label>Programa / Curso Base</label>
-                                <select name="curso_id" id="curso_id_form" class="form-select" required>
-                                    <option value="">Seleccione el curso...</option>
-                                    <?php if (!empty($cursos_disponibles)): ?>
-                                        <?php foreach ($cursos_disponibles as $curso): ?>
-                                            <option value="<?= $curso->getIdCurso() ?>"
-                                                <?= (isset($curso_preseleccionado) && $curso_preseleccionado == $curso->getIdCurso()) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($curso->getCodigoCurso() . ' - ' . $curso->getNombreCurso()) ?>
+                                <label>Programa Educativo Base</label>
+
+                                <select name="programa_id" id="programa_id_form" class="form-select" required>
+                                    <option value="">Seleccione el programa...</option>
+
+                                    <?php if (!empty($programas_disponibles)): ?>
+                                        <?php foreach ($programas_disponibles as $programa): ?>
+
+                                            <option value="<?= $programa->getId() ?>"
+                                                <?= (isset($programa_preseleccionado) && $programa_preseleccionado == $programa->getIdPrograma()) ? 'selected' : '' ?>>
+
+                                                <?= htmlspecialchars(
+                                                    $programa->getCodigo() . ' - ' . $programa->getNombre()
+                                                ) ?>
+
                                             </option>
+
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 </select>
                             </div>
-
                             <!-- Nombre del módulo -->
                             <div class="field-group">
                                 <label>Nombre del Módulo</label>
@@ -127,7 +134,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>CURSO APLICADO</th>
+                                    <th>PROGRAMA APLICADO</th>
                                     <th>NOMBRE DEL MÓDULO</th>
                                     <th>HORAS</th>
                                     <th>CRONOGRAMA</th>
@@ -138,36 +145,49 @@
                             <tbody id="cuerpoTablaModulos">
 
                                 <?php if (!empty($modulos)): $i = 1; ?>
+
                                     <?php foreach ($modulos as $mod):
+
                                         $estadoActivo = ($mod->getEstado() == 1);
 
-                                        // Buscar nombre del curso asociado
-                                        $nombreCurso = 'Sin curso';
-                                        if (!empty($cursos_disponibles)) {
-                                            foreach ($cursos_disponibles as $c) {
-                                                if ($c->getIdCurso() == $mod->getCursoId()) {
-                                                    $nombreCurso = $c->getCodigoCurso() . ' - ' . $c->getNombreCurso();
+                                        // Buscar nombre del programa asociado
+                                        $nombrePrograma = 'Sin programa';
+
+                                        if (!empty($programas_disponibles)) {
+
+                                            foreach ($programas_disponibles as $programa) {
+
+                                                if ($programa->getId() == $mod->getCursoId()) {
+
+                                                    $nombrePrograma =
+                                                        $programa->getCodigo() .
+                                                        ' - ' .
+                                                        $programa->getNombre();
+
                                                     break;
                                                 }
                                             }
                                         }
 
                                         $datosJson = htmlspecialchars(json_encode([
-                                            'id_modulo'    => $mod->getIdModulo(),
-                                            'curso_id'     => $mod->getCursoId(),
-                                            'nombre_modulo'=> $mod->getNombreModulo(),
-                                            'horas'        => $mod->getHoras(),
-                                            'fecha_inicio' => $mod->getFechaInicio(),
-                                            'fecha_fin'    => $mod->getFechaFin()
+                                            'id_modulo'      => $mod->getIdModulo(),
+                                            'programa_id'    => $mod->getCursoId(),
+                                            'nombre_modulo' => $mod->getNombreModulo(),
+                                            'horas'         => $mod->getHoras(),
+                                            'fecha_inicio'  => $mod->getFechaInicio(),
+                                            'fecha_fin'     => $mod->getFechaFin()
                                         ]), ENT_QUOTES, 'UTF-8');
+
                                     ?>
+
                                     <tr class="fila-modulo">
+
                                         <td class="id-column"><?= $i++ ?></td>
 
-                                        <!-- Nombre del curso (no solo el ID) -->
+                                        <!-- Nombre del programa -->
                                         <td>
                                             <span class="curso-referencia">
-                                                <?= htmlspecialchars($nombreCurso) ?>
+                                                <?= htmlspecialchars($nombrePrograma) ?>
                                             </span>
                                         </td>
 
@@ -184,45 +204,70 @@
                                             <?php
                                                 $fi = $mod->getFechaInicio();
                                                 $ff = $mod->getFechaFin();
+
                                                 echo ($fi ? date('d/m/Y', strtotime($fi)) : '---')
-                                                   . ' → '
-                                                   . ($ff ? date('d/m/Y', strtotime($ff)) : '---');
+                                                    . ' → ' .
+                                                    ($ff ? date('d/m/Y', strtotime($ff)) : '---');
                                             ?>
                                         </td>
 
                                         <td style="text-align: center;">
                                             <label class="switch">
-                                                <input type="checkbox" <?= $estadoActivo ? 'checked' : '' ?>
-                                                       onchange="confirmarEstadoModulo(this, <?= $mod->getIdModulo() ?>)">
+                                                <input type="checkbox"
+                                                    <?= $estadoActivo ? 'checked' : '' ?>
+                                                    onchange="confirmarEstadoModulo(this, <?= $mod->getIdModulo() ?>)">
                                                 <span class="slider"></span>
                                             </label>
                                         </td>
 
                                         <td style="text-align: center; white-space: nowrap;">
-                                            <button class="btn-icon btn-edit" title="Editar"
+
+                                            <button class="btn-icon btn-edit"
+                                                    title="Editar"
                                                     onclick='editarModulo(<?= $datosJson ?>)'>
+
                                                 <i class="fas fa-edit" style="color: #4a90e2;"></i>
+
                                             </button>
-                                            <button class="btn-icon btn-delete" title="Eliminar"
+
+                                            <button class="btn-icon btn-delete"
+                                                    title="Eliminar"
                                                     onclick="eliminarModulo(<?= $mod->getIdModulo() ?>)">
+
                                                 <i class="fas fa-trash" style="color: #e24a4a;"></i>
+
                                             </button>
+
                                         </td>
+
                                     </tr>
+
                                     <?php endforeach; ?>
 
                                 <?php else: ?>
-                                    <tr>
-                                        <td colspan="7" style="text-align: center; padding: 4rem 2rem;">
-                                            <div style="display: flex; flex-direction: column; align-items: center; opacity: 0.7;">
-                                                <i class="fas fa-layer-group" style="font-size: 4rem; color: #94a3b8; margin-bottom: 15px;"></i>
-                                                <h4 style="margin: 0; color: #0f172a; font-size: 1.2rem; font-weight: 600;">Sin módulos registrados</h4>
-                                                <p style="color: #64748b; margin-top: 8px; font-size: 0.9rem;">Usa el formulario para agregar el primer módulo.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
 
+                                <tr>
+                                    <td colspan="7" style="text-align: center; padding: 4rem 2rem;">
+
+                                        <div style="display: flex; flex-direction: column; align-items: center; opacity: 0.7;">
+
+                                            <i class="fas fa-layer-group"
+                                            style="font-size: 4rem; color: #94a3b8; margin-bottom: 15px;"></i>
+
+                                            <h4 style="margin: 0; color: #0f172a; font-size: 1.2rem; font-weight: 600;">
+                                                Sin módulos registrados
+                                            </h4>
+
+                                            <p style="color: #64748b; margin-top: 8px; font-size: 0.9rem;">
+                                                Usa el formulario para agregar el primer módulo.
+                                            </p>
+
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

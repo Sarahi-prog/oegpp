@@ -1,7 +1,7 @@
 <?php
 require_once './models/RegistroCapacitacion.php';
 require_once './models/RegistroCapacitacionModel.php';
-require_once 'models/CursosModel.php';
+require_once 'models/ProgramaEducativoModel.php';
 require_once 'models/ClientesModel.php';
 require_once 'models/LibrosRegistroModel.php';
 require_once 'helpers/loggers.php';
@@ -17,8 +17,8 @@ class RegistroCapacitacionController {
     public function listarRegistros() {
         $registros = $this->model->cargar_registro();
         $pagina_actual = 'registros_capacitacion';        
-        $modelCurso = new CursosModel();
-        $cursos = $modelCurso->cargar();
+        $modelPrograma = new ProgramaEducativoModel();
+        $programas = $modelPrograma->cargar();
         $modelCliente = new ClientesModel();
         $clientes = $modelCliente->cargar();
         $modelLibro = new LibrosRegistroModel();
@@ -27,7 +27,7 @@ class RegistroCapacitacionController {
     }
 
     public function guardarRegistro() {
-        if (isset($_POST['cliente_id'], $_POST['curso_id'])) {
+        if (isset($_POST['cliente_id'], $_POST['programa_id'])) {
 
             $registro = $this->mapearDatosFormulario();
             $id_registro = $_POST['id_registro'] ?? '';

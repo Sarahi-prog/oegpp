@@ -11,7 +11,7 @@ $archivos = [
     'LoginController.php',
     'VerificacionController.php',
     'SolicitudesRegistroController.php',
-    'CursosController.php',
+    'ProgramaEducativoController.php',
     'LibrosRegistroController.php',
     'RegistroCapacitacionController.php', // Asegúrate que el archivo sea SINGULAR si la clase lo es
     'NotasModuloController.php',
@@ -72,7 +72,7 @@ if (!$isPublic && isset($_SESSION['admin_id'])) {
 $controllerLogin        = new LoginController();
 $controllerVerificacion = new VerificacionController();
 $controllerSolicitudes  = new SolicitudesRegistroController();
-$controllerCursos       = new CursosController();
+$controllerProgramaEdu  = new ProgramaEducativoController();
 $controllerLibros       = new LibrosRegistroController();
 $controllerNotasModulo  = new NotasModuloController();
 $controllerRegistrosCap = new RegistroCapacitacionController();
@@ -139,24 +139,24 @@ case 'inicio':
         break;
 
         ///cursos
-case 'cursos':
-    $controllerCursos->cargar(); 
+case 'programa_educativo':
+    $controllerProgramaEdu->cargar(); 
     break;
 
-case 'guardar_curso':
-    $controllerCursos->guardarCurso();
+case 'guardar_programa':
+    $controllerProgramaEdu->guardarProgramaEducativo();
     break;
 
-case 'modificar_curso':
-    $controllerCursos->modificarCurso();
+case 'modificar_programa':
+    $controllerProgramaEdu->modificarProgramaEducativo();
     break;
 
-case 'eliminar_curso':
-    $controllerCursos->eliminarCurso();
+case 'eliminar_programa':
+    $controllerProgramaEdu->eliminarProgramaEducativo();
     break;
 
-case 'actualizar_estado_curso':
-    $controllerCursos->actualizar_estado();
+case 'actualizar_estado_programa':
+    $controllerProgramaEdu->actualizar_estado();
     break;
     
         /// modulos

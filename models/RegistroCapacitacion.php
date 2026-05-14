@@ -2,7 +2,7 @@
 class RegistroCapacitacion {
     private $id_registro;
     private $cliente_id;
-    private $curso_id;
+    private $programa_id;
     private $libro_id;
     private $registro;
     private $horas_realizadas;
@@ -17,7 +17,7 @@ class RegistroCapacitacion {
     public function __construct($data = []) {
         $this->id_registro = $data['id_registro'] ?? null;
         $this->cliente_id = $data['cliente_id'] ?? null;
-        $this->curso_id = $data['curso_id'] ?? null;
+        $this->programa_id = $data['programa_id'] ?? null;
         $this->libro_id = $data['libro_id'] ?? null;
         $this->registro = $data['registro'] ?? null;
         $this->horas_realizadas = $data['horas_realizadas'] ?? null;
@@ -36,8 +36,8 @@ class RegistroCapacitacion {
     public function getClienteId() { return $this->cliente_id; }
     public function setClienteId($id) { $this->cliente_id = $id; }
 
-    public function getCursoId() { return $this->curso_id; }
-    public function setCursoId($id) { $this->curso_id = $id; }
+    public function getProgramaId() { return $this->programa_id; }
+    public function setProgramaId($id) { $this->programa_id = $id; }
 
     public function getLibroId() { return $this->libro_id; }
     public function setLibroId($id) { $this->libro_id = $id; }

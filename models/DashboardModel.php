@@ -9,7 +9,7 @@ class DashboardModel {
  
     public function obtenerTotalCursos() {
         try {
-            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM cursos");
+            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM programa_educativo");
             $stmt->execute();
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
             return $res['total'] ?? 0;
@@ -21,7 +21,7 @@ class DashboardModel {
    public function obtenerTotalCursosActivos() {
     try {
         // Aseguramos que solo cuente los que tienen 1 exacto
-        $sql = "SELECT COUNT(*) as total FROM cursos WHERE estado = 1";
+        $sql = "SELECT COUNT(*) as total FROM programa_educativo WHERE estado = 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -35,7 +35,7 @@ class DashboardModel {
  
     public function obtenerTotalCertificados() {
         try {
-            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM cursos WHERE tipo = 'certificados'");
+            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM programa_educativo WHERE tipo = 'certificados'");
             $stmt->execute();
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
             return $res['total'] ?? 0;
@@ -46,7 +46,7 @@ class DashboardModel {
  
     public function obtenerTotalDiplomados() {
         try {
-            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM cursos WHERE tipo = 'diplomados'");
+            $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM programa_educativo WHERE tipo = 'diplomados'");
             $stmt->execute();
             $res = $stmt->fetch(PDO::FETCH_ASSOC);
             return $res['total'] ?? 0;

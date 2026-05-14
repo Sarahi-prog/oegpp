@@ -24,8 +24,8 @@
                     <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=clientes'">
                         <i class="fas fa-users"></i> Ver Clientes
                     </button>
-                    <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=cursos'">
-                        <i class="fas fa-book-open"></i> Ver Cursos
+                    <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=programa_educativo'">
+                        <i class="fas fa-book-open"></i> Ver Programas Educativos
                     </button>
                     <button class="btn btn-primary-green" onclick="window.location.href='index.php?accion=modulos'">
                         <i class="fas fa-cogs"></i> Ver Módulos
@@ -67,7 +67,7 @@
                     <div class="stat-icon-wrapper"><i class="fas fa-book-open"></i></div>
                 </div>
                 <div class="stat-body">
-                    <p class="stat-label">Cursos Activos</p>
+                    <p class="stat-label">Programas Activos</p>
                     <p class="stat-value"><?php echo $datos['cursos_activos'] ?? 0; ?></p>
                     <p class="stat-trend blue"><i class="fas fa-arrow-trend-up"></i> Total: <?php echo $datos['cursos_totales'] ?? 0; ?> cursos</p>
                 </div>

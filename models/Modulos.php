@@ -1,7 +1,7 @@
 <?php
 class Modulos {
     private $id_modulo;
-    private $curso_id;
+    private $programa_id;
     private $nombre_modulo;
     private $horas;
     private $fecha_inicio;
@@ -11,8 +11,8 @@ class Modulos {
     public function getIdModulo() { return $this->id_modulo; }
     public function setIdModulo($id_modulo) { $this->id_modulo = $id_modulo; }
 
-    public function getCursoId() { return $this->curso_id; }
-    public function setCursoId($curso_id) { $this->curso_id = $curso_id; }
+    public function getProgramaId() { return $this->programa_id; }
+    public function setProgramaId($programa_id) { $this->programa_id = $programa_id; }
 
     public function getNombreModulo() { return $this->nombre_modulo; }
     public function setNombreModulo($nombre_modulo) { $this->nombre_modulo = $nombre_modulo; }

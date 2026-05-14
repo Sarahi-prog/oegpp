@@ -1,7 +1,7 @@
 <?php
 require_once 'models/ModulosModel.php';
 require_once 'models/Modulos.php';
-require_once 'models/CursosModel.php';
+require_once 'models/ProgramaEducativoModel.php';
 require_once 'helpers/loggers.php';
 
 class ModulosController {
@@ -9,16 +9,16 @@ class ModulosController {
     public function cargar() {
         try {
             $model = new ModulosModel();
-            $id_curso = $_GET['id'] ?? null;
+            $id_programa = $_GET['id'] ?? null;
 
-            if ($id_curso) {
-                $modulos = $model->buscarPorCurso($id_curso);
+            if ($id_programa) {
+                $modulos = $model->buscarPorProgramaEducativo($id_programa);
             } else {
                 $modulos = $model->cargar();
             }
 
-            $cursosModel = new CursosModel();
-            $cursos_disponibles = $cursosModel->cargarCurso();
+            $programaModel = new ProgramaEducativoModel();
+            $programas_disponibles = $programaModel->cargarProgramaEducativo();
 
             require './views/modulos.php';
         } catch (Exception $e) {
