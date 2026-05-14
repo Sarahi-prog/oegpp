@@ -20,144 +20,98 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="directorio-title-container">
-                    <h2><i class="fas fa-book-open"></i> Directorio de Programa Educativo</h2>
-                    <p style="margin: 5px 0 0 0; color: #64748b;">Administra los programas académicos, diplomados y certificaciones.</p>
+                    <h2><i class="fas fa-book-open"></i> Directorio de Cursos</h2>
+                    <p style="margin: 5px 0 0 0; color: #64748b;">Administra los cursos académicos, diplomados y certificaciones.</p>
                 </div>
             </div>
         </div>
 
         <div class="dashboard-wrapper">
-            <div id="seccionRegistro" data-modulo="programa">
-
+            <div id="seccionRegistro" data-modulo="cursos">
                 <div class="side-panel">
-
-                    <h3 id="form-title"
-                        style="margin-top: 0; margin-bottom: 20px;">
-
-                        <i class="fas fa-plus-circle"></i>
-
-                        Datos del Programa Educativo
-
-                    </h3>
-
-                    <form id="formProgramaEducativo"
-                        action="index.php?accion=guardar_programa"
-                        method="POST">
+                    <h3 style="margin-top: 0; margin-bottom: 20px;"><i class="fas fa-edit"></i> Datos de curso</h3>
+                    <form id="formCurso" action="index.php?accion=guardar_programa" method="POST">
 
                         <!-- ID -->
                         <input type="hidden"
-                            name="id"
-                            id="id_programa_educativo_form"
+                            name="id_programa"
+                            id="id_programa_form"
                             value="">
 
                         <div class="form-vertical-stack">
 
                             <!-- CÓDIGO -->
                             <div class="field-group">
-
-                                <label>
-                                    Código de Programa Educativo
-                                </label>
+                                <label>Código de curso</label>
 
                                 <input type="text"
                                     name="codigo"
-                                    id="codigo_programa_educativo_form"
+                                    id="codigo_form"
                                     required
                                     placeholder="Ej. OEGPP-DIP-001"
                                     style="text-transform: uppercase;">
-
                             </div>
 
                             <!-- NOMBRE -->
                             <div class="field-group">
-
-                                <label>
-                                    Nombre de Programa Educativo
-                                </label>
+                                <label>Nombre de Curso</label>
 
                                 <input type="text"
                                     name="nombre"
-                                    id="nombre_programa_educativo_form"
+                                    id="nombre_form"
                                     required
-                                    placeholder="Nombre del programa educativo">
-
+                                    placeholder="Nombre de curso">
                             </div>
 
                             <div style="display: flex; gap: 10px;">
 
                                 <!-- TIPO -->
                                 <div class="field-group" style="flex: 1;">
-
-                                    <label>
-                                        Tipo de Programa Educativo
-                                    </label>
+                                    <label>Tipo</label>
 
                                     <select name="tipo"
-                                            id="tipo_programa_educativo_form"
+                                            id="tipo_form"
                                             class="form-select"
                                             required>
 
-                                        <option value="">
-                                            Seleccionar...
-                                        </option>
-
-                                        <option value="certificados">
-                                            Certificado
-                                        </option>
-
-                                        <option value="diplomados">
-                                            Diplomado
-                                        </option>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="certificados">Certificado</option>
+                                        <option value="diplomados">Diplomado</option>
 
                                     </select>
-
                                 </div>
 
                                 <!-- HORAS -->
                                 <div class="field-group" style="flex: 1;">
-
-                                    <label>
-                                        Horas Totales
-                                    </label>
+                                    <label>Horas Totales</label>
 
                                     <input type="number"
                                         name="horas_totales"
-                                        id="horas_totales_programa_educativo_form"
+                                        id="horas_totales_form"
                                         required
                                         min="1"
                                         placeholder="Ej. 120">
-
                                 </div>
 
                             </div>
 
-                            <!-- ESTADO -->
-                            <input type="hidden"
-                                name="estado"
-                                value="1">
-
                             <!-- BOTONES -->
                             <div class="form-actions"
-                                style="display: flex;
-                                        gap: 10px;
-                                        margin-top: 15px;">
+                                style="display: flex; gap: 10px; margin-top: 15px;">
 
                                 <button type="submit"
-                                        id="btn-submit-programa-educativo"
+                                        id="btn-submit-form"
                                         class="btn btn-primary-green"
                                         style="flex: 1;">
 
                                     <i class="fas fa-save"></i>
-
-                                    <span>
-                                        Guardar Programa Educativo
-                                    </span>
+                                    <span>Guardar curso</span>
 
                                 </button>
 
                                 <button type="button"
-                                        id="btn-cancelar-programa-educativo"
-                                        onclick="cancelarEdicionProgramaEducativo()"
+                                        id="btn-cancelar"
+                                        onclick="cancelarEdicion()"
                                         class="btn btn-secondary"
                                         style="display: none;
                                             background-color: #64748b;
@@ -176,10 +130,9 @@
                         </div>
 
                     </form>
-
                 </div>
-
             </div>
+
             <div class="table-section">
                 <div class="search-bar">
                     <div class="search-wrapper">
@@ -191,14 +144,15 @@
                         <span>Exportar Datos</span>
                     </button>
                 </div>
+
                 <div class="table-card">
                     <div class="table-container">
-                        <table class="data-table" id="tablaProgramaEducativo">
+                        <table class="data-table" id="tablaCursos">
                             <thead>
                                 <tr>
                                     <th>#</th> 
                                     <th>CÓDIGO</th>
-                                    <th>NOMBRE DE PROGRAMA</th>
+                                    <th>NOMBRE DE CURSO</th>
                                     <th>TIPO</th>
                                     <th>HORAS</th>
                                     <th>ESTADO</th>
@@ -211,55 +165,109 @@
                                 <?php 
                                 $i = 1; 
                                 if (!empty($programas)):
-                                    foreach ($programas as $programa): 
-                                        $tipoRaw = $programa->getTipo() ?? '';
-                                        $badgeClass = ($tipoRaw === 'diplomados') ? 'badge-diplomado' : 'badge-certificado';
-                                        $tipoFormateado = !empty($tipoRaw) ? ucfirst(substr($tipoRaw, 0, -1)) : 'Sin tipo';
-                                        $estadoActivo = ($programa->getEstado() == 1); 
+                                    foreach ($programas as $curso): 
+
+                                        $tipoRaw = $curso->getTipo() ?? '';
+
+                                        $badgeClass = ($tipoRaw === 'diplomados') 
+                                            ? 'badge-diplomado' 
+                                            : 'badge-certificado';
+
+                                        $tipoFormateado = !empty($tipoRaw) 
+                                            ? ucfirst(substr($tipoRaw, 0, -1)) 
+                                            : 'Sin tipo';
+
+                                        $estadoActivo = ($curso->getEstado() == 1); 
 
                                         $datosJson = json_encode([
-                                            'id' => $programa->getId(),
-                                            'codigo' => $programa->getCodigo(),
-                                            'nombre' => $programa->getNombre(),
-                                            'tipo' => $programa->getTipo(),
-                                            'horas_totales' => $programa->getHorasTotales()
+                                            'id_programa' => $curso->getIdPrograma(),
+                                            'codigo' => $curso->getCodigo(),
+                                            'nombre' => $curso->getNombre(),
+                                            'tipo' => $curso->getTipo(),
+                                            'horas_totales' => $curso->getHorasTotales()
                                         ]);
                                 ?>
                                 <tr class="fila-curso">
-                                    <td class="id-column"><?= $i++ ?></td>
-                                    <td><span class="codigo-box"><?= htmlspecialchars($programa->getCodigo()) ?></span></td>
-                                    <td><strong><?= htmlspecialchars($programa->getNombre()) ?></strong></td>
-                                    <td><span class="badge <?= $badgeClass ?>"><?= $tipoFormateado ?></span></td>
-                                    <td><i class="far fa-clock" style="color: #94a3b8; margin-right: 5px;"></i> <?= htmlspecialchars($programa->getHorasTotales()) ?> h</td>
+
+                                    <td class="id-column">
+                                        <?= $i++ ?>
+                                    </td>
+
+                                    <td>
+                                        <span class="codigo-box">
+                                            <?= htmlspecialchars($curso->getCodigo()) ?>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            <?= htmlspecialchars($curso->getNombre()) ?>
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge <?= $badgeClass ?>">
+                                            <?= $tipoFormateado ?>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <i class="far fa-clock"
+                                        style="color: #94a3b8; margin-right: 5px;"></i>
+
+                                        <?= htmlspecialchars($curso->getHorasTotales()) ?> h
+                                    </td>
                                     
                                     <td style="text-align: center;">
                                         <label class="switch">
-                                            <input type="checkbox" <?= $estadoActivo ? 'checked' : '' ?> 
-                                                   onchange="confirmarEstado(this, <?= $programa->getId() ?>)">
+
+                                            <input type="checkbox"
+                                                <?= $estadoActivo ? 'checked' : '' ?> 
+                                                onchange="confirmarEstado(this, <?= $curso->getIdPrograma() ?>)">
+
                                             <span class="slider"></span>
+
                                         </label>
                                     </td>
 
                                     <td style="text-align: center; white-space: nowrap;">
-                                        <a href="index.php?accion=modulos&id=<?= $programa->getId() ?>" 
+
+                                        <a href="index.php?accion=modulos&id=<?= $curso->getIdPrograma() ?>" 
                                         class="btn-icon" 
                                         title="Gestionar Módulos" 
                                         style="text-decoration: none; margin-right: 8px;">
-                                            <i class="fas fa-layer-group" style="color: #10b981;"></i>
+
+                                            <i class="fas fa-layer-group"
+                                            style="color: #10b981;"></i>
+
                                         </a>
 
-                                        <button class="btn-icon btn-edit" title="Editar" onclick='editarProgramaEducativo(<?= $datosJson ?>)'>
-                                            <i class="fas fa-edit" style="color: #4a90e2;"></i>
+                                        <button class="btn-icon btn-edit"
+                                                title="Editar"
+                                                onclick='editarCurso(<?= $datosJson ?>)'>
+
+                                            <i class="fas fa-edit"
+                                            style="color: #4a90e2;"></i>
+
                                         </button>
 
-                                        <button class="btn-icon btn-delete" title="Eliminar" onclick="eliminarProgramaEducativo(<?= $programa->getId() ?>)">
-                                            <i class="fas fa-trash" style="color: #e24a4a;"></i>
+                                        <button class="btn-icon btn-delete"
+                                                title="Eliminar"
+                                                onclick="eliminarCurso(<?= $curso->getIdPrograma() ?>)">
+
+                                            <i class="fas fa-trash"
+                                            style="color: #e24a4a;"></i>
+
                                         </button>
+
                                     </td>
+
                                 </tr>
+
                                 <?php 
                                     endforeach; 
-                                else: 
+                                    else: 
+                                ?>
                                 ?>
                                 <tr>
                                     <td colspan="7" style="text-align: center; padding: 4rem 2rem;">
@@ -280,6 +288,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="public/universalScript.js?v=<?= time(); ?>"></script>
-    <script src="public/programa_educativoScript.js?v=<?= time(); ?>"></script>
+    <script src="public/programa_educativoScript.js?v=<?= time(); ?>"></script>    
 </body>
 </html>

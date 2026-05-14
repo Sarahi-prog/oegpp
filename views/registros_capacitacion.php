@@ -20,7 +20,7 @@
             <div class="titulo-con-boton">
                 <div class="directorio-title-container">
                     <h2><i class="fas fa-clipboard-check"></i> Consulta de Capacitaciones</h2>
-                    <p>Verifique los cursos, libros de registro y certificados de un trabajador por su DNI.</p>
+                    <p>Verifique los programas, libros de registro y certificados de un trabajador por su DNI.</p>
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Curso</th>
+                                    <th>Programa</th>
                                     <th>Tipo</th>
                                     <th>Libro de registro</th>
                                     <th>N° Reg.</th>
@@ -135,11 +135,11 @@
 
                                     <!-- Nombre del curso (cursos.nombre_curso) -->
                                     <td>
-                                        <strong><?= htmlspecialchars($reg['nombre_curso']) ?></strong>
-                                        <?php if (!empty($reg['codigo_curso'])): ?>
+                                        <strong><?= htmlspecialchars($reg['nombre_programa']) ?></strong>
+                                        <?php if (!empty($reg['codigo_programa'])): ?>
                                             <br>
                                             <span class="codigo-box" style="margin-top:4px; display:inline-block;">
-                                                <?= htmlspecialchars($reg['codigo_curso']) ?>
+                                                <?= htmlspecialchars($reg['codigo_programa']) ?>
                                             </span>
                                         <?php endif; ?>
                                     </td>

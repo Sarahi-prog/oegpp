@@ -148,7 +148,7 @@ case 'guardar_programa':
     break;
 
 case 'modificar_programa':
-    $controllerProgramaEdu->modificarProgramaEducativo();
+    $controllerProgramaEdu->guardarProgramaEducativo();
     break;
 
 case 'eliminar_programa':
@@ -171,6 +171,10 @@ case 'actualizar_estado_programa':
 
     case 'modificar_modulo':
         $controllerModulos->modificar();
+        break;
+
+    case 'eliminar_modulo':
+        $controllerModulos->eliminar();
         break;
     
     ///libros registro

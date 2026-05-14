@@ -28,9 +28,9 @@ class ModulosController {
 
     public function guardar() {
         try {
-            if(isset($_POST['curso_id']) && isset($_POST['nombre_modulo'])){
+            if(isset($_POST['programa_id']) && isset($_POST['nombre_modulo'])){
                 $modulo = new Modulos();
-                $modulo->setCursoId($_POST['curso_id']);
+                $modulo->setProgramaId($_POST['programa_id']);
                 $modulo->setNombreModulo($_POST['nombre_modulo']);
                 $modulo->setHoras($_POST['horas']);
                 $modulo->setFechaInicio(!empty($_POST['fecha_inicio']) ? $_POST['fecha_inicio'] : null);
@@ -49,10 +49,10 @@ class ModulosController {
 
     public function modificar() {
         try {
-            if(isset($_POST['id_modulo']) && isset($_POST['curso_id']) && isset($_POST['nombre_modulo'])){
+            if(isset($_POST['id_modulo']) && isset($_POST['programa_id']) && isset($_POST['nombre_modulo'])){
                 $modulo = new Modulos();
                 $modulo->setIdModulo($_POST['id_modulo']);
-                $modulo->setCursoId($_POST['curso_id']);
+                $modulo->setProgramaId($_POST['programa_id']);
                 $modulo->setNombreModulo($_POST['nombre_modulo']);
                 $modulo->setHoras($_POST['horas']);
                 $modulo->setFechaInicio(!empty($_POST['fecha_inicio']) ? $_POST['fecha_inicio'] : null);

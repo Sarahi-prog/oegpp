@@ -157,7 +157,7 @@
 
                                             foreach ($programas_disponibles as $programa) {
 
-                                                if ($programa->getId() == $mod->getCursoId()) {
+                                                if ($programa->getId() == $mod->getProgramaId()) {
 
                                                     $nombrePrograma =
                                                         $programa->getCodigo() .
@@ -171,7 +171,7 @@
 
                                         $datosJson = htmlspecialchars(json_encode([
                                             'id_modulo'      => $mod->getIdModulo(),
-                                            'programa_id'    => $mod->getCursoId(),
+                                            'programa_id'    => $mod->getProgramaId(),
                                             'nombre_modulo' => $mod->getNombreModulo(),
                                             'horas'         => $mod->getHoras(),
                                             'fecha_inicio'  => $mod->getFechaInicio(),

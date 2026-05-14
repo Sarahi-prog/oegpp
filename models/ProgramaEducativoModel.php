@@ -13,7 +13,7 @@ class ProgramaEducativoModel {
         $peducativo = array();
         foreach ($filas as $f) {
             $cur = new ProgramaEducativo();
-            $cur->setId($f[0]);
+            $cur->setIdPrograma($f[0]);
             $cur->setCodigo($f[1]);
             $cur->setNombre($f[2]);
             $cur->setTipo($f[3]);
@@ -25,21 +25,21 @@ class ProgramaEducativoModel {
     }
 
     public function cargarProgramaEducativo() {
-        $sql = "SELECT * FROM programa_educativo ORDER BY id DESC;";
+        $sql = "SELECT * FROM programa_educativo ORDER BY id_programa DESC;";
         $ps = $this->db->prepare($sql);
         $ps->execute();
         return $this->mapearProgramaEducativo($ps->fetchAll());
     }
 
     public function cargarD() {
-        $sql = "SELECT * FROM programa_educativo WHERE tipo = 'diplomados' ORDER BY id DESC;";
+        $sql = "SELECT * FROM programa_educativo WHERE tipo = 'diplomados' ORDER BY id_programa DESC;";
         $ps = $this->db->prepare($sql);
         $ps->execute();
         return $this->mapearProgramaEducativo($ps->fetchAll());
     }
 
     public function cargarC() {
-        $sql = "SELECT * FROM programa_educativo WHERE tipo = 'certificados' ORDER BY id DESC;";
+        $sql = "SELECT * FROM programa_educativo WHERE tipo = 'certificados' ORDER BY id_programa DESC;";
         $ps = $this->db->prepare($sql);
         $ps->execute();
         return $this->mapearProgramaEducativo($ps->fetchAll());
@@ -81,7 +81,7 @@ class ProgramaEducativoModel {
                     WHERE id=:id";
             $ps = $this->db->prepare($sql);       
             return $ps->execute([ // <--- Retornamos el resultado (true/false)
-                ":id" => $programaEducativo->getId(),
+                ":id" => $programaEducativo->getIdPrograma(),
                 ":cc" => $programaEducativo->getCodigo(),
                 ":nc" => $programaEducativo->getNombre(),
                 ":t"  => $programaEducativo->getTipo(),
@@ -98,7 +98,7 @@ class ProgramaEducativoModel {
      */
     public function eliminarProgramaEducativo($id) {
         try {
-            $sql = "DELETE FROM programa_educativo WHERE id_curso=:id";
+            $sql = "DELETE FROM programa_educativo WHERE id_programa=:id";
             $ps = $this->db->prepare($sql);
             return $ps->execute([":id" => $id]);
         } catch (PDOException $e) {

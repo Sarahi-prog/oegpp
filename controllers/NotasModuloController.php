@@ -11,14 +11,11 @@ class NotasModuloController {
         try {
             $model   = new NotasModuloModel();
             $notas   = $model->cargar();
-
             // ── Cargar clientes y módulos para los selects ──
             $modelClientes = new ClientesModel();
             $clientes      = $modelClientes->cargar();
-
             $modelModulos  = new ModulosModel();
             $modulos       = $modelModulos->cargar();
-
             require './views/notas.php';
         } catch (Exception $e) {
             Logger::error($e);
