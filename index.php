@@ -144,16 +144,8 @@ switch($accion) {
         $registroCapacitacionController->cargar();
         break;
 
-    case 'guardar_capacitacion':
+    case 'guardar_registro':
         $registroCapacitacionController->guardar();
-        break;
-
-    case 'modificar_capacitacion':
-        $registroCapacitacionController->modificar();
-        break;
-
-    case 'buscar_dni':
-        $registroCapacitacionController->buscar();  
         break;
 
 

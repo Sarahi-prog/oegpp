@@ -1,90 +1,65 @@
 <?php
 require_once 'models/RegistroCapacitacion.php';
 require_once 'models/RegistroCapacitacionModel.php';
-require_once 'helpers/loggers.php';
+// Asegúrate de tener modelos para estos o usar el mismo modelo general
+require_once __DIR__ . '/../models/ClientesModel.php';
+require_once __DIR__ . '/../models/CursosModel.php';
+require_once __DIR__ . '/../models/LibrosRegistroModel.php';
 
-class RegistroCapacitacionController{
-    public function cargar(){
-    try {
-        $model = new RegistroCapacitacionModel();
-        $capacitaciones = $model->cargar();
-        require './views/registros_capacitacion.php';
-    } catch (Exception $e) {
-        error_log("Error en RegistroCapacitacion: " . $e->getMessage());
-        // Pasamos un mensaje amigable a la vista
-        $error_sistema = "Ocurrió un problema al cargar los datos. Por favor, contacte al administrador.";
-        require './views/registros_capacitacion.php'; 
-    }
-}
-
-    public function guardar(){
+class RegistroCapacitacionController {
+    
+    public function cargar() {
         try {
-            if(isset($_POST['cliente_id']) && isset($_POST['curso_id']) && isset($_POST['libro_id']) && isset($_POST['registro']) && isset($_POST['horas_realizadas']) && isset($_POST['fecha_emision']) && isset($_POST['folio'])){
-                $registrocapacitacion = new RegistroCapacitacion();
-                $registrocapacitacion->setClienteId($_POST['cliente_id']);
-                $registrocapacitacion->setCursoId($_POST['curso_id']);
-                $registrocapacitacion->setLibroId($_POST['libro_id']);
-                $registrocapacitacion->setRegistro($_POST['registro']);
-                $registrocapacitacion->setHorasRealizadas($_POST['horas_realizadas']);
-                $registrocapacitacion->setFechaInicio($_POST['fecha_inicio'] ?? null);
-                $registrocapacitacion->setFechaFin($_POST['fecha_fin'] ?? null);
-                $registrocapacitacion->setFechaEmision($_POST['fecha_emision']);
-                $registrocapacitacion->setFolio($_POST['folio']);
+            $model = new RegistroCapacitacionModel();
+            
+            // 1. Cargamos los registros de la tabla
+            $registros = $model->cargar();
+            
+            // 2. IMPORTANTE: Cargar datos para los select del formulario
+            // Si no tienes estos modelos, puedes crear métodos en RegistroCapacitacionModel
+            $clientes = $model->obtenerTodosClientes(); 
+            $cursos = $model->obtenerTodosCursos();
+            $libros = $model->obtenerTodosLibros();
+
+            require './views/registros_capacitacion.php';
+        } catch (Exception $e) {
+            error_log("Error en RegistroCapacitacion: " . $e->getMessage());
+            $error_sistema = "Error al cargar los datos.";
+            require './views/registros_capacitacion.php'; 
+        }
+    }
+
+    public function guardar() {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $registro = new RegistroCapacitacion();
+                $registro->setClienteId($_POST['cliente_id']);
+                $registro->setCursoId($_POST['curso_id']);
+                $registro->setLibroId($_POST['libro_id']);
+                $registro->setRegistro($_POST['registro']);
+                $registro->setHorasRealizadas($_POST['horas_realizadas']);
+                $registro->setFechaInicio($_POST['fecha_inicio'] ?: null);
+                $registro->setFechaFin($_POST['fecha_fin'] ?: null);
+                $registro->setFechaEmision($_POST['fecha_emision']);
+                $registro->setFolio($_POST['folio']);
+                $registro->setEstado($_POST['estado'] ?? 'Activo');
 
                 $model = new RegistroCapacitacionModel();
-                $model->guardar($registrocapacitacion);
+                
+                // Si viene un ID, editamos; si no, creamos
+                if (!empty($_POST['id_registro'])) {
+                    $registro->setIdRegistro($_POST['id_registro']);
+                    $model->modificar_registro($registro);
+                } else {
+                    $model->guardar($registro);
+                }
 
                 header('Location: index.php?accion=registros_capacitacion');
                 exit;
             }
-
+        } catch (Exception $e) {
+            error_log("Error al guardar: " . $e->getMessage());
             $this->cargar();
-        } catch (Exception $e) {
-            error_log("Error en RegistroCapacitacion: " . $e->getMessage());
         }
     }
-
-    public function modificar(){
-        try {
-            if(isset($_POST['id_registro']) && isset($_POST['trabajador_id']) && isset($_POST['curso_id']) && isset($_POST['libro_id']) && isset($_POST['registro']) && isset($_POST['horas_realizadas']) && isset($_POST['fecha_emision']) && isset($_POST['folio'])){
-                $registrocapacitacion = new RegistroCapacitacion();
-                $registrocapacitacion->setIdRegistro($_POST['id_registro']);
-                $registrocapacitacion->setClienteId($_POST['cliente_id']);
-                $registrocapacitacion->setCursoId($_POST['curso_id']);
-                $registrocapacitacion->setLibroId($_POST['libro_id']);
-                $registrocapacitacion->setRegistro($_POST['registro']);
-                $registrocapacitacion->setHorasRealizadas($_POST['horas_realizadas']);
-                $registrocapacitacion->setFechaInicio($_POST['fecha_inicio'] ?? null);
-                $registrocapacitacion->setFechaFin($_POST['fecha_fin'] ?? null);
-                $registrocapacitacion->setFechaEmision($_POST['fecha_emision']);
-                $registrocapacitacion->setFolio($_POST['folio']);
-
-                $model = new RegistroCapacitacionModel();
-                $model->modificar($registrocapacitacion);
-            }
-        } catch (Exception $e) {
-            error_log("Error en RegistroCapacitacion: " . $e->getMessage());
-        }
-    }
-
-        public function buscar() {
-            try {
-                $dni = $_GET['dni'] ?? '';
-                
-                if (!empty($dni)) {
-                    $model = new RegistroCapacitacionModel();
-                    $capacitaciones = $model->buscarPorDni($dni);
-                } else {
-                    $capacitaciones = [];
-                }
-
-                require './views/registros_capacitacion.php';
-            } catch (Exception $e) {
-                error_log("Error al buscar capacitaciones por DNI: " . $e->getMessage());
-                $error_sistema = "Ocurrió un problema al buscar. Por favor, contacte al administrador.";
-                require './views/registros_capacitacion.php';
-            }
-        }
-
-} 
-?>
+}
