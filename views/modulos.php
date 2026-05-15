@@ -27,8 +27,8 @@
             </div>
 
             <!-- Breadcrumb: volver a cursos -->
-            <a href="index.php?accion=cursos" class="btn-volver">
-                <i class="fas fa-arrow-left"></i> Volver a Cursos
+            <a href="index.php?accion=programa_educativo" class="btn-volver">
+                <i class="fas fa-arrow-left"></i> Volver a Programas
             </a>
         </div>
 
@@ -56,9 +56,8 @@
                                     <?php if (!empty($programas_disponibles)): ?>
                                         <?php foreach ($programas_disponibles as $programa): ?>
 
-                                            <option value="<?= $programa->getId() ?>"
+                                            <option value="<?= $programa->getIdPrograma() ?>"
                                                 <?= (isset($programa_preseleccionado) && $programa_preseleccionado == $programa->getIdPrograma()) ? 'selected' : '' ?>>
-
                                                 <?= htmlspecialchars(
                                                     $programa->getCodigo() . ' - ' . $programa->getNombre()
                                                 ) ?>
@@ -138,7 +137,6 @@
                                     <th>NOMBRE DEL MÓDULO</th>
                                     <th>HORAS</th>
                                     <th>CRONOGRAMA</th>
-                                    <th style="text-align: center;">ESTADO</th>
                                     <th style="text-align: center;" class="acciones">ACCIONES</th>
                                 </tr>
                             </thead>
@@ -157,7 +155,7 @@
 
                                             foreach ($programas_disponibles as $programa) {
 
-                                                if ($programa->getId() == $mod->getProgramaId()) {
+                                                if ($programa->getIdPrograma() == $mod->getProgramaId()) {
 
                                                     $nombrePrograma =
                                                         $programa->getCodigo() .
@@ -211,15 +209,6 @@
                                             ?>
                                         </td>
 
-                                        <td style="text-align: center;">
-                                            <label class="switch">
-                                                <input type="checkbox"
-                                                    <?= $estadoActivo ? 'checked' : '' ?>
-                                                    onchange="confirmarEstadoModulo(this, <?= $mod->getIdModulo() ?>)">
-                                                <span class="slider"></span>
-                                            </label>
-                                        </td>
-
                                         <td style="text-align: center; white-space: nowrap;">
 
                                             <button class="btn-icon btn-edit"
@@ -243,9 +232,7 @@
                                     </tr>
 
                                     <?php endforeach; ?>
-
                                 <?php else: ?>
-
                                 <tr>
                                     <td colspan="7" style="text-align: center; padding: 4rem 2rem;">
 
